@@ -1,0 +1,65 @@
+print("""
+       # The full description of the plugin is in this file, which is linked to from
+# `manifest.ttl`.  This is done so the host only needs to scan the relatively
+# small `manifest.ttl` files to quickly discover all plugins.
+
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
+
+# First the type of the plugin is described.  All plugins must explicitly list
+# `lv2:Plugin` as a type.  A more specific type should also be given, where
+# applicable, so hosts can present a nicer UI for loading plugins.  Note that
+# this URI is the identifier of the plugin, so if it does not match the one in
+# `manifest.ttl`, the host will not discover the plugin data at all.
+<http://github.com/geraldmwangi/GuitarMidi-LV2>
+	a lv2:Plugin ,
+		lv2:AmplifierPlugin ;
+	lv2:project <http://lv2plug.in/ns/lv2> ;
+	doap:name "Guitar Midi";
+	doap:license <http://opensource.org/licenses/isc> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	lv2:port [
+		a lv2:AudioPort ,
+			lv2:InputPort ;
+		lv2:index 0 ;
+		lv2:symbol "in" ;
+		lv2:name "In"
+	] ,""")
+
+for s in range(6):
+    for f in range(12):
+        idx = s * 12 + f+1
+        print(f"""[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index {idx} ;
+    lv2:symbol "filter_{s}_{f}" ;
+    lv2:name "String {s} Filter {f}"
+] ,""")
+print("""[
+        a lv2:OutputPort ,
+            atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports midi:MidiEvent ;
+        lv2:index 2 ;
+        lv2:symbol "midiout" ;
+        lv2:name "MidiOut"
+    ],[
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "polyphonic" ;
+        lv2:name "Polyphonic Detection" ;
+        lv2:portProperty lv2:toggled ;
+        lv2:default 0.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ] .
+      """)
+        
+        

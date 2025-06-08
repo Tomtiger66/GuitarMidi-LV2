@@ -1,0 +1,483 @@
+       # The full description of the plugin is in this file, which is linked to from
+# `manifest.ttl`.  This is done so the host only needs to scan the relatively
+# small `manifest.ttl` files to quickly discover all plugins.
+
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
+
+# First the type of the plugin is described.  All plugins must explicitly list
+# `lv2:Plugin` as a type.  A more specific type should also be given, where
+# applicable, so hosts can present a nicer UI for loading plugins.  Note that
+# this URI is the identifier of the plugin, so if it does not match the one in
+# `manifest.ttl`, the host will not discover the plugin data at all.
+<http://github.com/geraldmwangi/GuitarMidi-LV2>
+        a lv2:Plugin ,
+                lv2:AmplifierPlugin ;
+        lv2:project <http://lv2plug.in/ns/lv2> ;
+        doap:name "Guitar Midi";
+        doap:license <http://opensource.org/licenses/isc> ;
+        lv2:optionalFeature lv2:hardRTCapable ;
+        lv2:port [
+                a lv2:AudioPort ,
+                        lv2:InputPort ;
+                lv2:index 0 ;
+                lv2:symbol "in" ;
+                lv2:name "In"
+        ] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 1 ;
+    lv2:symbol "filter_0_0" ;
+    lv2:name "String 0 Filter 0"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 2 ;
+    lv2:symbol "filter_0_1" ;
+    lv2:name "String 0 Filter 1"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 3 ;
+    lv2:symbol "filter_0_2" ;
+    lv2:name "String 0 Filter 2"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 4 ;
+    lv2:symbol "filter_0_3" ;
+    lv2:name "String 0 Filter 3"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 5 ;
+    lv2:symbol "filter_0_4" ;
+    lv2:name "String 0 Filter 4"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 6 ;
+    lv2:symbol "filter_0_5" ;
+    lv2:name "String 0 Filter 5"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 7 ;
+    lv2:symbol "filter_0_6" ;
+    lv2:name "String 0 Filter 6"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 8 ;
+    lv2:symbol "filter_0_7" ;
+    lv2:name "String 0 Filter 7"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 9 ;
+    lv2:symbol "filter_0_8" ;
+    lv2:name "String 0 Filter 8"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 10 ;
+    lv2:symbol "filter_0_9" ;
+    lv2:name "String 0 Filter 9"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 11 ;
+    lv2:symbol "filter_0_10" ;
+    lv2:name "String 0 Filter 10"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 12 ;
+    lv2:symbol "filter_0_11" ;
+    lv2:name "String 0 Filter 11"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 13 ;
+    lv2:symbol "filter_1_0" ;
+    lv2:name "String 1 Filter 0"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 14 ;
+    lv2:symbol "filter_1_1" ;
+    lv2:name "String 1 Filter 1"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 15 ;
+    lv2:symbol "filter_1_2" ;
+    lv2:name "String 1 Filter 2"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 16 ;
+    lv2:symbol "filter_1_3" ;
+    lv2:name "String 1 Filter 3"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 17 ;
+    lv2:symbol "filter_1_4" ;
+    lv2:name "String 1 Filter 4"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 18 ;
+    lv2:symbol "filter_1_5" ;
+    lv2:name "String 1 Filter 5"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 19 ;
+    lv2:symbol "filter_1_6" ;
+    lv2:name "String 1 Filter 6"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 20 ;
+    lv2:symbol "filter_1_7" ;
+    lv2:name "String 1 Filter 7"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 21 ;
+    lv2:symbol "filter_1_8" ;
+    lv2:name "String 1 Filter 8"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 22 ;
+    lv2:symbol "filter_1_9" ;
+    lv2:name "String 1 Filter 9"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 23 ;
+    lv2:symbol "filter_1_10" ;
+    lv2:name "String 1 Filter 10"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 24 ;
+    lv2:symbol "filter_1_11" ;
+    lv2:name "String 1 Filter 11"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 25 ;
+    lv2:symbol "filter_2_0" ;
+    lv2:name "String 2 Filter 0"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 26 ;
+    lv2:symbol "filter_2_1" ;
+    lv2:name "String 2 Filter 1"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 27 ;
+    lv2:symbol "filter_2_2" ;
+    lv2:name "String 2 Filter 2"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 28 ;
+    lv2:symbol "filter_2_3" ;
+    lv2:name "String 2 Filter 3"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 29 ;
+    lv2:symbol "filter_2_4" ;
+    lv2:name "String 2 Filter 4"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 30 ;
+    lv2:symbol "filter_2_5" ;
+    lv2:name "String 2 Filter 5"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 31 ;
+    lv2:symbol "filter_2_6" ;
+    lv2:name "String 2 Filter 6"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 32 ;
+    lv2:symbol "filter_2_7" ;
+    lv2:name "String 2 Filter 7"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 33 ;
+    lv2:symbol "filter_2_8" ;
+    lv2:name "String 2 Filter 8"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 34 ;
+    lv2:symbol "filter_2_9" ;
+    lv2:name "String 2 Filter 9"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 35 ;
+    lv2:symbol "filter_2_10" ;
+    lv2:name "String 2 Filter 10"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 36 ;
+    lv2:symbol "filter_2_11" ;
+    lv2:name "String 2 Filter 11"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 37 ;
+    lv2:symbol "filter_3_0" ;
+    lv2:name "String 3 Filter 0"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 38 ;
+    lv2:symbol "filter_3_1" ;
+    lv2:name "String 3 Filter 1"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 39 ;
+    lv2:symbol "filter_3_2" ;
+    lv2:name "String 3 Filter 2"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 40 ;
+    lv2:symbol "filter_3_3" ;
+    lv2:name "String 3 Filter 3"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 41 ;
+    lv2:symbol "filter_3_4" ;
+    lv2:name "String 3 Filter 4"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 42 ;
+    lv2:symbol "filter_3_5" ;
+    lv2:name "String 3 Filter 5"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 43 ;
+    lv2:symbol "filter_3_6" ;
+    lv2:name "String 3 Filter 6"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 44 ;
+    lv2:symbol "filter_3_7" ;
+    lv2:name "String 3 Filter 7"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 45 ;
+    lv2:symbol "filter_3_8" ;
+    lv2:name "String 3 Filter 8"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 46 ;
+    lv2:symbol "filter_3_9" ;
+    lv2:name "String 3 Filter 9"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 47 ;
+    lv2:symbol "filter_3_10" ;
+    lv2:name "String 3 Filter 10"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 48 ;
+    lv2:symbol "filter_3_11" ;
+    lv2:name "String 3 Filter 11"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 49 ;
+    lv2:symbol "filter_4_0" ;
+    lv2:name "String 4 Filter 0"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 50 ;
+    lv2:symbol "filter_4_1" ;
+    lv2:name "String 4 Filter 1"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 51 ;
+    lv2:symbol "filter_4_2" ;
+    lv2:name "String 4 Filter 2"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 52 ;
+    lv2:symbol "filter_4_3" ;
+    lv2:name "String 4 Filter 3"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 53 ;
+    lv2:symbol "filter_4_4" ;
+    lv2:name "String 4 Filter 4"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 54 ;
+    lv2:symbol "filter_4_5" ;
+    lv2:name "String 4 Filter 5"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 55 ;
+    lv2:symbol "filter_4_6" ;
+    lv2:name "String 4 Filter 6"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 56 ;
+    lv2:symbol "filter_4_7" ;
+    lv2:name "String 4 Filter 7"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 57 ;
+    lv2:symbol "filter_4_8" ;
+    lv2:name "String 4 Filter 8"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 58 ;
+    lv2:symbol "filter_4_9" ;
+    lv2:name "String 4 Filter 9"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 59 ;
+    lv2:symbol "filter_4_10" ;
+    lv2:name "String 4 Filter 10"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 60 ;
+    lv2:symbol "filter_4_11" ;
+    lv2:name "String 4 Filter 11"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 61 ;
+    lv2:symbol "filter_5_0" ;
+    lv2:name "String 5 Filter 0"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 62 ;
+    lv2:symbol "filter_5_1" ;
+    lv2:name "String 5 Filter 1"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 63 ;
+    lv2:symbol "filter_5_2" ;
+    lv2:name "String 5 Filter 2"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 64 ;
+    lv2:symbol "filter_5_3" ;
+    lv2:name "String 5 Filter 3"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 65 ;
+    lv2:symbol "filter_5_4" ;
+    lv2:name "String 5 Filter 4"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 66 ;
+    lv2:symbol "filter_5_5" ;
+    lv2:name "String 5 Filter 5"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 67 ;
+    lv2:symbol "filter_5_6" ;
+    lv2:name "String 5 Filter 6"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 68 ;
+    lv2:symbol "filter_5_7" ;
+    lv2:name "String 5 Filter 7"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 69 ;
+    lv2:symbol "filter_5_8" ;
+    lv2:name "String 5 Filter 8"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 70 ;
+    lv2:symbol "filter_5_9" ;
+    lv2:name "String 5 Filter 9"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 71 ;
+    lv2:symbol "filter_5_10" ;
+    lv2:name "String 5 Filter 10"
+] ,
+[
+    a lv2:OutputPort, lv2:AudioPort ;
+    lv2:index 72 ;
+    lv2:symbol "filter_5_11" ;
+    lv2:name "String 5 Filter 11"
+] ,
+[
+        a lv2:OutputPort ,
+            atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports midi:MidiEvent ;
+        lv2:index 2 ;
+        lv2:symbol "midiout" ;
+        lv2:name "MidiOut"
+    ],[
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "polyphonic" ;
+        lv2:name "Polyphonic Detection" ;
+        lv2:portProperty lv2:toggled ;
+        lv2:default 0.0 ;
+        lv2:minimum 0.0 ;
+        lv2:maximum 1.0 ;
+    ] .
