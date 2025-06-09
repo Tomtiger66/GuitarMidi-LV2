@@ -72,55 +72,20 @@ FretBoard::FretBoard(LV2_URID_Map *map, float samplerate)
     // m_noteClassifiers.push_back(make_shared<NoteClassifier>(map,samplerate, 415.30,ebw));
     // m_noteClassifiers.push_back(make_shared<NoteClassifier>(map,samplerate, 440,ebw));
 
-    for (int ni = 1; ni <= 8; ni++)
-    {
-        float n = ((float)ni);
-        addNoteClassifier(82.41, n, map, samplerate);  // E
-        addNoteClassifier(87.31, n, map, samplerate);  // F
-        addNoteClassifier(92.50, n, map, samplerate);  // F#
-        addNoteClassifier(98.00, n, map, samplerate);  // G
-        addNoteClassifier(103.83, n, map, samplerate); // G#
-        addNoteClassifier(110, n, map, samplerate);    // A
-        addNoteClassifier(116.54, n, map, samplerate); // A#
-        addNoteClassifier(123.47, n, map, samplerate); // B
-        addNoteClassifier(130.81, n, map, samplerate); // C
-        addNoteClassifier(138.59, n, map, samplerate); // C#
-        addNoteClassifier(146.83, n, map, samplerate); // D
-        addNoteClassifier(155.56, n, map, samplerate); // D#
-        addNoteClassifier(164.81, n, map, samplerate);
-        addNoteClassifier(174.61, n, map, samplerate);
-        addNoteClassifier(185, n, map, samplerate);
-        addNoteClassifier(196, n, map, samplerate);
-        addNoteClassifier(207.65, n, map, samplerate);
-        addNoteClassifier(220, n, map, samplerate);
-        addNoteClassifier(233.08, n, map, samplerate);
-        addNoteClassifier(246.94, n, map, samplerate);
-        addNoteClassifier(261.63, n, map, samplerate);
-        addNoteClassifier(277.18, n, map, samplerate);
-        addNoteClassifier(293.66, n, map, samplerate);
-        addNoteClassifier(311.13, n, map, samplerate);
-        addNoteClassifier(329.63, n, map, samplerate);
+    m_frets.push_back(Fret(82,11,147,196,247,329,map,samplerate));
+    m_frets.push_back(Fret(87,117,156,208,262,349,map,samplerate));
+    m_frets.push_back(Fret(92,123,165,220,277,370,map,samplerate));
+    m_frets.push_back(Fret(98,131,175,233,294,392,map,samplerate));
+    m_frets.push_back(Fret(104,139,185,247,311,415,map,samplerate));
+    m_frets.push_back(Fret(110,147,196,262,329,440,map,samplerate));
+    m_frets.push_back(Fret(117,156,208,277,349,466,map,samplerate));
+    m_frets.push_back(Fret(123,165,220,294,370,494,map,samplerate));
+    m_frets.push_back(Fret(131,175,233,311,392,523,map,samplerate));
+    m_frets.push_back(Fret(139,185,247,329,415,554,map,samplerate));
+    m_frets.push_back(Fret(147,196,262,349,440,587,map,samplerate));
+    m_frets.push_back(Fret(156,208,277,370,466,622,map,samplerate));
 
-        addNoteClassifier(349.23, n, map, samplerate);
-        addNoteClassifier(369.99, n, map, samplerate);
-        addNoteClassifier(392.00, n, map, samplerate);
-        addNoteClassifier(415.30, n, map, samplerate);
-        addNoteClassifier(440.00, n, map, samplerate);
-        addNoteClassifier(466.16, n, map, samplerate);
-        addNoteClassifier(493.88, n, map, samplerate);
-        addNoteClassifier(523.25, n, map, samplerate);
-        addNoteClassifier(554.37, n, map, samplerate);
-        addNoteClassifier(587.33, n, map, samplerate);
-        addNoteClassifier(622.25, n, map, samplerate);
-        addNoteClassifier(659.26, n, map, samplerate);
-        addNoteClassifier(698.46, n, map, samplerate);
-        addNoteClassifier(739.99, n, map, samplerate);
-        addNoteClassifier(783.99, n, map, samplerate);
-        addNoteClassifier(830.61, n, map, samplerate);
-        addNoteClassifier(880.00, n, map, samplerate);
-        addNoteClassifier(932.33, n, map, samplerate);
-        addNoteClassifier(987.77, n, map, samplerate);
-    }
+    m_frets.push_back(Fret(165,220,294,392,494,659,map,samplerate));
 
     // for (auto group : m_harmonicGroups)
     // {
@@ -130,42 +95,15 @@ FretBoard::FretBoard(LV2_URID_Map *map, float samplerate)
     //     }
     // }
 }
-// void FretBoard::addNoteClassifier(float freq, float mult, LV2_URID_Map *map, float samplerate)
-// {
-//     freq *= mult;
-//     if (mult == 1 || freq > 987.77)
-//     {
-//         //Frequencies <100 Hz need higher resolution, so filters with lower bandwidth are applied
-//         float bw = (freq<100)?5:10;
 
-//         auto notecl = make_shared<NoteClassifier>(map, samplerate, freq, bw);
-//         m_noteClassifiers.push_back(notecl);
-//         m_harmonicGroups[freq] = make_shared<HarmonicGroup>();
-//         m_harmonicGroups[freq]->addNoteClassifier(notecl);
-//     }
-// }
 
-void FretBoard::addNoteClassifier(float freq, float mult, LV2_URID_Map *map, float samplerate)
-{
-    if (mult==1){
-        m_harmonicGroups[freq] = make_shared<HarmonicGroup>();
-    }
-    float f_mult=freq * mult;
-    // Frequencies <100 Hz need higher resolution, so filters with lower bandwidth are applied
-    float bw = (f_mult < 120) ? 2.5 : 5;
-    bw = (f_mult > 200) ? 10: 5;
 
-    auto notecl = make_shared<NoteClassifier>(map, samplerate, f_mult, bw);
-    m_noteClassifiers.push_back(notecl);
-    // m_harmonicGroups[freq]->addNoteClassifier(notecl);
-}
 
 
 void FretBoard::setAudioInput(const float *input)
 {
-    for (auto notecl : m_noteClassifiers)
-    {
-        notecl->input = input;
+    for (int n=0;n<m_frets.size();n++){
+        m_frets[n].setAudioInput(input);
     }
 }
 
@@ -180,34 +118,17 @@ void FretBoard::setAudioOutput(float *output)
 
 void FretBoard::setMidiOutput(LV2_Atom_Sequence *output)
 {
-    if (m_midioutput)
-    {
-        m_midioutput->setMidiOutput(output);
 
-        for (auto notecl : m_noteClassifiers)
-        {
-            notecl->setMidiOutput(m_midioutput);
-        }
-    }
 }
 
 void FretBoard::initialize()
 {
-    if (m_midioutput)
-        m_midioutput->initializeSequence();
-    omp_set_num_threads(1);
-    for (auto notecl : m_noteClassifiers)
-    {
-        notecl->initialize();
-    }
+
 }
 
 void FretBoard::finalize()
 {
-    for (auto notecl : m_noteClassifiers)
-    {
-        notecl->finalize();
-    }
+
 }
 
 void FretBoard::process(int nsamples)

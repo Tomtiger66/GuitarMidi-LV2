@@ -22,6 +22,10 @@ class HarmonicGroup
 
     }
 
+    void setOutput(int harmonic,float * buffer){
+        
+    }
+
 
 
 

@@ -53,7 +53,7 @@ private:
 
     shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
 
-    void addNoteClassifier(float freq,float mult,LV2_URID_Map *map, float samplerate);
+
 
 public:
     /**
@@ -72,10 +72,10 @@ public:
      */
     void setAudioInput(const float *input);
 
-    vector<shared_ptr<NoteClassifier>>& getNoteClassifiers()
-    {
-        return m_noteClassifiers;
-    }
+    // vector<shared_ptr<NoteClassifier>>& getNoteClassifiers()
+    // {
+    //     return m_noteClassifiers;
+    // }
 
     /**
      * @brief Set the Audio Output buffer. This buffer is only used as an internal buffer until I know how to query lv2 for the framebuffersize
