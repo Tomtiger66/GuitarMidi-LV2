@@ -2,35 +2,27 @@
 #include <noteclassifier.hpp>
 #include <iostream>
 using namespace std;
-
+#define NUMOVERTONES 3
 class HarmonicGroup
 {
     private:
-    vector<shared_ptr<NoteClassifier> > m_noteClassifiers;
-    bool m_oldState;
-    float* m_buffer;
-    int m_bufferSize;
+    vector<NoteClassifier > m_noteClassifiers;
+    double m_fundamentalfreq;
     public:
 
-    float* audioBuffer;
-    HarmonicGroup();
+ 
+    HarmonicGroup(LV2_URID_Map *map, float samplerate, float center = 110.0, float bandwidth = 20, float passbandatten = 2);
     ~HarmonicGroup();
 
-    void addNoteClassifier(shared_ptr<NoteClassifier> notecl);
+    void setAudioInput(const float *input){
+        for (int n=0;n<m_noteClassifiers.size();n++)
+        {
+            m_noteClassifiers[n].input=input;
+        }
 
-    void process(int nsamples);
-
-    bool getState(){
-        return m_oldState;
     }
 
-    void block_midi(){
-        m_noteClassifiers[0]->block_midinote=true;
-    }
 
-    void unblock_midi(){
-        m_noteClassifiers[0]->block_midinote=false;
-    }
 
 
 

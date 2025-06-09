@@ -157,7 +157,7 @@ void FretBoard::addNoteClassifier(float freq, float mult, LV2_URID_Map *map, flo
 
     auto notecl = make_shared<NoteClassifier>(map, samplerate, f_mult, bw);
     m_noteClassifiers.push_back(notecl);
-    m_harmonicGroups[freq]->addNoteClassifier(notecl);
+    // m_harmonicGroups[freq]->addNoteClassifier(notecl);
 }
 
 
@@ -171,7 +171,7 @@ void FretBoard::setAudioInput(const float *input)
 
 void FretBoard::setAudioOutput(float *output)
 {
-    m_harmonicGroups[196]->audioBuffer = output;
+    // m_harmonicGroups[196]->audioBuffer = output;
     // for (auto notecl : m_noteClassifiers)
     // {
     //     notecl->m_buffer = output;
@@ -212,51 +212,6 @@ void FretBoard::finalize()
 
 void FretBoard::process(int nsamples)
 {
-    for (auto notecl : m_noteClassifiers)
-        notecl->block_midinote = false;
-#ifdef WITH_TRACING_INFO
-    timespec starttimer = timer_start();
-#endif
-    m_midioutput->initializeSequence();
-// #pragma omp parallel for 
-    for (int n=0;n<m_noteClassifiers.size();n++)
-    {
-        auto notecl=m_noteClassifiers[n];
-        notecl->process(nsamples);
-
-       
-
-        // notecl->sendMidiNote(nsamples);
-    }
-#ifdef WITH_TRACING_INFO
-    lv2_log_trace(&g_logger, "Number of Overtonefilters: %ld. time: %ld\n ", m_noteClassifiers.size(), timer_end(starttimer));
-    starttimer = timer_start();
-#endif
 
 
-    //  if (fraction_ringing < 0.15)
-    if(*m_polyphonic_detection==1)
-        for (auto group : m_harmonicGroups)
-        {
-            group.second->process(nsamples);
-        }
-    else{
-        bool block_higher=false;
-        for (auto group : m_harmonicGroups)
-        {
-            if (block_higher)
-                group.second->block_midi();
-            group.second->process(nsamples);
-            if(group.second->getState())
-                block_higher=true;
-        }       
-    }
-#ifdef WITH_TRACING_INFO
-    lv2_log_trace(&g_logger, "Group processing: %ld \n", timer_end(starttimer));
-#endif
-    //  else
-    // if(fraction_ringing)
-    //     cout << "Attack: "<<fraction_ringing << endl;
-    for (auto notecl : m_noteClassifiers)
-        notecl->block_midinote = false;
 }

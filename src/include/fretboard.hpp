@@ -19,7 +19,7 @@
 #pragma once
 #include <time.h>
 #include <noteclassifier.hpp>
-#include <harmonicgroup.hpp>
+#include <fret.hpp>
 #include <memory>
 #include <vector>
 #include <map>
@@ -49,9 +49,7 @@ private:
      */
    
 
-    vector<shared_ptr<NoteClassifier>> m_noteClassifiers;
-
-    map<float,shared_ptr<HarmonicGroup> > m_harmonicGroups;
+    vector<Fret> m_frets;
 
     shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
 
