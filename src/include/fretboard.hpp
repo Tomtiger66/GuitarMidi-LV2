@@ -24,12 +24,15 @@
 #include <vector>
 #include <map>
 
+
+#define NUM_FRETS 12
+#define PORT_INDEX_OFFSET 3
+#define NUM_STRINGS 6
 typedef enum
 {
     FRETBOARD_INPUT = 0,
-    FRETBOARD_OUTPUT = 1,
-    FRETBOARD_MIDIOUTPUT=2,
-    FRETBOARD_POLYPHONIC_TOGGLE=3
+    FRETBOARD_MIDIOUTPUT=1,
+    FRETBOARD_POLYPHONIC_TOGGLE=2
 } PortIndex;
 using namespace std;
 
@@ -82,7 +85,7 @@ public:
      * 
      * @param output 
      */
-    void setAudioOutput(float *output);
+    void setAudioOutput(int portindex,float *output);
 
     /**
      * @brief Set the Midi Output buffer

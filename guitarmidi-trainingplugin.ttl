@@ -33,1461 +33,1461 @@
             lv2:symbol "in" ;
             lv2:name "In"
         ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 1 ;
-            lv2:symbol "filter_00_0" ;
-            lv2:name "String 0 Fret 0 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 2 ;
-            lv2:symbol "filter_01_0" ;
-            lv2:name "String 0 Fret 0 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 3 ;
-            lv2:symbol "filter_02_0" ;
-            lv2:name "String 0 Fret 0 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 4 ;
-            lv2:symbol "filter_03_0" ;
-            lv2:name "String 0 Fret 0 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 5 ;
-            lv2:symbol "filter_10_0" ;
-            lv2:name "String 1 Fret 0 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 6 ;
-            lv2:symbol "filter_11_0" ;
-            lv2:name "String 1 Fret 0 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 7 ;
-            lv2:symbol "filter_12_0" ;
-            lv2:name "String 1 Fret 0 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 8 ;
-            lv2:symbol "filter_13_0" ;
-            lv2:name "String 1 Fret 0 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 9 ;
-            lv2:symbol "filter_20_0" ;
-            lv2:name "String 2 Fret 0 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 10 ;
-            lv2:symbol "filter_21_0" ;
-            lv2:name "String 2 Fret 0 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 11 ;
-            lv2:symbol "filter_22_0" ;
-            lv2:name "String 2 Fret 0 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 12 ;
-            lv2:symbol "filter_23_0" ;
-            lv2:name "String 2 Fret 0 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 13 ;
-            lv2:symbol "filter_30_0" ;
-            lv2:name "String 3 Fret 0 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 14 ;
-            lv2:symbol "filter_31_0" ;
-            lv2:name "String 3 Fret 0 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 15 ;
-            lv2:symbol "filter_32_0" ;
-            lv2:name "String 3 Fret 0 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 16 ;
-            lv2:symbol "filter_33_0" ;
-            lv2:name "String 3 Fret 0 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 17 ;
-            lv2:symbol "filter_40_0" ;
-            lv2:name "String 4 Fret 0 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 18 ;
-            lv2:symbol "filter_41_0" ;
-            lv2:name "String 4 Fret 0 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 19 ;
-            lv2:symbol "filter_42_0" ;
-            lv2:name "String 4 Fret 0 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 20 ;
-            lv2:symbol "filter_43_0" ;
-            lv2:name "String 4 Fret 0 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 21 ;
-            lv2:symbol "filter_50_0" ;
-            lv2:name "String 5 Fret 0 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 22 ;
-            lv2:symbol "filter_51_0" ;
-            lv2:name "String 5 Fret 0 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 23 ;
-            lv2:symbol "filter_52_0" ;
-            lv2:name "String 5 Fret 0 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 24 ;
-            lv2:symbol "filter_53_0" ;
-            lv2:name "String 5 Fret 0 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 25 ;
-            lv2:symbol "filter_00_1" ;
-            lv2:name "String 0 Fret 1 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 26 ;
-            lv2:symbol "filter_01_1" ;
-            lv2:name "String 0 Fret 1 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 27 ;
-            lv2:symbol "filter_02_1" ;
-            lv2:name "String 0 Fret 1 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 28 ;
-            lv2:symbol "filter_03_1" ;
-            lv2:name "String 0 Fret 1 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 29 ;
-            lv2:symbol "filter_10_1" ;
-            lv2:name "String 1 Fret 1 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 30 ;
-            lv2:symbol "filter_11_1" ;
-            lv2:name "String 1 Fret 1 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 31 ;
-            lv2:symbol "filter_12_1" ;
-            lv2:name "String 1 Fret 1 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 32 ;
-            lv2:symbol "filter_13_1" ;
-            lv2:name "String 1 Fret 1 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 33 ;
-            lv2:symbol "filter_20_1" ;
-            lv2:name "String 2 Fret 1 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 34 ;
-            lv2:symbol "filter_21_1" ;
-            lv2:name "String 2 Fret 1 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 35 ;
-            lv2:symbol "filter_22_1" ;
-            lv2:name "String 2 Fret 1 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 36 ;
-            lv2:symbol "filter_23_1" ;
-            lv2:name "String 2 Fret 1 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 37 ;
-            lv2:symbol "filter_30_1" ;
-            lv2:name "String 3 Fret 1 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 38 ;
-            lv2:symbol "filter_31_1" ;
-            lv2:name "String 3 Fret 1 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 39 ;
-            lv2:symbol "filter_32_1" ;
-            lv2:name "String 3 Fret 1 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 40 ;
-            lv2:symbol "filter_33_1" ;
-            lv2:name "String 3 Fret 1 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 41 ;
-            lv2:symbol "filter_40_1" ;
-            lv2:name "String 4 Fret 1 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 42 ;
-            lv2:symbol "filter_41_1" ;
-            lv2:name "String 4 Fret 1 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 43 ;
-            lv2:symbol "filter_42_1" ;
-            lv2:name "String 4 Fret 1 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 44 ;
-            lv2:symbol "filter_43_1" ;
-            lv2:name "String 4 Fret 1 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 45 ;
-            lv2:symbol "filter_50_1" ;
-            lv2:name "String 5 Fret 1 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 46 ;
-            lv2:symbol "filter_51_1" ;
-            lv2:name "String 5 Fret 1 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 47 ;
-            lv2:symbol "filter_52_1" ;
-            lv2:name "String 5 Fret 1 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 48 ;
-            lv2:symbol "filter_53_1" ;
-            lv2:name "String 5 Fret 1 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 49 ;
-            lv2:symbol "filter_00_2" ;
-            lv2:name "String 0 Fret 2 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 50 ;
-            lv2:symbol "filter_01_2" ;
-            lv2:name "String 0 Fret 2 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 51 ;
-            lv2:symbol "filter_02_2" ;
-            lv2:name "String 0 Fret 2 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 52 ;
-            lv2:symbol "filter_03_2" ;
-            lv2:name "String 0 Fret 2 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 53 ;
-            lv2:symbol "filter_10_2" ;
-            lv2:name "String 1 Fret 2 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 54 ;
-            lv2:symbol "filter_11_2" ;
-            lv2:name "String 1 Fret 2 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 55 ;
-            lv2:symbol "filter_12_2" ;
-            lv2:name "String 1 Fret 2 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 56 ;
-            lv2:symbol "filter_13_2" ;
-            lv2:name "String 1 Fret 2 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 57 ;
-            lv2:symbol "filter_20_2" ;
-            lv2:name "String 2 Fret 2 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 58 ;
-            lv2:symbol "filter_21_2" ;
-            lv2:name "String 2 Fret 2 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 59 ;
-            lv2:symbol "filter_22_2" ;
-            lv2:name "String 2 Fret 2 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 60 ;
-            lv2:symbol "filter_23_2" ;
-            lv2:name "String 2 Fret 2 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 61 ;
-            lv2:symbol "filter_30_2" ;
-            lv2:name "String 3 Fret 2 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 62 ;
-            lv2:symbol "filter_31_2" ;
-            lv2:name "String 3 Fret 2 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 63 ;
-            lv2:symbol "filter_32_2" ;
-            lv2:name "String 3 Fret 2 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 64 ;
-            lv2:symbol "filter_33_2" ;
-            lv2:name "String 3 Fret 2 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 65 ;
-            lv2:symbol "filter_40_2" ;
-            lv2:name "String 4 Fret 2 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 66 ;
-            lv2:symbol "filter_41_2" ;
-            lv2:name "String 4 Fret 2 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 67 ;
-            lv2:symbol "filter_42_2" ;
-            lv2:name "String 4 Fret 2 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 68 ;
-            lv2:symbol "filter_43_2" ;
-            lv2:name "String 4 Fret 2 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 69 ;
-            lv2:symbol "filter_50_2" ;
-            lv2:name "String 5 Fret 2 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 70 ;
-            lv2:symbol "filter_51_2" ;
-            lv2:name "String 5 Fret 2 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 71 ;
-            lv2:symbol "filter_52_2" ;
-            lv2:name "String 5 Fret 2 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 72 ;
-            lv2:symbol "filter_53_2" ;
-            lv2:name "String 5 Fret 2 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 73 ;
-            lv2:symbol "filter_00_3" ;
-            lv2:name "String 0 Fret 3 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 74 ;
-            lv2:symbol "filter_01_3" ;
-            lv2:name "String 0 Fret 3 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 75 ;
-            lv2:symbol "filter_02_3" ;
-            lv2:name "String 0 Fret 3 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 76 ;
-            lv2:symbol "filter_03_3" ;
-            lv2:name "String 0 Fret 3 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 77 ;
-            lv2:symbol "filter_10_3" ;
-            lv2:name "String 1 Fret 3 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 78 ;
-            lv2:symbol "filter_11_3" ;
-            lv2:name "String 1 Fret 3 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 79 ;
-            lv2:symbol "filter_12_3" ;
-            lv2:name "String 1 Fret 3 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 80 ;
-            lv2:symbol "filter_13_3" ;
-            lv2:name "String 1 Fret 3 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 81 ;
-            lv2:symbol "filter_20_3" ;
-            lv2:name "String 2 Fret 3 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 82 ;
-            lv2:symbol "filter_21_3" ;
-            lv2:name "String 2 Fret 3 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 83 ;
-            lv2:symbol "filter_22_3" ;
-            lv2:name "String 2 Fret 3 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 84 ;
-            lv2:symbol "filter_23_3" ;
-            lv2:name "String 2 Fret 3 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 85 ;
-            lv2:symbol "filter_30_3" ;
-            lv2:name "String 3 Fret 3 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 86 ;
-            lv2:symbol "filter_31_3" ;
-            lv2:name "String 3 Fret 3 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 87 ;
-            lv2:symbol "filter_32_3" ;
-            lv2:name "String 3 Fret 3 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 88 ;
-            lv2:symbol "filter_33_3" ;
-            lv2:name "String 3 Fret 3 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 89 ;
-            lv2:symbol "filter_40_3" ;
-            lv2:name "String 4 Fret 3 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 90 ;
-            lv2:symbol "filter_41_3" ;
-            lv2:name "String 4 Fret 3 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 91 ;
-            lv2:symbol "filter_42_3" ;
-            lv2:name "String 4 Fret 3 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 92 ;
-            lv2:symbol "filter_43_3" ;
-            lv2:name "String 4 Fret 3 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 93 ;
-            lv2:symbol "filter_50_3" ;
-            lv2:name "String 5 Fret 3 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 94 ;
-            lv2:symbol "filter_51_3" ;
-            lv2:name "String 5 Fret 3 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 95 ;
-            lv2:symbol "filter_52_3" ;
-            lv2:name "String 5 Fret 3 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 96 ;
-            lv2:symbol "filter_53_3" ;
-            lv2:name "String 5 Fret 3 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 97 ;
-            lv2:symbol "filter_00_4" ;
-            lv2:name "String 0 Fret 4 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 98 ;
-            lv2:symbol "filter_01_4" ;
-            lv2:name "String 0 Fret 4 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 99 ;
-            lv2:symbol "filter_02_4" ;
-            lv2:name "String 0 Fret 4 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 100 ;
-            lv2:symbol "filter_03_4" ;
-            lv2:name "String 0 Fret 4 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 101 ;
-            lv2:symbol "filter_10_4" ;
-            lv2:name "String 1 Fret 4 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 102 ;
-            lv2:symbol "filter_11_4" ;
-            lv2:name "String 1 Fret 4 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 103 ;
-            lv2:symbol "filter_12_4" ;
-            lv2:name "String 1 Fret 4 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 104 ;
-            lv2:symbol "filter_13_4" ;
-            lv2:name "String 1 Fret 4 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 105 ;
-            lv2:symbol "filter_20_4" ;
-            lv2:name "String 2 Fret 4 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 106 ;
-            lv2:symbol "filter_21_4" ;
-            lv2:name "String 2 Fret 4 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 107 ;
-            lv2:symbol "filter_22_4" ;
-            lv2:name "String 2 Fret 4 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 108 ;
-            lv2:symbol "filter_23_4" ;
-            lv2:name "String 2 Fret 4 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 109 ;
-            lv2:symbol "filter_30_4" ;
-            lv2:name "String 3 Fret 4 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 110 ;
-            lv2:symbol "filter_31_4" ;
-            lv2:name "String 3 Fret 4 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 111 ;
-            lv2:symbol "filter_32_4" ;
-            lv2:name "String 3 Fret 4 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 112 ;
-            lv2:symbol "filter_33_4" ;
-            lv2:name "String 3 Fret 4 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 113 ;
-            lv2:symbol "filter_40_4" ;
-            lv2:name "String 4 Fret 4 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 114 ;
-            lv2:symbol "filter_41_4" ;
-            lv2:name "String 4 Fret 4 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 115 ;
-            lv2:symbol "filter_42_4" ;
-            lv2:name "String 4 Fret 4 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 116 ;
-            lv2:symbol "filter_43_4" ;
-            lv2:name "String 4 Fret 4 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 117 ;
-            lv2:symbol "filter_50_4" ;
-            lv2:name "String 5 Fret 4 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 118 ;
-            lv2:symbol "filter_51_4" ;
-            lv2:name "String 5 Fret 4 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 119 ;
-            lv2:symbol "filter_52_4" ;
-            lv2:name "String 5 Fret 4 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 120 ;
-            lv2:symbol "filter_53_4" ;
-            lv2:name "String 5 Fret 4 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 121 ;
-            lv2:symbol "filter_00_5" ;
-            lv2:name "String 0 Fret 5 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 122 ;
-            lv2:symbol "filter_01_5" ;
-            lv2:name "String 0 Fret 5 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 123 ;
-            lv2:symbol "filter_02_5" ;
-            lv2:name "String 0 Fret 5 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 124 ;
-            lv2:symbol "filter_03_5" ;
-            lv2:name "String 0 Fret 5 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 125 ;
-            lv2:symbol "filter_10_5" ;
-            lv2:name "String 1 Fret 5 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 126 ;
-            lv2:symbol "filter_11_5" ;
-            lv2:name "String 1 Fret 5 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 127 ;
-            lv2:symbol "filter_12_5" ;
-            lv2:name "String 1 Fret 5 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 128 ;
-            lv2:symbol "filter_13_5" ;
-            lv2:name "String 1 Fret 5 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 129 ;
-            lv2:symbol "filter_20_5" ;
-            lv2:name "String 2 Fret 5 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 130 ;
-            lv2:symbol "filter_21_5" ;
-            lv2:name "String 2 Fret 5 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 131 ;
-            lv2:symbol "filter_22_5" ;
-            lv2:name "String 2 Fret 5 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 132 ;
-            lv2:symbol "filter_23_5" ;
-            lv2:name "String 2 Fret 5 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 133 ;
-            lv2:symbol "filter_30_5" ;
-            lv2:name "String 3 Fret 5 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 134 ;
-            lv2:symbol "filter_31_5" ;
-            lv2:name "String 3 Fret 5 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 135 ;
-            lv2:symbol "filter_32_5" ;
-            lv2:name "String 3 Fret 5 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 136 ;
-            lv2:symbol "filter_33_5" ;
-            lv2:name "String 3 Fret 5 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 137 ;
-            lv2:symbol "filter_40_5" ;
-            lv2:name "String 4 Fret 5 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 138 ;
-            lv2:symbol "filter_41_5" ;
-            lv2:name "String 4 Fret 5 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 139 ;
-            lv2:symbol "filter_42_5" ;
-            lv2:name "String 4 Fret 5 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 140 ;
-            lv2:symbol "filter_43_5" ;
-            lv2:name "String 4 Fret 5 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 141 ;
-            lv2:symbol "filter_50_5" ;
-            lv2:name "String 5 Fret 5 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 142 ;
-            lv2:symbol "filter_51_5" ;
-            lv2:name "String 5 Fret 5 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 143 ;
-            lv2:symbol "filter_52_5" ;
-            lv2:name "String 5 Fret 5 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 144 ;
-            lv2:symbol "filter_53_5" ;
-            lv2:name "String 5 Fret 5 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 145 ;
-            lv2:symbol "filter_00_6" ;
-            lv2:name "String 0 Fret 6 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 146 ;
-            lv2:symbol "filter_01_6" ;
-            lv2:name "String 0 Fret 6 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 147 ;
-            lv2:symbol "filter_02_6" ;
-            lv2:name "String 0 Fret 6 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 148 ;
-            lv2:symbol "filter_03_6" ;
-            lv2:name "String 0 Fret 6 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 149 ;
-            lv2:symbol "filter_10_6" ;
-            lv2:name "String 1 Fret 6 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 150 ;
-            lv2:symbol "filter_11_6" ;
-            lv2:name "String 1 Fret 6 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 151 ;
-            lv2:symbol "filter_12_6" ;
-            lv2:name "String 1 Fret 6 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 152 ;
-            lv2:symbol "filter_13_6" ;
-            lv2:name "String 1 Fret 6 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 153 ;
-            lv2:symbol "filter_20_6" ;
-            lv2:name "String 2 Fret 6 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 154 ;
-            lv2:symbol "filter_21_6" ;
-            lv2:name "String 2 Fret 6 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 155 ;
-            lv2:symbol "filter_22_6" ;
-            lv2:name "String 2 Fret 6 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 156 ;
-            lv2:symbol "filter_23_6" ;
-            lv2:name "String 2 Fret 6 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 157 ;
-            lv2:symbol "filter_30_6" ;
-            lv2:name "String 3 Fret 6 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 158 ;
-            lv2:symbol "filter_31_6" ;
-            lv2:name "String 3 Fret 6 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 159 ;
-            lv2:symbol "filter_32_6" ;
-            lv2:name "String 3 Fret 6 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 160 ;
-            lv2:symbol "filter_33_6" ;
-            lv2:name "String 3 Fret 6 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 161 ;
-            lv2:symbol "filter_40_6" ;
-            lv2:name "String 4 Fret 6 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 162 ;
-            lv2:symbol "filter_41_6" ;
-            lv2:name "String 4 Fret 6 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 163 ;
-            lv2:symbol "filter_42_6" ;
-            lv2:name "String 4 Fret 6 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 164 ;
-            lv2:symbol "filter_43_6" ;
-            lv2:name "String 4 Fret 6 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 165 ;
-            lv2:symbol "filter_50_6" ;
-            lv2:name "String 5 Fret 6 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 166 ;
-            lv2:symbol "filter_51_6" ;
-            lv2:name "String 5 Fret 6 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 167 ;
-            lv2:symbol "filter_52_6" ;
-            lv2:name "String 5 Fret 6 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 168 ;
-            lv2:symbol "filter_53_6" ;
-            lv2:name "String 5 Fret 6 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 169 ;
-            lv2:symbol "filter_00_7" ;
-            lv2:name "String 0 Fret 7 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 170 ;
-            lv2:symbol "filter_01_7" ;
-            lv2:name "String 0 Fret 7 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 171 ;
-            lv2:symbol "filter_02_7" ;
-            lv2:name "String 0 Fret 7 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 172 ;
-            lv2:symbol "filter_03_7" ;
-            lv2:name "String 0 Fret 7 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 173 ;
-            lv2:symbol "filter_10_7" ;
-            lv2:name "String 1 Fret 7 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 174 ;
-            lv2:symbol "filter_11_7" ;
-            lv2:name "String 1 Fret 7 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 175 ;
-            lv2:symbol "filter_12_7" ;
-            lv2:name "String 1 Fret 7 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 176 ;
-            lv2:symbol "filter_13_7" ;
-            lv2:name "String 1 Fret 7 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 177 ;
-            lv2:symbol "filter_20_7" ;
-            lv2:name "String 2 Fret 7 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 178 ;
-            lv2:symbol "filter_21_7" ;
-            lv2:name "String 2 Fret 7 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 179 ;
-            lv2:symbol "filter_22_7" ;
-            lv2:name "String 2 Fret 7 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 180 ;
-            lv2:symbol "filter_23_7" ;
-            lv2:name "String 2 Fret 7 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 181 ;
-            lv2:symbol "filter_30_7" ;
-            lv2:name "String 3 Fret 7 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 182 ;
-            lv2:symbol "filter_31_7" ;
-            lv2:name "String 3 Fret 7 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 183 ;
-            lv2:symbol "filter_32_7" ;
-            lv2:name "String 3 Fret 7 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 184 ;
-            lv2:symbol "filter_33_7" ;
-            lv2:name "String 3 Fret 7 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 185 ;
-            lv2:symbol "filter_40_7" ;
-            lv2:name "String 4 Fret 7 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 186 ;
-            lv2:symbol "filter_41_7" ;
-            lv2:name "String 4 Fret 7 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 187 ;
-            lv2:symbol "filter_42_7" ;
-            lv2:name "String 4 Fret 7 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 188 ;
-            lv2:symbol "filter_43_7" ;
-            lv2:name "String 4 Fret 7 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 189 ;
-            lv2:symbol "filter_50_7" ;
-            lv2:name "String 5 Fret 7 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 190 ;
-            lv2:symbol "filter_51_7" ;
-            lv2:name "String 5 Fret 7 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 191 ;
-            lv2:symbol "filter_52_7" ;
-            lv2:name "String 5 Fret 7 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 192 ;
-            lv2:symbol "filter_53_7" ;
-            lv2:name "String 5 Fret 7 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 193 ;
-            lv2:symbol "filter_00_8" ;
-            lv2:name "String 0 Fret 8 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 194 ;
-            lv2:symbol "filter_01_8" ;
-            lv2:name "String 0 Fret 8 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 195 ;
-            lv2:symbol "filter_02_8" ;
-            lv2:name "String 0 Fret 8 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 196 ;
-            lv2:symbol "filter_03_8" ;
-            lv2:name "String 0 Fret 8 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 197 ;
-            lv2:symbol "filter_10_8" ;
-            lv2:name "String 1 Fret 8 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 198 ;
-            lv2:symbol "filter_11_8" ;
-            lv2:name "String 1 Fret 8 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 199 ;
-            lv2:symbol "filter_12_8" ;
-            lv2:name "String 1 Fret 8 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 200 ;
-            lv2:symbol "filter_13_8" ;
-            lv2:name "String 1 Fret 8 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 201 ;
-            lv2:symbol "filter_20_8" ;
-            lv2:name "String 2 Fret 8 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 202 ;
-            lv2:symbol "filter_21_8" ;
-            lv2:name "String 2 Fret 8 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 203 ;
-            lv2:symbol "filter_22_8" ;
-            lv2:name "String 2 Fret 8 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 204 ;
-            lv2:symbol "filter_23_8" ;
-            lv2:name "String 2 Fret 8 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 205 ;
-            lv2:symbol "filter_30_8" ;
-            lv2:name "String 3 Fret 8 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 206 ;
-            lv2:symbol "filter_31_8" ;
-            lv2:name "String 3 Fret 8 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 207 ;
-            lv2:symbol "filter_32_8" ;
-            lv2:name "String 3 Fret 8 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 208 ;
-            lv2:symbol "filter_33_8" ;
-            lv2:name "String 3 Fret 8 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 209 ;
-            lv2:symbol "filter_40_8" ;
-            lv2:name "String 4 Fret 8 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 210 ;
-            lv2:symbol "filter_41_8" ;
-            lv2:name "String 4 Fret 8 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 211 ;
-            lv2:symbol "filter_42_8" ;
-            lv2:name "String 4 Fret 8 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 212 ;
-            lv2:symbol "filter_43_8" ;
-            lv2:name "String 4 Fret 8 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 213 ;
-            lv2:symbol "filter_50_8" ;
-            lv2:name "String 5 Fret 8 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 214 ;
-            lv2:symbol "filter_51_8" ;
-            lv2:name "String 5 Fret 8 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 215 ;
-            lv2:symbol "filter_52_8" ;
-            lv2:name "String 5 Fret 8 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 216 ;
-            lv2:symbol "filter_53_8" ;
-            lv2:name "String 5 Fret 8 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 217 ;
-            lv2:symbol "filter_00_9" ;
-            lv2:name "String 0 Fret 9 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 218 ;
-            lv2:symbol "filter_01_9" ;
-            lv2:name "String 0 Fret 9 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 219 ;
-            lv2:symbol "filter_02_9" ;
-            lv2:name "String 0 Fret 9 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 220 ;
-            lv2:symbol "filter_03_9" ;
-            lv2:name "String 0 Fret 9 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 221 ;
-            lv2:symbol "filter_10_9" ;
-            lv2:name "String 1 Fret 9 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 222 ;
-            lv2:symbol "filter_11_9" ;
-            lv2:name "String 1 Fret 9 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 223 ;
-            lv2:symbol "filter_12_9" ;
-            lv2:name "String 1 Fret 9 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 224 ;
-            lv2:symbol "filter_13_9" ;
-            lv2:name "String 1 Fret 9 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 225 ;
-            lv2:symbol "filter_20_9" ;
-            lv2:name "String 2 Fret 9 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 226 ;
-            lv2:symbol "filter_21_9" ;
-            lv2:name "String 2 Fret 9 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 227 ;
-            lv2:symbol "filter_22_9" ;
-            lv2:name "String 2 Fret 9 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 228 ;
-            lv2:symbol "filter_23_9" ;
-            lv2:name "String 2 Fret 9 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 229 ;
-            lv2:symbol "filter_30_9" ;
-            lv2:name "String 3 Fret 9 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 230 ;
-            lv2:symbol "filter_31_9" ;
-            lv2:name "String 3 Fret 9 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 231 ;
-            lv2:symbol "filter_32_9" ;
-            lv2:name "String 3 Fret 9 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 232 ;
-            lv2:symbol "filter_33_9" ;
-            lv2:name "String 3 Fret 9 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 233 ;
-            lv2:symbol "filter_40_9" ;
-            lv2:name "String 4 Fret 9 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 234 ;
-            lv2:symbol "filter_41_9" ;
-            lv2:name "String 4 Fret 9 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 235 ;
-            lv2:symbol "filter_42_9" ;
-            lv2:name "String 4 Fret 9 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 236 ;
-            lv2:symbol "filter_43_9" ;
-            lv2:name "String 4 Fret 9 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 237 ;
-            lv2:symbol "filter_50_9" ;
-            lv2:name "String 5 Fret 9 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 238 ;
-            lv2:symbol "filter_51_9" ;
-            lv2:name "String 5 Fret 9 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 239 ;
-            lv2:symbol "filter_52_9" ;
-            lv2:name "String 5 Fret 9 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 240 ;
-            lv2:symbol "filter_53_9" ;
-            lv2:name "String 5 Fret 9 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 241 ;
-            lv2:symbol "filter_00_10" ;
-            lv2:name "String 0 Fret 10 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 242 ;
-            lv2:symbol "filter_01_10" ;
-            lv2:name "String 0 Fret 10 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 243 ;
-            lv2:symbol "filter_02_10" ;
-            lv2:name "String 0 Fret 10 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 244 ;
-            lv2:symbol "filter_03_10" ;
-            lv2:name "String 0 Fret 10 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 245 ;
-            lv2:symbol "filter_10_10" ;
-            lv2:name "String 1 Fret 10 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 246 ;
-            lv2:symbol "filter_11_10" ;
-            lv2:name "String 1 Fret 10 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 247 ;
-            lv2:symbol "filter_12_10" ;
-            lv2:name "String 1 Fret 10 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 248 ;
-            lv2:symbol "filter_13_10" ;
-            lv2:name "String 1 Fret 10 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 249 ;
-            lv2:symbol "filter_20_10" ;
-            lv2:name "String 2 Fret 10 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 250 ;
-            lv2:symbol "filter_21_10" ;
-            lv2:name "String 2 Fret 10 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 251 ;
-            lv2:symbol "filter_22_10" ;
-            lv2:name "String 2 Fret 10 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 252 ;
-            lv2:symbol "filter_23_10" ;
-            lv2:name "String 2 Fret 10 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 253 ;
-            lv2:symbol "filter_30_10" ;
-            lv2:name "String 3 Fret 10 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 254 ;
-            lv2:symbol "filter_31_10" ;
-            lv2:name "String 3 Fret 10 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 255 ;
-            lv2:symbol "filter_32_10" ;
-            lv2:name "String 3 Fret 10 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 256 ;
-            lv2:symbol "filter_33_10" ;
-            lv2:name "String 3 Fret 10 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 257 ;
-            lv2:symbol "filter_40_10" ;
-            lv2:name "String 4 Fret 10 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 258 ;
-            lv2:symbol "filter_41_10" ;
-            lv2:name "String 4 Fret 10 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 259 ;
-            lv2:symbol "filter_42_10" ;
-            lv2:name "String 4 Fret 10 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 260 ;
-            lv2:symbol "filter_43_10" ;
-            lv2:name "String 4 Fret 10 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 261 ;
-            lv2:symbol "filter_50_10" ;
-            lv2:name "String 5 Fret 10 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 262 ;
-            lv2:symbol "filter_51_10" ;
-            lv2:name "String 5 Fret 10 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 263 ;
-            lv2:symbol "filter_52_10" ;
-            lv2:name "String 5 Fret 10 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 264 ;
-            lv2:symbol "filter_53_10" ;
-            lv2:name "String 5 Fret 10 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 265 ;
-            lv2:symbol "filter_00_11" ;
-            lv2:name "String 0 Fret 11 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 266 ;
-            lv2:symbol "filter_01_11" ;
-            lv2:name "String 0 Fret 11 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 267 ;
-            lv2:symbol "filter_02_11" ;
-            lv2:name "String 0 Fret 11 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 268 ;
-            lv2:symbol "filter_03_11" ;
-            lv2:name "String 0 Fret 11 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 269 ;
-            lv2:symbol "filter_10_11" ;
-            lv2:name "String 1 Fret 11 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 270 ;
-            lv2:symbol "filter_11_11" ;
-            lv2:name "String 1 Fret 11 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 271 ;
-            lv2:symbol "filter_12_11" ;
-            lv2:name "String 1 Fret 11 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 272 ;
-            lv2:symbol "filter_13_11" ;
-            lv2:name "String 1 Fret 11 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 273 ;
-            lv2:symbol "filter_20_11" ;
-            lv2:name "String 2 Fret 11 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 274 ;
-            lv2:symbol "filter_21_11" ;
-            lv2:name "String 2 Fret 11 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 275 ;
-            lv2:symbol "filter_22_11" ;
-            lv2:name "String 2 Fret 11 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 276 ;
-            lv2:symbol "filter_23_11" ;
-            lv2:name "String 2 Fret 11 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 277 ;
-            lv2:symbol "filter_30_11" ;
-            lv2:name "String 3 Fret 11 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 278 ;
-            lv2:symbol "filter_31_11" ;
-            lv2:name "String 3 Fret 11 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 279 ;
-            lv2:symbol "filter_32_11" ;
-            lv2:name "String 3 Fret 11 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 280 ;
-            lv2:symbol "filter_33_11" ;
-            lv2:name "String 3 Fret 11 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 281 ;
-            lv2:symbol "filter_40_11" ;
-            lv2:name "String 4 Fret 11 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 282 ;
-            lv2:symbol "filter_41_11" ;
-            lv2:name "String 4 Fret 11 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 283 ;
-            lv2:symbol "filter_42_11" ;
-            lv2:name "String 4 Fret 11 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 284 ;
-            lv2:symbol "filter_43_11" ;
-            lv2:name "String 4 Fret 11 Harmonic 3"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 285 ;
-            lv2:symbol "filter_50_11" ;
-            lv2:name "String 5 Fret 11 Harmonic 0"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 286 ;
-            lv2:symbol "filter_51_11" ;
-            lv2:name "String 5 Fret 11 Harmonic 1"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 287 ;
-            lv2:symbol "filter_52_11" ;
-            lv2:name "String 5 Fret 11 Harmonic 2"
-        ] ,[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index 288 ;
-            lv2:symbol "filter_53_11" ;
-            lv2:name "String 5 Fret 11 Harmonic 3"
-        ] ,[
             a lv2:OutputPort ,
                 atom:AtomPort ;
             atom:bufferType atom:Sequence ;
             atom:supports midi:MidiEvent ;
-            lv2:index 289 ;
+            lv2:index 1 ;
             lv2:symbol "midiout" ;
             lv2:name "MidiOut"
         ],[
             a lv2:InputPort, lv2:ControlPort ;
-            lv2:index 290 ;
+            lv2:index 2 ;
             lv2:symbol "polyphonic" ;
             lv2:name "Polyphonic Detection" ;
             lv2:portProperty lv2:toggled ;
             lv2:default 0.0 ;
             lv2:minimum 0.0 ;
             lv2:maximum 1.0 ;
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 3 ;
+            lv2:symbol "filter_0_0_0" ;
+            lv2:name "Fret 0 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 4 ;
+            lv2:symbol "filter_0_0_1" ;
+            lv2:name "Fret 0 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 5 ;
+            lv2:symbol "filter_0_0_2" ;
+            lv2:name "Fret 0 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 6 ;
+            lv2:symbol "filter_0_0_3" ;
+            lv2:name "Fret 0 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 7 ;
+            lv2:symbol "filter_0_1_0" ;
+            lv2:name "Fret 0 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 8 ;
+            lv2:symbol "filter_0_1_1" ;
+            lv2:name "Fret 0 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 9 ;
+            lv2:symbol "filter_0_1_2" ;
+            lv2:name "Fret 0 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 10 ;
+            lv2:symbol "filter_0_1_3" ;
+            lv2:name "Fret 0 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 11 ;
+            lv2:symbol "filter_0_2_0" ;
+            lv2:name "Fret 0 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 12 ;
+            lv2:symbol "filter_0_2_1" ;
+            lv2:name "Fret 0 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 13 ;
+            lv2:symbol "filter_0_2_2" ;
+            lv2:name "Fret 0 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 14 ;
+            lv2:symbol "filter_0_2_3" ;
+            lv2:name "Fret 0 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 15 ;
+            lv2:symbol "filter_0_3_0" ;
+            lv2:name "Fret 0 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 16 ;
+            lv2:symbol "filter_0_3_1" ;
+            lv2:name "Fret 0 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 17 ;
+            lv2:symbol "filter_0_3_2" ;
+            lv2:name "Fret 0 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 18 ;
+            lv2:symbol "filter_0_3_3" ;
+            lv2:name "Fret 0 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 19 ;
+            lv2:symbol "filter_0_4_0" ;
+            lv2:name "Fret 0 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 20 ;
+            lv2:symbol "filter_0_4_1" ;
+            lv2:name "Fret 0 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 21 ;
+            lv2:symbol "filter_0_4_2" ;
+            lv2:name "Fret 0 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 22 ;
+            lv2:symbol "filter_0_4_3" ;
+            lv2:name "Fret 0 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 23 ;
+            lv2:symbol "filter_0_5_0" ;
+            lv2:name "Fret 0 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 24 ;
+            lv2:symbol "filter_0_5_1" ;
+            lv2:name "Fret 0 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 25 ;
+            lv2:symbol "filter_0_5_2" ;
+            lv2:name "Fret 0 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 26 ;
+            lv2:symbol "filter_0_5_3" ;
+            lv2:name "Fret 0 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 27 ;
+            lv2:symbol "filter_1_0_0" ;
+            lv2:name "Fret 1 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 28 ;
+            lv2:symbol "filter_1_0_1" ;
+            lv2:name "Fret 1 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 29 ;
+            lv2:symbol "filter_1_0_2" ;
+            lv2:name "Fret 1 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 30 ;
+            lv2:symbol "filter_1_0_3" ;
+            lv2:name "Fret 1 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 31 ;
+            lv2:symbol "filter_1_1_0" ;
+            lv2:name "Fret 1 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 32 ;
+            lv2:symbol "filter_1_1_1" ;
+            lv2:name "Fret 1 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 33 ;
+            lv2:symbol "filter_1_1_2" ;
+            lv2:name "Fret 1 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 34 ;
+            lv2:symbol "filter_1_1_3" ;
+            lv2:name "Fret 1 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 35 ;
+            lv2:symbol "filter_1_2_0" ;
+            lv2:name "Fret 1 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 36 ;
+            lv2:symbol "filter_1_2_1" ;
+            lv2:name "Fret 1 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 37 ;
+            lv2:symbol "filter_1_2_2" ;
+            lv2:name "Fret 1 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 38 ;
+            lv2:symbol "filter_1_2_3" ;
+            lv2:name "Fret 1 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 39 ;
+            lv2:symbol "filter_1_3_0" ;
+            lv2:name "Fret 1 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 40 ;
+            lv2:symbol "filter_1_3_1" ;
+            lv2:name "Fret 1 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 41 ;
+            lv2:symbol "filter_1_3_2" ;
+            lv2:name "Fret 1 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 42 ;
+            lv2:symbol "filter_1_3_3" ;
+            lv2:name "Fret 1 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 43 ;
+            lv2:symbol "filter_1_4_0" ;
+            lv2:name "Fret 1 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 44 ;
+            lv2:symbol "filter_1_4_1" ;
+            lv2:name "Fret 1 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 45 ;
+            lv2:symbol "filter_1_4_2" ;
+            lv2:name "Fret 1 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 46 ;
+            lv2:symbol "filter_1_4_3" ;
+            lv2:name "Fret 1 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 47 ;
+            lv2:symbol "filter_1_5_0" ;
+            lv2:name "Fret 1 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 48 ;
+            lv2:symbol "filter_1_5_1" ;
+            lv2:name "Fret 1 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 49 ;
+            lv2:symbol "filter_1_5_2" ;
+            lv2:name "Fret 1 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 50 ;
+            lv2:symbol "filter_1_5_3" ;
+            lv2:name "Fret 1 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 51 ;
+            lv2:symbol "filter_2_0_0" ;
+            lv2:name "Fret 2 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 52 ;
+            lv2:symbol "filter_2_0_1" ;
+            lv2:name "Fret 2 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 53 ;
+            lv2:symbol "filter_2_0_2" ;
+            lv2:name "Fret 2 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 54 ;
+            lv2:symbol "filter_2_0_3" ;
+            lv2:name "Fret 2 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 55 ;
+            lv2:symbol "filter_2_1_0" ;
+            lv2:name "Fret 2 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 56 ;
+            lv2:symbol "filter_2_1_1" ;
+            lv2:name "Fret 2 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 57 ;
+            lv2:symbol "filter_2_1_2" ;
+            lv2:name "Fret 2 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 58 ;
+            lv2:symbol "filter_2_1_3" ;
+            lv2:name "Fret 2 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 59 ;
+            lv2:symbol "filter_2_2_0" ;
+            lv2:name "Fret 2 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 60 ;
+            lv2:symbol "filter_2_2_1" ;
+            lv2:name "Fret 2 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 61 ;
+            lv2:symbol "filter_2_2_2" ;
+            lv2:name "Fret 2 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 62 ;
+            lv2:symbol "filter_2_2_3" ;
+            lv2:name "Fret 2 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 63 ;
+            lv2:symbol "filter_2_3_0" ;
+            lv2:name "Fret 2 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 64 ;
+            lv2:symbol "filter_2_3_1" ;
+            lv2:name "Fret 2 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 65 ;
+            lv2:symbol "filter_2_3_2" ;
+            lv2:name "Fret 2 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 66 ;
+            lv2:symbol "filter_2_3_3" ;
+            lv2:name "Fret 2 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 67 ;
+            lv2:symbol "filter_2_4_0" ;
+            lv2:name "Fret 2 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 68 ;
+            lv2:symbol "filter_2_4_1" ;
+            lv2:name "Fret 2 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 69 ;
+            lv2:symbol "filter_2_4_2" ;
+            lv2:name "Fret 2 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 70 ;
+            lv2:symbol "filter_2_4_3" ;
+            lv2:name "Fret 2 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 71 ;
+            lv2:symbol "filter_2_5_0" ;
+            lv2:name "Fret 2 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 72 ;
+            lv2:symbol "filter_2_5_1" ;
+            lv2:name "Fret 2 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 73 ;
+            lv2:symbol "filter_2_5_2" ;
+            lv2:name "Fret 2 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 74 ;
+            lv2:symbol "filter_2_5_3" ;
+            lv2:name "Fret 2 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 75 ;
+            lv2:symbol "filter_3_0_0" ;
+            lv2:name "Fret 3 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 76 ;
+            lv2:symbol "filter_3_0_1" ;
+            lv2:name "Fret 3 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 77 ;
+            lv2:symbol "filter_3_0_2" ;
+            lv2:name "Fret 3 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 78 ;
+            lv2:symbol "filter_3_0_3" ;
+            lv2:name "Fret 3 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 79 ;
+            lv2:symbol "filter_3_1_0" ;
+            lv2:name "Fret 3 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 80 ;
+            lv2:symbol "filter_3_1_1" ;
+            lv2:name "Fret 3 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 81 ;
+            lv2:symbol "filter_3_1_2" ;
+            lv2:name "Fret 3 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 82 ;
+            lv2:symbol "filter_3_1_3" ;
+            lv2:name "Fret 3 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 83 ;
+            lv2:symbol "filter_3_2_0" ;
+            lv2:name "Fret 3 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 84 ;
+            lv2:symbol "filter_3_2_1" ;
+            lv2:name "Fret 3 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 85 ;
+            lv2:symbol "filter_3_2_2" ;
+            lv2:name "Fret 3 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 86 ;
+            lv2:symbol "filter_3_2_3" ;
+            lv2:name "Fret 3 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 87 ;
+            lv2:symbol "filter_3_3_0" ;
+            lv2:name "Fret 3 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 88 ;
+            lv2:symbol "filter_3_3_1" ;
+            lv2:name "Fret 3 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 89 ;
+            lv2:symbol "filter_3_3_2" ;
+            lv2:name "Fret 3 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 90 ;
+            lv2:symbol "filter_3_3_3" ;
+            lv2:name "Fret 3 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 91 ;
+            lv2:symbol "filter_3_4_0" ;
+            lv2:name "Fret 3 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 92 ;
+            lv2:symbol "filter_3_4_1" ;
+            lv2:name "Fret 3 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 93 ;
+            lv2:symbol "filter_3_4_2" ;
+            lv2:name "Fret 3 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 94 ;
+            lv2:symbol "filter_3_4_3" ;
+            lv2:name "Fret 3 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 95 ;
+            lv2:symbol "filter_3_5_0" ;
+            lv2:name "Fret 3 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 96 ;
+            lv2:symbol "filter_3_5_1" ;
+            lv2:name "Fret 3 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 97 ;
+            lv2:symbol "filter_3_5_2" ;
+            lv2:name "Fret 3 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 98 ;
+            lv2:symbol "filter_3_5_3" ;
+            lv2:name "Fret 3 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 99 ;
+            lv2:symbol "filter_4_0_0" ;
+            lv2:name "Fret 4 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 100 ;
+            lv2:symbol "filter_4_0_1" ;
+            lv2:name "Fret 4 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 101 ;
+            lv2:symbol "filter_4_0_2" ;
+            lv2:name "Fret 4 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 102 ;
+            lv2:symbol "filter_4_0_3" ;
+            lv2:name "Fret 4 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 103 ;
+            lv2:symbol "filter_4_1_0" ;
+            lv2:name "Fret 4 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 104 ;
+            lv2:symbol "filter_4_1_1" ;
+            lv2:name "Fret 4 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 105 ;
+            lv2:symbol "filter_4_1_2" ;
+            lv2:name "Fret 4 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 106 ;
+            lv2:symbol "filter_4_1_3" ;
+            lv2:name "Fret 4 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 107 ;
+            lv2:symbol "filter_4_2_0" ;
+            lv2:name "Fret 4 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 108 ;
+            lv2:symbol "filter_4_2_1" ;
+            lv2:name "Fret 4 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 109 ;
+            lv2:symbol "filter_4_2_2" ;
+            lv2:name "Fret 4 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 110 ;
+            lv2:symbol "filter_4_2_3" ;
+            lv2:name "Fret 4 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 111 ;
+            lv2:symbol "filter_4_3_0" ;
+            lv2:name "Fret 4 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 112 ;
+            lv2:symbol "filter_4_3_1" ;
+            lv2:name "Fret 4 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 113 ;
+            lv2:symbol "filter_4_3_2" ;
+            lv2:name "Fret 4 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 114 ;
+            lv2:symbol "filter_4_3_3" ;
+            lv2:name "Fret 4 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 115 ;
+            lv2:symbol "filter_4_4_0" ;
+            lv2:name "Fret 4 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 116 ;
+            lv2:symbol "filter_4_4_1" ;
+            lv2:name "Fret 4 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 117 ;
+            lv2:symbol "filter_4_4_2" ;
+            lv2:name "Fret 4 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 118 ;
+            lv2:symbol "filter_4_4_3" ;
+            lv2:name "Fret 4 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 119 ;
+            lv2:symbol "filter_4_5_0" ;
+            lv2:name "Fret 4 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 120 ;
+            lv2:symbol "filter_4_5_1" ;
+            lv2:name "Fret 4 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 121 ;
+            lv2:symbol "filter_4_5_2" ;
+            lv2:name "Fret 4 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 122 ;
+            lv2:symbol "filter_4_5_3" ;
+            lv2:name "Fret 4 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 123 ;
+            lv2:symbol "filter_5_0_0" ;
+            lv2:name "Fret 5 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 124 ;
+            lv2:symbol "filter_5_0_1" ;
+            lv2:name "Fret 5 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 125 ;
+            lv2:symbol "filter_5_0_2" ;
+            lv2:name "Fret 5 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 126 ;
+            lv2:symbol "filter_5_0_3" ;
+            lv2:name "Fret 5 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 127 ;
+            lv2:symbol "filter_5_1_0" ;
+            lv2:name "Fret 5 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 128 ;
+            lv2:symbol "filter_5_1_1" ;
+            lv2:name "Fret 5 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 129 ;
+            lv2:symbol "filter_5_1_2" ;
+            lv2:name "Fret 5 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 130 ;
+            lv2:symbol "filter_5_1_3" ;
+            lv2:name "Fret 5 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 131 ;
+            lv2:symbol "filter_5_2_0" ;
+            lv2:name "Fret 5 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 132 ;
+            lv2:symbol "filter_5_2_1" ;
+            lv2:name "Fret 5 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 133 ;
+            lv2:symbol "filter_5_2_2" ;
+            lv2:name "Fret 5 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 134 ;
+            lv2:symbol "filter_5_2_3" ;
+            lv2:name "Fret 5 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 135 ;
+            lv2:symbol "filter_5_3_0" ;
+            lv2:name "Fret 5 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 136 ;
+            lv2:symbol "filter_5_3_1" ;
+            lv2:name "Fret 5 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 137 ;
+            lv2:symbol "filter_5_3_2" ;
+            lv2:name "Fret 5 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 138 ;
+            lv2:symbol "filter_5_3_3" ;
+            lv2:name "Fret 5 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 139 ;
+            lv2:symbol "filter_5_4_0" ;
+            lv2:name "Fret 5 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 140 ;
+            lv2:symbol "filter_5_4_1" ;
+            lv2:name "Fret 5 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 141 ;
+            lv2:symbol "filter_5_4_2" ;
+            lv2:name "Fret 5 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 142 ;
+            lv2:symbol "filter_5_4_3" ;
+            lv2:name "Fret 5 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 143 ;
+            lv2:symbol "filter_5_5_0" ;
+            lv2:name "Fret 5 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 144 ;
+            lv2:symbol "filter_5_5_1" ;
+            lv2:name "Fret 5 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 145 ;
+            lv2:symbol "filter_5_5_2" ;
+            lv2:name "Fret 5 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 146 ;
+            lv2:symbol "filter_5_5_3" ;
+            lv2:name "Fret 5 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 147 ;
+            lv2:symbol "filter_6_0_0" ;
+            lv2:name "Fret 6 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 148 ;
+            lv2:symbol "filter_6_0_1" ;
+            lv2:name "Fret 6 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 149 ;
+            lv2:symbol "filter_6_0_2" ;
+            lv2:name "Fret 6 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 150 ;
+            lv2:symbol "filter_6_0_3" ;
+            lv2:name "Fret 6 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 151 ;
+            lv2:symbol "filter_6_1_0" ;
+            lv2:name "Fret 6 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 152 ;
+            lv2:symbol "filter_6_1_1" ;
+            lv2:name "Fret 6 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 153 ;
+            lv2:symbol "filter_6_1_2" ;
+            lv2:name "Fret 6 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 154 ;
+            lv2:symbol "filter_6_1_3" ;
+            lv2:name "Fret 6 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 155 ;
+            lv2:symbol "filter_6_2_0" ;
+            lv2:name "Fret 6 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 156 ;
+            lv2:symbol "filter_6_2_1" ;
+            lv2:name "Fret 6 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 157 ;
+            lv2:symbol "filter_6_2_2" ;
+            lv2:name "Fret 6 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 158 ;
+            lv2:symbol "filter_6_2_3" ;
+            lv2:name "Fret 6 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 159 ;
+            lv2:symbol "filter_6_3_0" ;
+            lv2:name "Fret 6 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 160 ;
+            lv2:symbol "filter_6_3_1" ;
+            lv2:name "Fret 6 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 161 ;
+            lv2:symbol "filter_6_3_2" ;
+            lv2:name "Fret 6 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 162 ;
+            lv2:symbol "filter_6_3_3" ;
+            lv2:name "Fret 6 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 163 ;
+            lv2:symbol "filter_6_4_0" ;
+            lv2:name "Fret 6 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 164 ;
+            lv2:symbol "filter_6_4_1" ;
+            lv2:name "Fret 6 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 165 ;
+            lv2:symbol "filter_6_4_2" ;
+            lv2:name "Fret 6 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 166 ;
+            lv2:symbol "filter_6_4_3" ;
+            lv2:name "Fret 6 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 167 ;
+            lv2:symbol "filter_6_5_0" ;
+            lv2:name "Fret 6 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 168 ;
+            lv2:symbol "filter_6_5_1" ;
+            lv2:name "Fret 6 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 169 ;
+            lv2:symbol "filter_6_5_2" ;
+            lv2:name "Fret 6 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 170 ;
+            lv2:symbol "filter_6_5_3" ;
+            lv2:name "Fret 6 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 171 ;
+            lv2:symbol "filter_7_0_0" ;
+            lv2:name "Fret 7 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 172 ;
+            lv2:symbol "filter_7_0_1" ;
+            lv2:name "Fret 7 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 173 ;
+            lv2:symbol "filter_7_0_2" ;
+            lv2:name "Fret 7 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 174 ;
+            lv2:symbol "filter_7_0_3" ;
+            lv2:name "Fret 7 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 175 ;
+            lv2:symbol "filter_7_1_0" ;
+            lv2:name "Fret 7 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 176 ;
+            lv2:symbol "filter_7_1_1" ;
+            lv2:name "Fret 7 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 177 ;
+            lv2:symbol "filter_7_1_2" ;
+            lv2:name "Fret 7 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 178 ;
+            lv2:symbol "filter_7_1_3" ;
+            lv2:name "Fret 7 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 179 ;
+            lv2:symbol "filter_7_2_0" ;
+            lv2:name "Fret 7 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 180 ;
+            lv2:symbol "filter_7_2_1" ;
+            lv2:name "Fret 7 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 181 ;
+            lv2:symbol "filter_7_2_2" ;
+            lv2:name "Fret 7 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 182 ;
+            lv2:symbol "filter_7_2_3" ;
+            lv2:name "Fret 7 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 183 ;
+            lv2:symbol "filter_7_3_0" ;
+            lv2:name "Fret 7 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 184 ;
+            lv2:symbol "filter_7_3_1" ;
+            lv2:name "Fret 7 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 185 ;
+            lv2:symbol "filter_7_3_2" ;
+            lv2:name "Fret 7 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 186 ;
+            lv2:symbol "filter_7_3_3" ;
+            lv2:name "Fret 7 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 187 ;
+            lv2:symbol "filter_7_4_0" ;
+            lv2:name "Fret 7 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 188 ;
+            lv2:symbol "filter_7_4_1" ;
+            lv2:name "Fret 7 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 189 ;
+            lv2:symbol "filter_7_4_2" ;
+            lv2:name "Fret 7 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 190 ;
+            lv2:symbol "filter_7_4_3" ;
+            lv2:name "Fret 7 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 191 ;
+            lv2:symbol "filter_7_5_0" ;
+            lv2:name "Fret 7 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 192 ;
+            lv2:symbol "filter_7_5_1" ;
+            lv2:name "Fret 7 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 193 ;
+            lv2:symbol "filter_7_5_2" ;
+            lv2:name "Fret 7 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 194 ;
+            lv2:symbol "filter_7_5_3" ;
+            lv2:name "Fret 7 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 195 ;
+            lv2:symbol "filter_8_0_0" ;
+            lv2:name "Fret 8 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 196 ;
+            lv2:symbol "filter_8_0_1" ;
+            lv2:name "Fret 8 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 197 ;
+            lv2:symbol "filter_8_0_2" ;
+            lv2:name "Fret 8 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 198 ;
+            lv2:symbol "filter_8_0_3" ;
+            lv2:name "Fret 8 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 199 ;
+            lv2:symbol "filter_8_1_0" ;
+            lv2:name "Fret 8 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 200 ;
+            lv2:symbol "filter_8_1_1" ;
+            lv2:name "Fret 8 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 201 ;
+            lv2:symbol "filter_8_1_2" ;
+            lv2:name "Fret 8 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 202 ;
+            lv2:symbol "filter_8_1_3" ;
+            lv2:name "Fret 8 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 203 ;
+            lv2:symbol "filter_8_2_0" ;
+            lv2:name "Fret 8 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 204 ;
+            lv2:symbol "filter_8_2_1" ;
+            lv2:name "Fret 8 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 205 ;
+            lv2:symbol "filter_8_2_2" ;
+            lv2:name "Fret 8 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 206 ;
+            lv2:symbol "filter_8_2_3" ;
+            lv2:name "Fret 8 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 207 ;
+            lv2:symbol "filter_8_3_0" ;
+            lv2:name "Fret 8 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 208 ;
+            lv2:symbol "filter_8_3_1" ;
+            lv2:name "Fret 8 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 209 ;
+            lv2:symbol "filter_8_3_2" ;
+            lv2:name "Fret 8 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 210 ;
+            lv2:symbol "filter_8_3_3" ;
+            lv2:name "Fret 8 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 211 ;
+            lv2:symbol "filter_8_4_0" ;
+            lv2:name "Fret 8 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 212 ;
+            lv2:symbol "filter_8_4_1" ;
+            lv2:name "Fret 8 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 213 ;
+            lv2:symbol "filter_8_4_2" ;
+            lv2:name "Fret 8 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 214 ;
+            lv2:symbol "filter_8_4_3" ;
+            lv2:name "Fret 8 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 215 ;
+            lv2:symbol "filter_8_5_0" ;
+            lv2:name "Fret 8 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 216 ;
+            lv2:symbol "filter_8_5_1" ;
+            lv2:name "Fret 8 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 217 ;
+            lv2:symbol "filter_8_5_2" ;
+            lv2:name "Fret 8 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 218 ;
+            lv2:symbol "filter_8_5_3" ;
+            lv2:name "Fret 8 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 219 ;
+            lv2:symbol "filter_9_0_0" ;
+            lv2:name "Fret 9 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 220 ;
+            lv2:symbol "filter_9_0_1" ;
+            lv2:name "Fret 9 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 221 ;
+            lv2:symbol "filter_9_0_2" ;
+            lv2:name "Fret 9 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 222 ;
+            lv2:symbol "filter_9_0_3" ;
+            lv2:name "Fret 9 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 223 ;
+            lv2:symbol "filter_9_1_0" ;
+            lv2:name "Fret 9 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 224 ;
+            lv2:symbol "filter_9_1_1" ;
+            lv2:name "Fret 9 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 225 ;
+            lv2:symbol "filter_9_1_2" ;
+            lv2:name "Fret 9 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 226 ;
+            lv2:symbol "filter_9_1_3" ;
+            lv2:name "Fret 9 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 227 ;
+            lv2:symbol "filter_9_2_0" ;
+            lv2:name "Fret 9 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 228 ;
+            lv2:symbol "filter_9_2_1" ;
+            lv2:name "Fret 9 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 229 ;
+            lv2:symbol "filter_9_2_2" ;
+            lv2:name "Fret 9 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 230 ;
+            lv2:symbol "filter_9_2_3" ;
+            lv2:name "Fret 9 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 231 ;
+            lv2:symbol "filter_9_3_0" ;
+            lv2:name "Fret 9 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 232 ;
+            lv2:symbol "filter_9_3_1" ;
+            lv2:name "Fret 9 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 233 ;
+            lv2:symbol "filter_9_3_2" ;
+            lv2:name "Fret 9 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 234 ;
+            lv2:symbol "filter_9_3_3" ;
+            lv2:name "Fret 9 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 235 ;
+            lv2:symbol "filter_9_4_0" ;
+            lv2:name "Fret 9 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 236 ;
+            lv2:symbol "filter_9_4_1" ;
+            lv2:name "Fret 9 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 237 ;
+            lv2:symbol "filter_9_4_2" ;
+            lv2:name "Fret 9 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 238 ;
+            lv2:symbol "filter_9_4_3" ;
+            lv2:name "Fret 9 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 239 ;
+            lv2:symbol "filter_9_5_0" ;
+            lv2:name "Fret 9 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 240 ;
+            lv2:symbol "filter_9_5_1" ;
+            lv2:name "Fret 9 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 241 ;
+            lv2:symbol "filter_9_5_2" ;
+            lv2:name "Fret 9 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 242 ;
+            lv2:symbol "filter_9_5_3" ;
+            lv2:name "Fret 9 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 243 ;
+            lv2:symbol "filter_10_0_0" ;
+            lv2:name "Fret 10 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 244 ;
+            lv2:symbol "filter_10_0_1" ;
+            lv2:name "Fret 10 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 245 ;
+            lv2:symbol "filter_10_0_2" ;
+            lv2:name "Fret 10 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 246 ;
+            lv2:symbol "filter_10_0_3" ;
+            lv2:name "Fret 10 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 247 ;
+            lv2:symbol "filter_10_1_0" ;
+            lv2:name "Fret 10 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 248 ;
+            lv2:symbol "filter_10_1_1" ;
+            lv2:name "Fret 10 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 249 ;
+            lv2:symbol "filter_10_1_2" ;
+            lv2:name "Fret 10 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 250 ;
+            lv2:symbol "filter_10_1_3" ;
+            lv2:name "Fret 10 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 251 ;
+            lv2:symbol "filter_10_2_0" ;
+            lv2:name "Fret 10 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 252 ;
+            lv2:symbol "filter_10_2_1" ;
+            lv2:name "Fret 10 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 253 ;
+            lv2:symbol "filter_10_2_2" ;
+            lv2:name "Fret 10 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 254 ;
+            lv2:symbol "filter_10_2_3" ;
+            lv2:name "Fret 10 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 255 ;
+            lv2:symbol "filter_10_3_0" ;
+            lv2:name "Fret 10 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 256 ;
+            lv2:symbol "filter_10_3_1" ;
+            lv2:name "Fret 10 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 257 ;
+            lv2:symbol "filter_10_3_2" ;
+            lv2:name "Fret 10 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 258 ;
+            lv2:symbol "filter_10_3_3" ;
+            lv2:name "Fret 10 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 259 ;
+            lv2:symbol "filter_10_4_0" ;
+            lv2:name "Fret 10 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 260 ;
+            lv2:symbol "filter_10_4_1" ;
+            lv2:name "Fret 10 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 261 ;
+            lv2:symbol "filter_10_4_2" ;
+            lv2:name "Fret 10 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 262 ;
+            lv2:symbol "filter_10_4_3" ;
+            lv2:name "Fret 10 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 263 ;
+            lv2:symbol "filter_10_5_0" ;
+            lv2:name "Fret 10 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 264 ;
+            lv2:symbol "filter_10_5_1" ;
+            lv2:name "Fret 10 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 265 ;
+            lv2:symbol "filter_10_5_2" ;
+            lv2:name "Fret 10 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 266 ;
+            lv2:symbol "filter_10_5_3" ;
+            lv2:name "Fret 10 String 5  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 267 ;
+            lv2:symbol "filter_11_0_0" ;
+            lv2:name "Fret 11 String 0  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 268 ;
+            lv2:symbol "filter_11_0_1" ;
+            lv2:name "Fret 11 String 0  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 269 ;
+            lv2:symbol "filter_11_0_2" ;
+            lv2:name "Fret 11 String 0  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 270 ;
+            lv2:symbol "filter_11_0_3" ;
+            lv2:name "Fret 11 String 0  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 271 ;
+            lv2:symbol "filter_11_1_0" ;
+            lv2:name "Fret 11 String 1  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 272 ;
+            lv2:symbol "filter_11_1_1" ;
+            lv2:name "Fret 11 String 1  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 273 ;
+            lv2:symbol "filter_11_1_2" ;
+            lv2:name "Fret 11 String 1  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 274 ;
+            lv2:symbol "filter_11_1_3" ;
+            lv2:name "Fret 11 String 1  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 275 ;
+            lv2:symbol "filter_11_2_0" ;
+            lv2:name "Fret 11 String 2  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 276 ;
+            lv2:symbol "filter_11_2_1" ;
+            lv2:name "Fret 11 String 2  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 277 ;
+            lv2:symbol "filter_11_2_2" ;
+            lv2:name "Fret 11 String 2  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 278 ;
+            lv2:symbol "filter_11_2_3" ;
+            lv2:name "Fret 11 String 2  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 279 ;
+            lv2:symbol "filter_11_3_0" ;
+            lv2:name "Fret 11 String 3  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 280 ;
+            lv2:symbol "filter_11_3_1" ;
+            lv2:name "Fret 11 String 3  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 281 ;
+            lv2:symbol "filter_11_3_2" ;
+            lv2:name "Fret 11 String 3  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 282 ;
+            lv2:symbol "filter_11_3_3" ;
+            lv2:name "Fret 11 String 3  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 283 ;
+            lv2:symbol "filter_11_4_0" ;
+            lv2:name "Fret 11 String 4  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 284 ;
+            lv2:symbol "filter_11_4_1" ;
+            lv2:name "Fret 11 String 4  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 285 ;
+            lv2:symbol "filter_11_4_2" ;
+            lv2:name "Fret 11 String 4  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 286 ;
+            lv2:symbol "filter_11_4_3" ;
+            lv2:name "Fret 11 String 4  Harmonic 3"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 287 ;
+            lv2:symbol "filter_11_5_0" ;
+            lv2:name "Fret 11 String 5  Harmonic 0"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 288 ;
+            lv2:symbol "filter_11_5_1" ;
+            lv2:name "Fret 11 String 5  Harmonic 1"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 289 ;
+            lv2:symbol "filter_11_5_2" ;
+            lv2:name "Fret 11 String 5  Harmonic 2"
+        ],[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index 290 ;
+            lv2:symbol "filter_11_5_3" ;
+            lv2:name "Fret 11 String 5  Harmonic 3"
         ] .
         

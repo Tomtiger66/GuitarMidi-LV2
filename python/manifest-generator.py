@@ -35,37 +35,37 @@ with open("guitarmidi-trainingplugin.ttl", "w") as file:
             lv2:index 0 ;
             lv2:symbol "in" ;
             lv2:name "In"
-        ] ,""")
-    for f in range(num_frets):
-        for s in range(6):
-            for o in range(num_overtones+1):
-        
-                idx = f*6*(num_overtones+1)+s*(num_overtones+1)+o+1
-                file.write(f"""[
-            a lv2:OutputPort, lv2:AudioPort ;
-            lv2:index {idx} ;
-            lv2:symbol "filter_{s}{o}_{f}" ;
-            lv2:name "String {s} Fret {f} Harmonic {o}"
-        ] ,""")
-    idx = (num_frets-1)*6*(num_overtones+1)+5*(num_overtones+1)+(num_overtones)+2
-    file.write(f"""[
+        ] ,[
             a lv2:OutputPort ,
                 atom:AtomPort ;
             atom:bufferType atom:Sequence ;
             atom:supports midi:MidiEvent ;
-            lv2:index {idx} ;
+            lv2:index 1 ;
             lv2:symbol "midiout" ;
             lv2:name "MidiOut"
         ],[
             a lv2:InputPort, lv2:ControlPort ;
-            lv2:index {idx+1} ;
+            lv2:index 2 ;
             lv2:symbol "polyphonic" ;
             lv2:name "Polyphonic Detection" ;
             lv2:portProperty lv2:toggled ;
             lv2:default 0.0 ;
             lv2:minimum 0.0 ;
             lv2:maximum 1.0 ;
-        ] .
+        ]""")
+    for f in range(num_frets):
+        for s in range(6):
+            for o in range(num_overtones+1):
+        
+                idx = f*6*(num_overtones+1)+s*(num_overtones+1)+o+3
+                file.write(f""",[
+            a lv2:OutputPort, lv2:AudioPort ;
+            lv2:index {idx} ;
+            lv2:symbol "filter_{f}_{s}_{o}" ;
+            lv2:name "Fret {f} String {s}  Harmonic {o}"
+        ]""")
+    idx = (num_frets-1)*6*(num_overtones+1)+5*(num_overtones+1)+(num_overtones)+2
+    file.write(f""" .
         """)
         
         

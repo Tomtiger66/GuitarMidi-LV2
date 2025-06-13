@@ -107,8 +107,14 @@ void FretBoard::setAudioInput(const float *input)
     }
 }
 
-void FretBoard::setAudioOutput(float *output)
+void FretBoard::setAudioOutput(int portindex,float *output)
 {
+    portindex-=PORT_INDEX_OFFSET;
+
+    int fret=portindex/(NUM_STRINGS*NUM_HARMONICS);
+
+    int stringid=portindex-fret*NUM_STRINGS*NUM_HARMONICS;
+
     // m_harmonicGroups[196]->audioBuffer = output;
     // for (auto notecl : m_noteClassifiers)
     // {

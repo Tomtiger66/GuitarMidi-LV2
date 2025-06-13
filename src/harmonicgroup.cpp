@@ -6,7 +6,7 @@ HarmonicGroup::HarmonicGroup(LV2_URID_Map *map, float samplerate, float fund, fl
     m_noteClassifiers.push_back(NoteClassifier(map,samplerate,fund,bandwidth,passbandatten));
     m_fundamentalfreq=fund;
     //Add the overtones
-    for(int n=1;n<=NUMOVERTONES;n++)
+    for(int n=1;n<NUM_HARMONICS;n++)
     {
         m_noteClassifiers.push_back(NoteClassifier(map,samplerate,fund*(n+1),bandwidth,passbandatten));
     }

@@ -2,7 +2,7 @@
 #include <noteclassifier.hpp>
 #include <iostream>
 using namespace std;
-#define NUMOVERTONES 3
+#define NUM_HARMONICS 4 //f
 class HarmonicGroup
 {
     private:

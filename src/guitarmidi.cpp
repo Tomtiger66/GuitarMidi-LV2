@@ -75,9 +75,6 @@ connect_port(LV2_Handle instance,
 		// notecl->input = (const float *)data;
 		fretboard->setAudioInput((const float *)data);
 		break;
-	case FRETBOARD_OUTPUT:
-		fretboard->setAudioOutput((float *)data);
-		break;
 	case FRETBOARD_MIDIOUTPUT:
 		fretboard->setMidiOutput((LV2_Atom_Sequence *)data);
 		break;
