@@ -72,20 +72,20 @@ FretBoard::FretBoard(LV2_URID_Map *map, float samplerate)
     // m_noteClassifiers.push_back(make_shared<NoteClassifier>(map,samplerate, 415.30,ebw));
     // m_noteClassifiers.push_back(make_shared<NoteClassifier>(map,samplerate, 440,ebw));
 
-    m_frets.push_back(Fret(82,11,147,196,247,329,map,samplerate));
-    m_frets.push_back(Fret(87,117,156,208,262,349,map,samplerate));
-    m_frets.push_back(Fret(92,123,165,220,277,370,map,samplerate));
-    m_frets.push_back(Fret(98,131,175,233,294,392,map,samplerate));
-    m_frets.push_back(Fret(104,139,185,247,311,415,map,samplerate));
-    m_frets.push_back(Fret(110,147,196,262,329,440,map,samplerate));
-    m_frets.push_back(Fret(117,156,208,277,349,466,map,samplerate));
-    m_frets.push_back(Fret(123,165,220,294,370,494,map,samplerate));
-    m_frets.push_back(Fret(131,175,233,311,392,523,map,samplerate));
-    m_frets.push_back(Fret(139,185,247,329,415,554,map,samplerate));
-    m_frets.push_back(Fret(147,196,262,349,440,587,map,samplerate));
-    m_frets.push_back(Fret(156,208,277,370,466,622,map,samplerate));
+    m_frets.push_back(Fret(82,11,147,196,247,329,samplerate));
+    m_frets.push_back(Fret(87,117,156,208,262,349,samplerate));
+    m_frets.push_back(Fret(92,123,165,220,277,370,samplerate));
+    m_frets.push_back(Fret(98,131,175,233,294,392,samplerate));
+    m_frets.push_back(Fret(104,139,185,247,311,415,samplerate));
+    m_frets.push_back(Fret(110,147,196,262,329,440,samplerate));
+    m_frets.push_back(Fret(117,156,208,277,349,466,samplerate));
+    m_frets.push_back(Fret(123,165,220,294,370,494,samplerate));
+    m_frets.push_back(Fret(131,175,233,311,392,523,samplerate));
+    m_frets.push_back(Fret(139,185,247,329,415,554,samplerate));
+    m_frets.push_back(Fret(147,196,262,349,440,587,samplerate));
+    m_frets.push_back(Fret(156,208,277,370,466,622,samplerate));
 
-    m_frets.push_back(Fret(165,220,294,392,494,659,map,samplerate));
+    m_frets.push_back(Fret(165,220,294,392,494,659,samplerate));
 
     // for (auto group : m_harmonicGroups)
     // {
@@ -113,7 +113,14 @@ void FretBoard::setAudioOutput(int portindex,float *output)
 
     int fret=portindex/(NUM_STRINGS*NUM_HARMONICS);
 
-    int stringid=portindex-fret*NUM_STRINGS*NUM_HARMONICS;
+    int stringid=(portindex-fret*NUM_STRINGS*NUM_HARMONICS)/NUM_HARMONICS;
+
+
+    int harmonic=portindex-fret*NUM_STRINGS*NUM_HARMONICS-stringid*NUM_HARMONICS;
+
+    if(fret<m_frets.size()){
+        m_frets[fret].setOutput(stringid,harmonic,output);
+    }
 
     // m_harmonicGroups[196]->audioBuffer = output;
     // for (auto notecl : m_noteClassifiers)
