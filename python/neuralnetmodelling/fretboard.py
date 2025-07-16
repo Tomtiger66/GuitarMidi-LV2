@@ -2,6 +2,7 @@ num_harmonics=4
 num_frets=13
 num_strings=6
 from scipy import signal 
+import numpy as np
 class Filter:
     def __init__(self, fret,stringid,harmonic,center_freq, bw,sample_rate):
         self.id=fret*num_strings*num_harmonics+stringid*num_harmonics+harmonic
