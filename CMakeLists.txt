@@ -24,7 +24,10 @@ set(DSPFiltersSRCs ${DSPFiltersDir}/source/Cascade.cpp
 add_library(dsp STATIC ${DSPFiltersSRCs})
 
 add_subdirectory(src)
-
+add_subdirectory(ext/eigen)
+add_subdirectory(ext/FunctionalPlus)
+add_subdirectory(ext/json)
+add_subdirectory(ext/frugally-deep)
 if(${BUILD_ANALYSIS_APP})
 add_subdirectory(AnalysisApp)
 endif()

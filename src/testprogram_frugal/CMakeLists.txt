@@ -1,0 +1,1 @@
+add_executable(frugal_test main.cpp)

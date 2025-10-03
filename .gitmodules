@@ -4,3 +4,12 @@
 [submodule "ext/frugally-deep"]
 	path = ext/frugally-deep
 	url = git@github.com:Dobiasd/frugally-deep.git
+[submodule "ext/FunctionalPlus"]
+	path = ext/FunctionalPlus
+	url = https://github.com/Dobiasd/FunctionalPlus
+[submodule "ext/eigen"]
+	path = ext/eigen
+	url = https://gitlab.com/libeigen/eigen.git
+[submodule "ext/json"]
+	path = ext/json
+	url = https://github.com/nlohmann/json

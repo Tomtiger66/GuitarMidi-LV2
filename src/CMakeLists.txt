@@ -26,3 +26,6 @@ install(TARGETS guitarmidi
 
 install(FILES ../manifest.ttl ../guitarmidi.ttl
         DESTINATION guitarmidi.lv2)
+
+
+add_subdirectory(testprogram_frugal)
