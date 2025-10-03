@@ -3,9 +3,10 @@
 #include <vector>
 #include <string>
 #include <chrono>
-// NOTE: This assumes you have the 'fdeep.h' header file from the Frugally-Deep library
-// in your include path. Frugally-Deep is a header-only library.
 
+// Include Eigen to set the number of threads for parallel execution
+// Note: Eigen is a dependency of fdeep, so this should usually be available.
+#include <Eigen/Core> 
 
 // Define the expected input shape for the model
 // Based on the previous CNN discussion (128 time steps, 43 mel bins, 1 channel)
@@ -22,6 +23,7 @@ void run_inference(const std::string& model_file_path) {
 
     // 1. Load the model
     // fdeep::load_model performs all necessary parsing and validation.
+    // NOTE: Model loading is slow. Do this only ONCE at application start.
     const fdeep::model model = fdeep::load_model(model_file_path);
     
     std::cout << "Model loaded successfully." << std::endl;
@@ -45,32 +47,33 @@ void run_inference(const std::string& model_file_path) {
               << fdeep::show_tensor_shape(input_tensor.shape())<< " (Total elements: " << input_size << ")" 
               << std::endl;
     
-    // 3. Run Prediction (Inference)
-    // The predict function returns a vector of output tensors (one for each model output)
+    // 3. Run Prediction (Warm-up)
+    // The first prediction can be slower due to caching, so run it once to "warm up"
+    std::cout << "Running warm-up prediction..." << std::endl;
+    model.predict(input_vec);
+    std::cout << "Warm-up complete. Starting timed loop." << std::endl;
 
-    std::cout<<"First prediction"<<std::endl;
-    auto begin=std::chrono::system_clock::now();
-     fdeep::tensors result_vec = model.predict(input_vec);
-    auto end=std::chrono::system_clock::now();
 
-    auto duration=end-begin;
-
-    auto d=chrono::duration_cast<chrono::milliseconds>(duration);
-    cout<<"Duration "<<d.count()<<endl;
-    std::cout<<"second prediction"<<std::endl;
+    // 4. Run Timed Loop for Steady-State Measurement
+    // We use microseconds for better resolution to target the 5ms goal.
+    int count = 0;
     while(true)
     {
-        begin = std::chrono::system_clock::now();
+        auto begin = std::chrono::high_resolution_clock::now();
+        fdeep::tensors result_vec = model.predict(input_vec);
+        auto end = std::chrono::high_resolution_clock::now();
 
-        result_vec = model.predict(input_vec);
-        end = std::chrono::system_clock::now();
-
-        duration = end - begin;
-
-        d = chrono::duration_cast<chrono::milliseconds>(duration);
-        cout << "Duration " << d.count() << endl;
+        auto duration_us = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        double duration_ms = static_cast<double>(duration_us.count()) / 1000.0;
+        
+        std::cout << "Prediction " << ++count << ": Duration " << duration_ms << "ms" << std::endl;
+        
+        // Simple break condition to avoid infinite loop in testing environments
+        if (count > 50) break; 
     }
-    // 4. Process the Output
+
+    // 5. Process the Output (from the last prediction)
+    const fdeep::tensors& result_vec = model.predict(input_vec); // Re-run one last time for result
     if (result_vec.empty()) {
         std::cerr << "Prediction failed: Result vector is empty." << std::endl;
         return;
@@ -92,6 +95,14 @@ void run_inference(const std::string& model_file_path) {
 
 int main(int argc, char* argv[]) {
     try {
+        // --- CRITICAL SPEED UP STEP 1: Enable Multi-threading (Parallelization) ---
+        // Eigen (FDeep's dependency) uses multi-threading. Set the number of threads
+        // to match your CPU cores for maximum speed. You must ensure your CMake
+        // enables OpenMP for this to be effective.
+        const int num_threads = 4; // Adjust this to your core count for maximum throughput.
+        Eigen::setNbThreads(num_threads);
+        std::cout << "Set Eigen threads to: " << Eigen::nbThreads() << std::endl;
+        
         // Specify the path to your converted JSON model file
         const std::string MODEL_PATH = "/home/gerald/workspace/src/GuitarMidi-LV2/python/neuralnetmodelling/model_dir/guitarmidi-model-and-weights.json";
         
