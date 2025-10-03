@@ -1,3 +1,6 @@
 [submodule "DSPFilters"]
 	path = DSPFilters
 	url = https://github.com/vinniefalco/DSPFilters.git
+[submodule "ext/frugally-deep"]
+	path = ext/frugally-deep
+	url = git@github.com:Dobiasd/frugally-deep.git
