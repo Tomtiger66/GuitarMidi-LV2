@@ -1,6 +1,30 @@
 {
     "configurations": [
         {
+            "name": "(gdb) Launch frugal test",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/home/gerald/workspace/src/GuitarMidi-LV2/build/src/testprogram_frugal/frugal_test",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "(gdb) Launch Ardour",
             "type": "cppdbg",
             "request": "launch",

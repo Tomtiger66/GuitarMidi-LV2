@@ -22,12 +22,14 @@ set(DSPFiltersSRCs ${DSPFiltersDir}/source/Cascade.cpp
     ${DSPFiltersDir}/source/Butterworth.cpp
     ${DSPFiltersDir}/source/PoleFilter.cpp)
 add_library(dsp STATIC ${DSPFiltersSRCs})
-
-add_subdirectory(src)
+set(JSON_Install ON CACHE BOOL "Enable installation rules for nlohmann_json dependency")
 add_subdirectory(ext/eigen)
 add_subdirectory(ext/FunctionalPlus)
-add_subdirectory(ext/json)
+# add_subdirectory(ext/json)
 add_subdirectory(ext/frugally-deep)
+add_subdirectory(src)
+
+
 if(${BUILD_ANALYSIS_APP})
 add_subdirectory(AnalysisApp)
 endif()
