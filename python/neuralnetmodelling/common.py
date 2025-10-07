@@ -38,10 +38,10 @@ def save_data_slices(output_dir,nn_slices,batch_size):
     
     
     
-def plot_heatmap(plotdata):
+def plot_heatmap(plotdata,downsample_factor=1000):
     num_cols=plotdata.shape[1]
     num_rows=plotdata.shape[0]
-    downsample_factor = 1000
+
     # --- Downsampling the data ---
     print(f"Downsampling data by a factor of {downsample_factor}...")
     # Calculate the new number of columns after downsampling
@@ -77,33 +77,33 @@ def plot_heatmap(plotdata):
     
     
 def reshape_to_nn_input(indata):
+    return reshape_to_nn_output(indata)
+    # num_cols=indata.shape[1]
+    # num_rows=indata.shape[0]
+    # downsample_factor = frame_size
+    # # --- Downsampling the data ---
+    # print(f"reshape data by a factor of {downsample_factor}...")
+    # # Calculate the new number of columns after downsampling
+    # new_num_cols = num_cols // downsample_factor
 
-    num_cols=indata.shape[1]
-    num_rows=indata.shape[0]
-    downsample_factor = frame_size
-    # --- Downsampling the data ---
-    print(f"reshape data by a factor of {downsample_factor}...")
-    # Calculate the new number of columns after downsampling
-    new_num_cols = num_cols // downsample_factor
-
-    # Ensure the original number of columns is a multiple of the downsample_factor
-    # If not, you might lose some data at the end or need a more complex aggregation.
-    # For simplicity, we'll slice to a multiple of downsample_factor
-    effective_cols = new_num_cols * downsample_factor
-    data_sliced = indata[:, :effective_cols]
-    print(data_sliced.shape)
-    # Reshape the data for averaging:
-    # -1: infer dimension
-    # downsample_factor: group columns into blocks
-    # num_rows: keep rows as isp
-    # This reshapes (19, M*N) to (19, M, N)
-    reshaped_data = np.max(data_sliced.reshape(num_rows, new_num_cols, downsample_factor),axis=2)
-    reshaped_data=np.swapaxes(reshaped_data,0,1)
-    # reshaped_data=np.swapaxes(reshaped_data,1,2)
+    # # Ensure the original number of columns is a multiple of the downsample_factor
+    # # If not, you might lose some data at the end or need a more complex aggregation.
+    # # For simplicity, we'll slice to a multiple of downsample_factor
+    # effective_cols = new_num_cols * downsample_factor
+    # data_sliced = indata[:, :effective_cols]
+    # print(data_sliced.shape)
+    # # Reshape the data for averaging:
+    # # -1: infer dimension
+    # # downsample_factor: group columns into blocks
+    # # num_rows: keep rows as isp
+    # # This reshapes (19, M*N) to (19, M, N)
+    # reshaped_data = np.max(data_sliced.reshape(num_rows, new_num_cols, downsample_factor),axis=2)
+    # reshaped_data=np.swapaxes(reshaped_data,0,1)
+    # # reshaped_data=np.swapaxes(reshaped_data,1,2)
     
-    print('Reshaped the input data to  ')
-    print(reshaped_data.shape)
-    return reshaped_data
+    # print('Reshaped the input data to  ')
+    # print(reshaped_data.shape)
+    # return reshaped_data
 
 def reshape_to_nn_output(outdata):
     num_samples=outdata.shape[1]

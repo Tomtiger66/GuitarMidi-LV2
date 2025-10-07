@@ -10,7 +10,7 @@
 
 // Define the expected input shape for the model
 // Based on the previous CNN discussion (128 time steps, 43 mel bins, 1 channel)
-constexpr size_t INPUT_HEIGHT = 256; 
+// constexpr size_t INPUT_HEIGHT = 256; 
 constexpr size_t INPUT_WIDTH = 312;
 constexpr size_t INPUT_CHANNELS = 1;
 using namespace std;
@@ -31,13 +31,13 @@ void run_inference(const std::string& model_file_path) {
     // 2. Prepare the input tensor
     
     // Create the input data in a flat std::vector (size = H * W * C)
-    const size_t input_size = INPUT_HEIGHT * INPUT_WIDTH * INPUT_CHANNELS;
+    const size_t input_size = /*INPUT_HEIGHT * */INPUT_WIDTH * INPUT_CHANNELS;
     
     // For demonstration, we fill the input with dummy data (e.g., 0.5)
     std::vector<float> input_data(input_size, 0.5f); 
     
     // Create the tensor shape, including the batch size of 1
-    const fdeep::tensor_shape shape(INPUT_HEIGHT, INPUT_WIDTH, INPUT_CHANNELS);
+    const fdeep::tensor_shape shape(/*INPUT_HEIGHT,*/ INPUT_WIDTH, INPUT_CHANNELS);
 
     // Create the final input tensor wrapped in a vector for the predict function
     const fdeep::tensor input_tensor(shape, input_data);
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
         std::cout << "Set Eigen threads to: " << Eigen::nbThreads() << std::endl;
         
         // Specify the path to your converted JSON model file
-        const std::string MODEL_PATH = "/home/gerald/workspace/src/GuitarMidi-LV2/python/neuralnetmodelling/model_dir/guitarmidi-model-and-weights.json";
+        const std::string MODEL_PATH = "/home/gmwangi/workspace/src/GuitarMidi-LV2/python/neuralnetmodelling/model_dir/guitarmidi-model-and-weights.json";
         
         // This is the main function call
         run_inference(MODEL_PATH);

@@ -17,9 +17,10 @@ def build_cnn_model(input_shape, output_dim,training=True):
     model.add(layers.MaxPooling1D(pool_size=2, strides=2))
 
     model.add(layers.Conv1D(filters=128, kernel_size=3, padding='same', activation='relu'))
+
+    model.add(layers.BatchNormalization())
     if training:
-        model.add(layers.BatchNormalization())
-    model.add(layers.SpatialDropout1D(0.3))
+        model.add(layers.SpatialDropout1D(0.3))
     model.add(layers.MaxPooling1D(pool_size=2, strides=2))
 
     model.add(layers.GlobalAveragePooling1D())
