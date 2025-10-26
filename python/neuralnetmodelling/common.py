@@ -13,11 +13,11 @@ OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
 
 # Common functions
-def save_data_slices(output_dir,nn_slices,batch_size):
+def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
     totalsamples=nn_slices.shape[0]
     # Create directories if they don't exist
     os.makedirs(output_dir, exist_ok=True)
-    print(f'Saving {totalsamples} samples to disk')
+    print(f'Saving {totalsamples} samples to disk with filenamuber offset {filenum_offset}...')
     for i in range(0,totalsamples,batch_size):
         current_in=None
         
@@ -27,7 +27,7 @@ def save_data_slices(output_dir,nn_slices,batch_size):
             current_in=nn_slices[i:(i+batch_size)]
             
         # Define file paths for the current slice
-        input_filepath = os.path.join(output_dir, f'slice_{i:05d}.npy') # 05d for zero-padding up to 99999
+        input_filepath = os.path.join(output_dir, f'slice_{i+filenum_offset:05d}.npy') # 05d for zero-padding up to 99999
 
         # Save the slices
         np.save(input_filepath, current_in)
