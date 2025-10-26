@@ -1,0 +1,17 @@
+{
+  "name": "NVIDIA TensorFlow with Home Bind Mount",
+  "image": "nvcr.io/nvidia/tensorflow:25.02-tf2-py3",
+  "runArgs": [
+    "--gpus",
+    "all",
+    "--ipc=host",
+    "--privileged"
+  ],
+  "mounts": [
+    "source=/home,target=/home,type=bind"
+  ],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "postCreateCommand": "nvidia-smi"
+}
