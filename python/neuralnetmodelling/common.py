@@ -15,6 +15,7 @@ OUTPUT_DIM_ONSETS = 1 # For onsets output
 # Common functions
 def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
     totalsamples=nn_slices.shape[0]
+    filenum_offset=filenum_offset//frame_size
     # Create directories if they don't exist
     os.makedirs(output_dir, exist_ok=True)
     print(f'Saving {totalsamples} samples to disk with filenamuber offset {filenum_offset}...')
