@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 def build_cnn_model(input_shape, output_dim,training=True):
+    print("Building CNN model with input shape:", input_shape, "and output dim:", output_dim)
     model = models.Sequential()
     model.add(layers.Input(shape=input_shape, dtype=tf.float32))
 
