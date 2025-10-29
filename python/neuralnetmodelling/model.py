@@ -17,23 +17,25 @@ def build_small_cnn_model(input_shape, output_dim,training=True):
     
     # Conv block 1
     x=conv_block(inputs,32)
+    x = layers.MaxPooling1D(pool_size=4, strides=4)(x)
+    x = layers.SpatialDropout1D(0.2)(x, training=training)
     x=conv_block(x,64)
 
     
     x = layers.MaxPooling1D(pool_size=2, strides=2)(x)
-    # x = layers.SpatialDropout1D(0.2)(x, training=training)
-    x = layers.Dropout(0.2)(x, training=training)
-    x=conv_block(x,128)
+    x = layers.SpatialDropout1D(0.2)(x, training=training)
+    # x = layers.Dropout(0.2)(x, training=training)
+    x=conv_block(x,64)
 
     
     
     x = layers.MaxPooling1D(pool_size=2, strides=2)(x)
-    # x = layers.SpatialDropout1D(0.3)(x, training=training)
-    x = layers.Dropout(0.2)(x, training=training)
+    x = layers.SpatialDropout1D(0.3)(x, training=training)
+    # x = layers.Dropout(0.2)(x, training=training)
 
-    # x = layers.GlobalAveragePooling1D()(x)
+    x = layers.GlobalAveragePooling1D()(x)
     # x=layers.Flatten()(x)
-    x = layers.GlobalMaxPooling1D()(x)
+    # x = layers.GlobalMaxPooling1D()(x)
     # x=layers.Dense(128,activation='linear')(x)
     x = layers.Dropout(0.2)(x, training=training)
     outputs = layers.Dense(output_dim, activation='sigmoid')(x)
