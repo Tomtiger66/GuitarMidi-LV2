@@ -9,3 +9,5 @@ Makefile~
 build
 bin
 *.npy
+guitarmidi_epoch*_valAcc*.weights.h5
+guitarmidi_epoch*_valLoss*.weights.h5
