@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 # Common parameters
 frame_size=256
-# image_height = 256
+image_height = 256
 image_width = 312 # Assuming this is your updated 288+some context/padding, or just 288 filter outputs
 num_channels = 1
 num_classes = 89 # For MIDI notes
-INPUT_SHAPE = (image_width, num_channels)
+INPUT_SHAPE = (image_width,image_height, num_channels)
 OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
 
@@ -78,7 +78,7 @@ def plot_heatmap(plotdata,downsample_factor=1000):
     
     
 def reshape_to_nn_input(indata):
-    return reshape_to_nn_output(indata)
+    return reshape_to_nn_output(indata,collapse_time=False)
     # num_cols=indata.shape[1]
     # num_rows=indata.shape[0]
     # downsample_factor = frame_size
@@ -106,7 +106,7 @@ def reshape_to_nn_input(indata):
     # print(reshaped_data.shape)
     # return reshaped_data
 
-def reshape_to_nn_output(outdata):
+def reshape_to_nn_output(outdata,collapse_time=True):
     num_samples=outdata.shape[1]
     num_midi_classes=outdata.shape[0]
     downsample_factor = frame_size
@@ -129,7 +129,8 @@ def reshape_to_nn_output(outdata):
     reshaped_data = data_sliced.reshape(num_midi_classes, num_frames, downsample_factor)
     
     #Take only one sample per frame
-    reshaped_data=np.max(reshaped_data,axis=2)
+    if collapse_time:
+        reshaped_data=np.max(reshaped_data,axis=2)
     reshaped_data=np.swapaxes(reshaped_data,0,1)
     
     print('Reshaped the output data to  ')
