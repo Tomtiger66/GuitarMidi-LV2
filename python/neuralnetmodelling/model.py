@@ -52,8 +52,16 @@ def build_cnn_model(input_shape, output_dim,training=True):
     # model.add(layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
     model.add(layers.GlobalAveragePooling2D())
+    # if training:
+    #     model.add(layers.Dropout(0.2))
+    # Bottleneck layer
+    model.add(layers.Dense(6, activation='relu'))
+    model.add(layers.Dense(20, activation='relu'))
+    model.add(layers.Dense(32, activation='relu'))
+    model.add(layers.Dense(64, activation='relu'))
     if training:
         model.add(layers.Dropout(0.4))
+
     model.add(layers.Dense(output_dim, activation='sigmoid', dtype=tf.float32))
 
     return model
