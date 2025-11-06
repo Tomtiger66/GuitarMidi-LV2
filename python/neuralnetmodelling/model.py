@@ -11,6 +11,11 @@ HIDDEN_D = 384           # Chosen hidden dimension
 TRANSFORMER_LAYERS = 4   # Chosen layer count
 NUM_HEADS = 6            # Chosen number of heads (divisor of 384)
 DROPOUT_RATE = 0.1
+def partitioned_average_pooling(x):
+    splits = tf.split(x, [7,7,7,6,6,6], axis=1)   # sum=39 height slices
+    pooled = [tf.reduce_mean(part, axis=[1,2]) for part in splits]
+    return tf.concat(pooled, axis=1)
+
 def build_cnn_model(input_shape, output_dim,training=True):
 
     # return create_fast_model(input_shape=(IMG_H, IMG_W, CHANNELS), num_classes=NUM_CLASSES, 
@@ -51,14 +56,20 @@ def build_cnn_model(input_shape, output_dim,training=True):
     #     model.add(layers.SpatialDropout2D(0.3))
     # model.add(layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
-    model.add(layers.GlobalAveragePooling2D())
-    # if training:
-    #     model.add(layers.Dropout(0.2))
-    # Bottleneck layer
-    model.add(layers.Dense(6, activation='relu'))
-    model.add(layers.Dense(20, activation='relu'))
-    model.add(layers.Dense(32, activation='relu'))
-    model.add(layers.Dense(64, activation='relu'))
+
+
+
+# Use as a Lambda layer in your model:
+    model.add(layers.Lambda(partitioned_average_pooling))
+
+    # model.add(layers.Flatten())
+    # # if training:
+    # #     model.add(layers.Dropout(0.2))
+    # # Bottleneck layer
+    # model.add(layers.Dense(6, activation='relu'))
+    # model.add(layers.Dense(20, activation='relu'))
+    # model.add(layers.Dense(32, activation='relu'))
+    # model.add(layers.Dense(64, activation='relu'))
     if training:
         model.add(layers.Dropout(0.4))
 
