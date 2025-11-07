@@ -29,3 +29,4 @@ install(FILES ../manifest.ttl ../guitarmidi.ttl
 
 
 add_subdirectory(testprogram_frugal)
+add_subdirectory(tflite_custom_op_example)

@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.10)
-project(TFLiteCustomOpExample CXX)
+# cmake_minimum_required(VERSION 3.10)
+# project(TFLiteCustomOpExample CXX)
 
 # --- TENSORFLOW LITE CONFIGURATION ---
 # IMPORTANT: You need to set the path to your TFLite source or installation.
@@ -9,7 +9,7 @@ project(TFLiteCustomOpExample CXX)
 # A simple way for many is to use the TFLite CMake configuration if available.
 # We'll rely on finding the TFLite dependency.
 
-# find_package(TFLite REQUIRED)
+find_package(TFLite REQUIRED)
 # If TFLite is installed via a package manager or built with install targets, 
 # this should find the necessary headers and libraries.
 
