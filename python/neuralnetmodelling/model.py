@@ -24,7 +24,7 @@ def build_cnn_model(input_shape, output_dim,training=True):
     model = models.Sequential()
     model.add(layers.Input(shape=input_shape, dtype=tf.float32))
 
-    model.add(layers.Conv2D(filters=32, kernel_size=(7, 7), padding='same', activation=None))
+    model.add(layers.Conv2D(filters=32, kernel_size=(5, 5), padding='same', activation=None))
     
     model.add(layers.Activation('relu'))
     model.add(layers.BatchNormalization())
@@ -32,7 +32,7 @@ def build_cnn_model(input_shape, output_dim,training=True):
         model.add(layers.SpatialDropout2D(0.2))
     #model.add(layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
-    model.add(layers.Conv2D(filters=64, kernel_size=(7, 7), padding='same', activation=None))
+    model.add(layers.Conv2D(filters=64, kernel_size=(5, 5), padding='same', activation=None))
     
     model.add(layers.Activation('relu'))
     model.add(layers.BatchNormalization())
@@ -40,7 +40,7 @@ def build_cnn_model(input_shape, output_dim,training=True):
         model.add(layers.SpatialDropout2D(0.2))
     model.add(layers.MaxPooling2D(pool_size=(4, 4), strides=(4, 4)))
 
-    model.add(layers.Conv2D(filters=128, kernel_size=(7, 7), padding='same', activation=None))
+    model.add(layers.Conv2D(filters=64, kernel_size=(5, 5), padding='same', activation=None))
    
     model.add(layers.Activation('relu'))
     model.add(layers.BatchNormalization())
