@@ -1,43 +1,60 @@
-# cmake_minimum_required(VERSION 3.10)
-# project(TFLiteCustomOpExample CXX)
+#
+# Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-# --- TENSORFLOW LITE CONFIGURATION ---
-# IMPORTANT: You need to set the path to your TFLite source or installation.
-# This variable should point to the directory containing the TFLite libraries 
-# and the include directories (e.g., where 'tensorflow/lite/interpreter.h' resides).
-# Example: set(TFLITE_DIR "/path/to/your/tflite/install")
-# A simple way for many is to use the TFLite CMake configuration if available.
-# We'll rely on finding the TFLite dependency.
 
-find_package(TFLite REQUIRED)
-# If TFLite is installed via a package manager or built with install targets, 
-# this should find the necessary headers and libraries.
+# Builds the minimal Tensorflow Lite example.
 
-# If TFLite is NOT found via find_package, you will need manual configuration:
-# include_directories(
-#     /path/to/tflite/src/
-#     /path/to/tflite/src/tensorflow/lite/
-# )
-# link_libraries(
-#     /path/to/libtensorflow-lite.a
-#     /path/to/libtensorflow-lite_custom_op.a # Or similar libs
-# )
+cmake_minimum_required(VERSION 3.16)
+project(minimal C CXX)
 
-# --- CUSTOM OPERATOR LIBRARY ---
-add_library(custom_op STATIC
-    custom_op/PartitionedAvgPool.cc
+option(LINK_TFLITE_FLEX "Enable tensorflowlite_flex library linkage" OFF)
+
+set(TENSORFLOW_SOURCE_DIR "" CACHE PATH
+  "Directory that contains the TensorFlow project"
+)
+if(NOT TENSORFLOW_SOURCE_DIR)
+  get_filename_component(TENSORFLOW_SOURCE_DIR
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../"
+    ABSOLUTE
+  )
+endif()
+
+add_subdirectory(
+  "${TENSORFLOW_SOURCE_DIR}/tensorflow/lite"
+  "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite"
+  EXCLUDE_FROM_ALL
 )
 
-# Link against TFLite includes for custom op development
-target_include_directories(custom_op PUBLIC ${TFLite_INCLUDE_DIRS} custom_op /home/gerald/workspace/src/tensorflow-op70/tensorflow /home/gerald/workspace/src/tensorflow-op70/tensorflow/tensorflow/lite/kernels /home/gerald/workspace/src/tensorflow-op70/tensorflow/tensorflow/lite  )
-
-# --- EXECUTABLE TARGET ---
-add_executable(tflite_runner src/main.cc)
-
-# Link the executable with the custom op library and the TFLite libraries
-target_link_libraries(tflite_runner
-    custom_op
-    ${TFLite_LIBRARIES} 
-    /home/gerald/workspace/src/tensorflow-op70/tensorflow/bazel-bin/tensorflow/lite/libtensorflowlite.so
-
+set(CMAKE_CXX_STANDARD 17)
+add_executable(minimal
+  minimal.cc
 )
+
+if(LINK_TFLITE_FLEX)
+  find_library(TF_LIB_FLEX tensorflowlite_flex HINTS "${TENSORFLOW_SOURCE_DIR}/bazel-bin/tensorflow/lite/delegates/flex/")
+  if(NOT TF_LIB_FLEX)
+    message(FATAL_ERROR "tensorflowlite_flex library not found")
+  endif()
+
+  target_link_libraries(minimal
+    tensorflow-lite
+    -Wl,--no-as-needed # Add --no-as-needed since for some toolchains (e.g. Ubuntu) --as-needed is added by default.
+    ${TF_LIB_FLEX}
+  )
+else()
+  target_link_libraries(minimal
+    tensorflow-lite
+  )
+endif()
