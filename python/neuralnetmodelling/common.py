@@ -2,6 +2,7 @@ import  os
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import tensorflow as tf
 # Common parameters
 frame_size=256
 image_height = 256
@@ -36,8 +37,37 @@ def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
         #     print(f"Saved slice {i}/{totalsamples}")
 
     print(f"Serialization complete. {totalsamples} Files saved in '{output_dir}'.")
+
+# Load a single sample from files    
+def load_sample_from_files(input_path_tensor):
+    input_path = input_path_tensor.numpy().decode('utf-8')
+    inputname=os.path.basename(input_path)
     
+    parentdir=os.path.dirname(os.path.dirname(input_path))
+    # print("current dir: "+parentdir)
+    output_path=os.path.join(parentdir,'output',inputname)
+
+    # print("input: "+input_path)
+    # print("output: "+output_path)
+    # Load data
+    image = np.load(input_path).astype(np.float32).reshape(INPUT_SHAPE)
+    label = np.load(output_path).astype(np.float32).reshape(OUTPUT_DIM_NOTES)
+
+    # Ensure shape
+    image = tf.ensure_shape(image, INPUT_SHAPE)
+    label = tf.ensure_shape(label, (OUTPUT_DIM_NOTES,)) 
     
+    # Return features and label
+    return image, label
+
+# TensorFlow wrapper for loading sample from files
+def tf_load_sample_from_files(ipath):
+    image, label = tf.py_function(
+        load_sample_from_files, [ipath], [tf.float32, tf.float32]
+    )
+    image.set_shape(INPUT_SHAPE)
+    label.set_shape((OUTPUT_DIM_NOTES,))
+    return image, label # Return (features, labels, sample_weights)   
     
 def plot_heatmap(plotdata,downsample_factor=1000):
     num_cols=plotdata.shape[1]

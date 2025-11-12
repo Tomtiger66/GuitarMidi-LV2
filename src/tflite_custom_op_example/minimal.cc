@@ -15,7 +15,8 @@ limitations under the License.
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
-
+#include <chrono>
+#include <iostream>
 #include "tensorflow/lite/core/interpreter_builder.h"
 #include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/register.h"
@@ -71,6 +72,18 @@ int main(int argc, char* argv[]) {
   // be accessed with `T* input = interpreter->typed_input_tensor<T>(i);`
 
   // Run inference
+  while (true){
+    // char c;
+    // std::cin >>c;
+    // if(c=='q'){
+    //   break;
+    // }
+    auto timer_start=std::chrono::high_resolution_clock::now();
+    TFLITE_MINIMAL_CHECK(interpreter->Invoke()==kTfLiteOk);
+    auto timer_end=std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double,std::milli> duration=timer_end-timer_start;
+    std::cout<<"Inference time: "<<duration.count()<<"ms"<<std::endl;
+  }
   TFLITE_MINIMAL_CHECK(interpreter->Invoke() == kTfLiteOk);
   printf("\n\n=== Post-invoke Interpreter State ===\n");
   tflite::PrintInterpreterState(interpreter.get());
