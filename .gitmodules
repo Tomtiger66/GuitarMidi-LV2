@@ -13,3 +13,6 @@
 [submodule "ext/json"]
 	path = ext/json
 	url = https://github.com/nlohmann/json
+[submodule "ext/tensorflow"]
+	path = ext/tensorflow
+	url = git@github.com:tensorflow/tensorflow.git
