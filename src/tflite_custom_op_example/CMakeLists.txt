@@ -21,7 +21,7 @@ project(minimal C CXX)
 
 option(LINK_TFLITE_FLEX "Enable tensorflowlite_flex library linkage" OFF)
 
-set(TENSORFLOW_SOURCE_DIR "" CACHE PATH
+set(TENSORFLOW_SOURCE_DIR "/home/gerald/workspace/src/tensorflow-op70/tensorflow_src" CACHE PATH
   "Directory that contains the TensorFlow project"
 )
 if(NOT TENSORFLOW_SOURCE_DIR)
@@ -30,11 +30,13 @@ if(NOT TENSORFLOW_SOURCE_DIR)
     ABSOLUTE
   )
 endif()
-
+message("TensorFlow source dir: ${TENSORFLOW_SOURCE_DIR}")
+set(TFLITE_ENABLE_XNNPACK ON CACHE BOOL "Enable XNNPACK" FORCE)
+include_directories(${TENSORFLOW_SOURCE_DIR}  ${TENSORFLOW_SOURCE_DIR}/tensorflow/lite/delegates/xnnpack)
 add_subdirectory(
   "${TENSORFLOW_SOURCE_DIR}/tensorflow/lite"
   "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite"
-  EXCLUDE_FROM_ALL
+  #EXCLUDE_FROM_ALL
 )
 
 set(CMAKE_CXX_STANDARD 17)

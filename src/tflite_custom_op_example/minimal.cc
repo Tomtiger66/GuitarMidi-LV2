@@ -12,16 +12,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
+
+#define TF_MAJOR_VERSION 2
+#define TF_MINOR_VERSION 20
+#define TF_PATCH_VERSION 0
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
 #include <chrono>
 #include <iostream>
+#include "tensorflow/core/public/version.h"
+#include "tensorflow/lite/version.h"
 #include "tensorflow/lite/core/interpreter_builder.h"
 #include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/model_builder.h"
 #include "tensorflow/lite/optional_debug_tools.h"
+#include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
 // This is an example that is minimal to read a model
 // from disk and perform inference. There is no data being loaded
 // that is up to you to add as a user.
@@ -59,16 +66,25 @@ int main(int argc, char* argv[]) {
   std::unique_ptr<tflite::Interpreter> interpreter;
   builder(&interpreter);
   TFLITE_MINIMAL_CHECK(interpreter != nullptr);
-//   tflite::XNNPackDelegateOptions xnnpack_options =
-//       tflite::XNNPackDelegateOptionsDefault();
-//   xnnpack_options.num_threads = 4;  // Set number of threads as appropriate for your
-//                                     // platform and application needs.  
-
-//     if (interpreter->ModifyGraphWithDelegate(
-//         tflite::XNNPackDelegateCreate(nullptr)) != kTfLiteOk) {
-//     // Handle error, but usually optional
-//     fprintf(stderr, "Warning: Failed to apply XNNPACK delegate.\n");
-// }
+  
+  TfLiteXNNPackDelegateOptions xnnpack_options =
+      TfLiteXNNPackDelegateOptionsDefault();
+  xnnpack_options.num_threads = 16;  // Set number of threads as appropriate for your
+                                    // platform and application needs.  
+//  tflite::gpu::GpuDelegateOptions gpu_options = 
+//       tflite::gpu::GpuDelegateOptionsDefault();
+//   gpu_options.inference_preference = TFLITE_GPU_INFERENCE_PREFERENCE_FAST_SINGLE_ANSWER;
+//   gpu_options.inference_priority1 = TFLITE_GPU_INFERENCE_PRIORITY_MIN_LATENCY;
+//   gpu_options.inference_priority2 = TFLITE_GPU_INFERENCE_PRIORITY_AUTO;
+//   gpu_options.inference_priority3 = TFLITE_GPU_INFERENCE_PRIORITY_AUTO;
+//   std::unique_ptr<tflite::GpuDelegate, decltype(&tflite::GpuDelegateDelete)> gpu_delegate(
+//       tflite::GpuDelegateCreate(&gpu_options), tflite::GpuDelegateDelete);
+//   TFLITE_MINIMAL_CHECK(interpreter->ModifyGraphWithDelegate(gpu_delegate.get()) == kTfLiteOk);
+    if (interpreter->ModifyGraphWithDelegate(
+        TfLiteXNNPackDelegateCreate(&xnnpack_options)) != kTfLiteOk) {
+    // Handle error, but usually optional
+    fprintf(stderr, "Warning: Failed to apply XNNPACK delegate.\n");
+}
   // Allocate tensor buffers.
   TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
   printf("=== Pre-invoke Interpreter State ===\n");
