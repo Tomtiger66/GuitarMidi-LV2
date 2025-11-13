@@ -22,7 +22,6 @@ limitations under the License.
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/model_builder.h"
 #include "tensorflow/lite/optional_debug_tools.h"
-
 // This is an example that is minimal to read a model
 // from disk and perform inference. There is no data being loaded
 // that is up to you to add as a user.
@@ -60,7 +59,16 @@ int main(int argc, char* argv[]) {
   std::unique_ptr<tflite::Interpreter> interpreter;
   builder(&interpreter);
   TFLITE_MINIMAL_CHECK(interpreter != nullptr);
+//   tflite::XNNPackDelegateOptions xnnpack_options =
+//       tflite::XNNPackDelegateOptionsDefault();
+//   xnnpack_options.num_threads = 4;  // Set number of threads as appropriate for your
+//                                     // platform and application needs.  
 
+//     if (interpreter->ModifyGraphWithDelegate(
+//         tflite::XNNPackDelegateCreate(nullptr)) != kTfLiteOk) {
+//     // Handle error, but usually optional
+//     fprintf(stderr, "Warning: Failed to apply XNNPACK delegate.\n");
+// }
   // Allocate tensor buffers.
   TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
   printf("=== Pre-invoke Interpreter State ===\n");
