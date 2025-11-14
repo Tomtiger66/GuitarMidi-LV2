@@ -16,6 +16,11 @@ def partitioned_average_pooling(x):
     pooled = [tf.reduce_mean(part, axis=[1,2]) for part in splits]
     return tf.concat(pooled, axis=1)
 
+def partitioned_average_pooling_1d(x):
+    splits = tf.split(x, [7,7,7,6,6,6], axis=1)   # sum=39 height slices
+    pooled = [tf.reduce_mean(part, axis=[1]) for part in splits]
+    return tf.concat(pooled, axis=1)
+
 def build_cnn_model(input_shape, output_dim,training=True):
 
     # return create_fast_model(input_shape=(IMG_H, IMG_W, CHANNELS), num_classes=NUM_CLASSES, 
@@ -84,7 +89,43 @@ def build_cnn_model(input_shape, output_dim,training=True):
 
     return model
 
+def build_1d_cnn_model(input_shape, output_dim,training=True):
+    model = models.Sequential()
+    model.add(layers.Input(shape=input_shape, dtype=tf.float32))
+    # get max along time axis
+    model.add(layers.Lambda(lambda x: tf.reduce_max(x, axis=2)))
+    model.add(layers.Conv1D(filters=32, kernel_size=5, padding='same', activation=None))
+    
+    model.add(layers.Activation('relu'))
+    model.add(layers.BatchNormalization())
+    if training:
+        model.add(layers.SpatialDropout1D(0.2))
+    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
 
+    model.add(layers.Conv1D(filters=64, kernel_size=5, padding='same', activation=None))
+   
+    model.add(layers.Activation('relu'))
+    model.add(layers.BatchNormalization())
+    if training:
+        model.add(layers.SpatialDropout1D(0.3))
+    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
+
+    model.add(layers.Conv1D(filters=128, kernel_size=5, padding='same', activation=None))
+   
+    model.add(layers.Activation('relu'))
+    model.add(layers.BatchNormalization())
+    if training:
+        model.add(layers.SpatialDropout1D(0.3))
+    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
+
+    model.add(layers.Lambda(partitioned_average_pooling_1d))#
+    #model.add(layers.GlobalAveragePooling1D())#model.add(layers.Flatten())
+    if training:
+        model.add(layers.Dropout(0.4))
+
+    model.add(layers.Dense(output_dim, activation='sigmoid', dtype=tf.float32))
+
+    return model
 
 # class FASTBlock(layers.Layer):
 #     """
