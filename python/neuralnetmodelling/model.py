@@ -107,7 +107,7 @@ def build_1d_cnn_model(input_shape, output_dim,training=True):
     model.add(layers.Activation('relu'))
     model.add(layers.BatchNormalization())
     if training:
-        model.add(layers.SpatialDropout1D(0.3))
+        model.add(layers.SpatialDropout1D(0.2))
     model.add(layers.MaxPooling1D(pool_size=2, strides=2))
 
     model.add(layers.Conv1D(filters=128, kernel_size=5, padding='same', activation=None))
@@ -115,11 +115,20 @@ def build_1d_cnn_model(input_shape, output_dim,training=True):
     model.add(layers.Activation('relu'))
     model.add(layers.BatchNormalization())
     if training:
+        model.add(layers.SpatialDropout1D(0.2))
+    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
+
+    model.add(layers.Conv1D(filters=256, kernel_size=5, padding='same', activation=None))
+   
+    model.add(layers.Activation('relu'))
+    model.add(layers.BatchNormalization())
+    if training:
         model.add(layers.SpatialDropout1D(0.3))
     model.add(layers.MaxPooling1D(pool_size=2, strides=2))
 
-    model.add(layers.Lambda(partitioned_average_pooling_1d))#
-    #model.add(layers.GlobalAveragePooling1D())#model.add(layers.Flatten())
+    #model.add(layers.Lambda(partitioned_average_pooling_1d))#
+    #model.add(layers.GlobalAveragePooling1D())#
+    model.add(layers.Flatten())
     if training:
         model.add(layers.Dropout(0.4))
 
