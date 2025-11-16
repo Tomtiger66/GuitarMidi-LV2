@@ -19,20 +19,17 @@
 #pragma once
 #include <time.h>
 #include <noteclassifier.hpp>
-#include <fret.hpp>
+#include <harmonicgroup.hpp>
 #include <memory>
 #include <vector>
 #include <map>
 
-
-#define NUM_FRETS 12
-#define PORT_INDEX_OFFSET 3
-#define NUM_STRINGS 6
 typedef enum
 {
     FRETBOARD_INPUT = 0,
-    FRETBOARD_MIDIOUTPUT=1,
-    FRETBOARD_POLYPHONIC_TOGGLE=2
+    FRETBOARD_OUTPUT = 1,
+    FRETBOARD_MIDIOUTPUT=2,
+    FRETBOARD_POLYPHONIC_TOGGLE=3
 } PortIndex;
 using namespace std;
 
@@ -52,11 +49,13 @@ private:
      */
    
 
-    vector<Fret> m_frets;
+    vector<shared_ptr<NoteClassifier>> m_noteClassifiers;
+
+    map<float,shared_ptr<HarmonicGroup> > m_harmonicGroups;
 
     shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
 
-
+    void addNoteClassifier(float freq,LV2_URID_Map *map, float samplerate);
 
 public:
     /**
@@ -75,17 +74,17 @@ public:
      */
     void setAudioInput(const float *input);
 
-    // vector<shared_ptr<NoteClassifier>>& getNoteClassifiers()
-    // {
-    //     return m_noteClassifiers;
-    // }
+    vector<shared_ptr<NoteClassifier>>& getNoteClassifiers()
+    {
+        return m_noteClassifiers;
+    }
 
     /**
      * @brief Set the Audio Output buffer. This buffer is only used as an internal buffer until I know how to query lv2 for the framebuffersize
      * 
      * @param output 
      */
-    void setAudioOutput(int portindex,float *output);
+    void setAudioOutput(float *output);
 
     /**
      * @brief Set the Midi Output buffer

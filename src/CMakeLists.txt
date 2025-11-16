@@ -9,7 +9,7 @@ find_package(PkgConfig REQUIRED)
 find_package(OpenMP REQUIRED)
 pkg_check_modules(Pango REQUIRED pango)
 
-set(SRC guitarmidi.cpp  noteclassifier.cpp midioutput.cpp fret.cpp fretboard.cpp harmonicgroup.cpp logging.cpp filter.cpp)
+set(SRC guitarmidi.cpp  noteclassifier.cpp midioutput.cpp fretboard.cpp harmonicgroup.cpp logging.cpp)
 
 add_library(guitarmidi SHARED ${SRC})
 if(WITH_AUBIO=On)
@@ -26,6 +26,3 @@ install(TARGETS guitarmidi
 
 install(FILES ../manifest.ttl ../guitarmidi.ttl
         DESTINATION guitarmidi.lv2)
-
-
-add_subdirectory(tflite_custom_op_example)

@@ -1,35 +1,36 @@
 #pragma once
-#include <filter.hpp>
+#include <noteclassifier.hpp>
 #include <iostream>
 using namespace std;
-#define NUM_HARMONICS 4 //fundamental+Overtones
+
 class HarmonicGroup
 {
     private:
-    vector<Filter > m_noteClassifiers;
-    double m_fundamentalfreq;
+    vector<shared_ptr<NoteClassifier> > m_noteClassifiers;
+    bool m_oldState;
+    float* m_buffer;
+    int m_bufferSize;
     public:
 
- 
-    HarmonicGroup( float samplerate, float center = 110.0, float bandwidth = 20, float passbandatten = 2);
+    float* audioBuffer;
+    HarmonicGroup();
     ~HarmonicGroup();
 
-    void setAudioInput(const float *input){
-        for (int n=0;n<m_noteClassifiers.size();n++)
-        {
-            m_noteClassifiers[n].setInput(input);
-        }
+    void addNoteClassifier(shared_ptr<NoteClassifier> notecl);
 
+    void process(int nsamples);
+
+    bool getState(){
+        return m_oldState;
     }
 
-    void setOutput(int harmonic, float * buffer){
-        if(m_noteClassifiers.size()>harmonic){
-            m_noteClassifiers[harmonic].setOutput(buffer);
-        }
-        
+    void block_midi(){
+        m_noteClassifiers[0]->block_midinote=true;
     }
 
-
+    void unblock_midi(){
+        m_noteClassifiers[0]->block_midinote=false;
+    }
 
 
 
