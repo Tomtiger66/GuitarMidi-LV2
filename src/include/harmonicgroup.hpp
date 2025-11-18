@@ -1,38 +1,23 @@
 #pragma once
-#include <noteclassifier.hpp>
+#include <filter.hpp>
 #include <iostream>
+#include <vector>
+#include <memory>
 using namespace std;
-
-class HarmonicGroup
+#define NUM_HARMONICS 4
+namespace GuitarMidi
 {
+    class HarmonicGroup
+    {
     private:
-    vector<shared_ptr<NoteClassifier> > m_noteClassifiers;
-    bool m_oldState;
-    float* m_buffer;
-    int m_bufferSize;
+        vector<shared_ptr<Filter>> m_filters;
+        bool m_oldState;
+        float *m_buffer;
+        int m_bufferSize;
+
     public:
-
-    float* audioBuffer;
-    HarmonicGroup();
-    ~HarmonicGroup();
-
-    void addNoteClassifier(shared_ptr<NoteClassifier> notecl);
-
-    void process(int nsamples);
-
-    bool getState(){
-        return m_oldState;
-    }
-
-    void block_midi(){
-        m_noteClassifiers[0]->block_midinote=true;
-    }
-
-    void unblock_midi(){
-        m_noteClassifiers[0]->block_midinote=false;
-    }
-
-
-
-
-};
+        float *audioBuffer;
+        HarmonicGroup(float samplerate, float centerfreq, float bandwidth = 20, float passbandatten = 2);
+        ~HarmonicGroup();
+    };
+}

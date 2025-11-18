@@ -9,7 +9,7 @@ find_package(PkgConfig REQUIRED)
 find_package(OpenMP REQUIRED)
 pkg_check_modules(Pango REQUIRED pango)
 
-set(SRC guitarmidi.cpp  noteclassifier.cpp midioutput.cpp fretboard.cpp harmonicgroup.cpp logging.cpp)
+set(SRC guitarmidi.cpp  noteclassifier.cpp midioutput.cpp fretboard.cpp harmonicgroup.cpp logging.cpp filterbank.cpp filter.cpp)
 
 add_library(guitarmidi SHARED ${SRC})
 if(WITH_AUBIO=On)

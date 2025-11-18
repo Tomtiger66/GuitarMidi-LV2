@@ -32,7 +32,7 @@ typedef enum
     FRETBOARD_POLYPHONIC_TOGGLE=3
 } PortIndex;
 using namespace std;
-
+using namespace GuitarMidi;
 /**
  * @brief FretBoard holds a bank of NoteClassifiers, which independently trigger a midi note when finding a fundamental (or a partial) frequency
  * in polyphonic audio
