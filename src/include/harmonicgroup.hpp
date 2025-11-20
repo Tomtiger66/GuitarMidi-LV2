@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 using namespace std;
-#define NUM_HARMONICS 4
+
 namespace GuitarMidi
 {
     class HarmonicGroup
@@ -17,7 +17,7 @@ namespace GuitarMidi
 
     public:
         float *audioBuffer;
-        HarmonicGroup(float samplerate, float centerfreq, float bandwidth = 20, float passbandatten = 2);
+        HarmonicGroup(int fret,int string_id,float samplerate, float centerfreq, float bandwidth = 20, float passbandatten = 2);
         ~HarmonicGroup();
     };
 }

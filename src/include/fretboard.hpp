@@ -23,6 +23,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <fret.hpp>
 
 typedef enum
 {
@@ -49,9 +50,7 @@ private:
      */
    
 
-    vector<shared_ptr<NoteClassifier>> m_noteClassifiers;
-
-    map<float,shared_ptr<HarmonicGroup> > m_harmonicGroups;
+    vector<Fret> m_frets;
 
     shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
 
@@ -74,10 +73,7 @@ public:
      */
     void setAudioInput(const float *input);
 
-    vector<shared_ptr<NoteClassifier>>& getNoteClassifiers()
-    {
-        return m_noteClassifiers;
-    }
+
 
     /**
      * @brief Set the Audio Output buffer. This buffer is only used as an internal buffer until I know how to query lv2 for the framebuffersize
