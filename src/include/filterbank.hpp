@@ -10,8 +10,8 @@ namespace GuitarMidi{
             std::vector<std::shared_ptr<Filter> > m_filters;
             public:
             FilterBank(){}
-            void addFilter(shared_ptr<Filter> filter){
-                m_filters.push_back(filter);
+            void addFilter(FilterRepresentation filter){
+                m_filters.push_back(filter);// TODO change to filter rep
             }
 
             void process(int nsamples){

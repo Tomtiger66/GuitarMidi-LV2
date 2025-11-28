@@ -1,6 +1,7 @@
 #pragma once
 #include <DspFilters/Dsp.h>
 #include <config.hpp>
+#include <harmonicgroup.hpp>
 #define MAXORDER 10   // the real order is 2*MAXORDER
 #define FILTERORDER 2 // the real order is 2*MAXORDER
 #define NUM_HARMONICS 4
@@ -12,12 +13,7 @@ namespace GuitarMidi
     class Filter
     {
     private:
-        int m_filter_id;
-        /**
-         * @brief m_centerfreq: The center frequency of the bandpass filters
-         *
-         */
-        float m_centerfreq;
+        FilterRepresentation m_filter_rep;
 
         /**
          * @brief m_bandwidth: The bandwidth frequency of the bandpass filters
@@ -71,7 +67,7 @@ namespace GuitarMidi
 
         int get_filter_id()
         {
-            return m_filter_id;
+            return m_filter_id;//TODO replace with filter rep
         }
 
         void setOutput(float *output)

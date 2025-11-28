@@ -7,17 +7,20 @@ using namespace std;
 
 namespace GuitarMidi
 {
+    struct FilterRepresentation{
+        int filter_id;
+        float center_freq;
+
+    };
     class HarmonicGroup
     {
     private:
-        vector<shared_ptr<Filter>> m_filters;
-        bool m_oldState;
-        float *m_buffer;
-        int m_bufferSize;
+        vector<FilterRepresentation> m_filters;
+
 
     public:
-        float *audioBuffer;
-        HarmonicGroup(int fret,int string_id,float samplerate, float centerfreq, float bandwidth = 20, float passbandatten = 2);
+   
+        HarmonicGroup(int fret,int string_id, float centerfreq);
         ~HarmonicGroup();
     };
 }
