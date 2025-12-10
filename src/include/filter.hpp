@@ -10,10 +10,11 @@
 
 namespace GuitarMidi
 {
+
     class Filter
     {
     private:
-        FilterRepresentation m_filter_rep;
+        GuitarMidi::FilterRepresentation m_filter_rep;
 
         /**
          * @brief m_bandwidth: The bandwidth frequency of the bandpass filters
@@ -61,13 +62,13 @@ namespace GuitarMidi
         void setFilterParameters(float bandwidth = 20, float passbandatten = 2, int order = FILTERORDER);
 
     public:
-        Filter(int fret, int string, int harmonic, float samplerate, float center = 110.0, float bandwidth = 20, float passbandatten = 2);
+        Filter(FilterRepresentation filter_rep, float samplerate,  float bandwidth = 20, float passbandatten = 2);
         ~Filter();
         void initialize();
 
-        int get_filter_id()
+        FilterRepresentation get_filter_id()
         {
-            return m_filter_id;//TODO replace with filter rep
+            return m_filter_rep;//TODO replace with filter rep
         }
 
         void setOutput(float *output)

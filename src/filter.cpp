@@ -1,9 +1,9 @@
 #include <filter.hpp>
 namespace GuitarMidi
 {
-    Filter::Filter(int fret, int string, int harmonic, float samplerate, float center, float bandwidth, float passbandatten)
+    Filter::Filter(FilterRepresentation filter_rep, float samplerate, float bandwidth, float passbandatten)
     {
-        m_centerfreq = center;
+        m_filter_rep=filter_rep;
         m_passbandatten = passbandatten;
         m_bandwidth = bandwidth;
         m_samplerate = samplerate;
@@ -11,8 +11,6 @@ namespace GuitarMidi
         m_bufferSize = 256;
         m_buffer = nullptr;
         m_output = nullptr;
-        // self.id=fret*num_strings*num_harmonics+stringid*num_harmonics+harmonic
-        m_filter_id = fret * NUM_STRINGS * NUM_HARMONICS + string * NUM_HARMONICS + harmonic;
         initialize();
     }
 
@@ -25,11 +23,12 @@ namespace GuitarMidi
         m_filter.reset();
 
 #ifdef USE_ELLIPTIC_FILTERS
-        m_filter.setup(m_order, m_samplerate, m_centerfreq, m_bandwidth, m_passbandatten, 18.0);
+        m_filter.setup(m_order, m_samplerate, m_filter_rep.center_freq, m_bandwidth, m_passbandatten, 18.0);
 #else
         m_filter.setup(m_order, m_samplerate, m_centerfreq, m_bandwidth);
 #endif
     }
+
     Filter::~Filter()
     {
         m_filter.reset();

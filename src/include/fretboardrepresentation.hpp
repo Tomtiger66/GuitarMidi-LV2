@@ -12,5 +12,13 @@ namespace GuitarMidi
 
         public:
         FretBoardRepresentation();
+
+        map<uint,FilterRepresentation> get_filterrepresentations(){
+            map<uint,FilterRepresentation> res;
+            for (auto f: m_frets)
+                f.get_filterrepresentations(res);
+
+            return res;
+        }
     };
 }

@@ -7,18 +7,18 @@ namespace GuitarMidi{
     class FilterBank{
 
         private:
-            std::vector<std::shared_ptr<Filter> > m_filters;
+            std::vector<FilterRepresentation > m_filters;
             public:
             FilterBank(){}
             void addFilter(FilterRepresentation filter){
                 m_filters.push_back(filter);// TODO change to filter rep
             }
 
-            void process(int nsamples){
-                for(auto filter:m_filters){
-                    filter->process(nsamples);
-                }
-            }
+            // void process(int nsamples){
+            //     for(auto filter:m_filters){
+            //         filter->process(nsamples);
+            //     }
+            // }
 
     };
 }
