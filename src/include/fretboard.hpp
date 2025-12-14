@@ -19,7 +19,7 @@
 #pragma once
 #include <time.h>
 #include <noteclassifier.hpp>
-#include <harmonicgroup.hpp>
+#include <fretboardrepresentation.hpp>
 #include <memory>
 #include <vector>
 #include <map>
@@ -44,13 +44,7 @@ class FretBoard
 private:
      float*  m_polyphonic_detection;
 
-    /**
-     * @brief m_noteClassifiers: The filterbank
-     * 
-     */
-   
-
-    vector<Fret> m_frets;
+    GuitarMidi::FretBoardRepresentation m_fretboard_rep;
 
     shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
 
