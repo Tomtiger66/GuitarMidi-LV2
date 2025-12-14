@@ -7,7 +7,7 @@
 #define NUM_HARMONICS 4
 #define NUM_STRINGS 6
 #define NUM_FRETS 12
-
+#define BUFFER_SIZE 256
 namespace GuitarMidi
 {
 

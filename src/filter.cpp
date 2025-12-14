@@ -8,7 +8,7 @@ namespace GuitarMidi
         m_bandwidth = bandwidth;
         m_samplerate = samplerate;
 
-        m_bufferSize = 256;
+        m_bufferSize = BUFFER_SIZE;
         m_buffer = nullptr;
         m_output = nullptr;
         initialize();
@@ -51,6 +51,8 @@ namespace GuitarMidi
         memcpy(m_buffer, m_input, nsamples * sizeof(float));
 
         m_filter.process(nsamples, &m_buffer);
+        for (int b=0;b<m_bufferSize;b++)
+            m_buffer[b]=fabs(m_buffer[b]);
 
         if (m_output != nullptr)
         {
