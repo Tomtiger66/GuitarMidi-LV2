@@ -1,6 +1,17 @@
 #include <filterbank.hpp>
 
-GuitarMidi::FilterBank::FilterBank(map<uint, FilterRepresentation> filterreps, int samplerate)
+GuitarMidi::FilterBank::FilterBank()
+{
+
+
+}
+
+GuitarMidi::FilterBank::~FilterBank()
+{
+    delete [] m_filterbankbuffer.audio_buffer_2D;
+}
+
+void GuitarMidi::FilterBank::setup(map<uint, FilterRepresentation> filterreps, int samplerate)
 {
     if (filterreps.size()==0)
         throw std::runtime_error("No filter representations");
@@ -19,10 +30,4 @@ GuitarMidi::FilterBank::FilterBank(map<uint, FilterRepresentation> filterreps, i
         m_filters.insert(make_pair(f.first,filter));
 
     }
-
-}
-
-GuitarMidi::FilterBank::~FilterBank()
-{
-    delete [] m_filterbankbuffer.audio_buffer_2D;
 }

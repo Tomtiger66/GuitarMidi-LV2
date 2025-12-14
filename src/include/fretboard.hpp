@@ -19,12 +19,13 @@
 #pragma once
 #include <time.h>
 #include <noteclassifier.hpp>
+#include <filterbank.hpp>
 #include <fretboardrepresentation.hpp>
 #include <memory>
 #include <vector>
 #include <map>
 #include <fret.hpp>
-
+#include <noteinferencer.hpp>
 typedef enum
 {
     FRETBOARD_INPUT = 0,
@@ -48,7 +49,8 @@ private:
 
     shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
 
-    void addNoteClassifier(float freq,LV2_URID_Map *map, float samplerate);
+    FilterBank m_filterbank;
+    NoteInferencer m_noteinferencer;
 
 public:
     /**

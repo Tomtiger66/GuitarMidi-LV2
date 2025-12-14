@@ -3,14 +3,11 @@
 #include <filter.hpp>
 #include <map>
 #include <memory>
+#include <common.hpp>
 using namespace std;
 namespace GuitarMidi{
 
-    struct AudioBuffer2D{
-        int num_filters;
-        int window_size;
-        float* audio_buffer_2D;
-    };
+
     class FilterBank{
 
         private:
@@ -18,8 +15,10 @@ namespace GuitarMidi{
             AudioBuffer2D m_filterbankbuffer; //number of filters x buffersize
       
             public:
-            FilterBank(map<uint,FilterRepresentation> filterreps,int samplerate);
+            FilterBank();
             ~FilterBank();
+
+            void setup(map<uint,FilterRepresentation> filterreps,int samplerate);
 
             void setInput(const float *input)
             {
