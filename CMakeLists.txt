@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
 project("GuitarMidi-LV2")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(setversionfromgit)
@@ -28,7 +28,7 @@ set(JSON_Install ON CACHE BOOL "Enable installation rules for nlohmann_json depe
 # # add_subdirectory(ext/json)
 # add_subdirectory(ext/frugally-deep)
 add_subdirectory(src)
-
+#add_subdirectory(src/tflite_custom_op_example)
 
 if(${BUILD_ANALYSIS_APP})
 add_subdirectory(AnalysisApp)
