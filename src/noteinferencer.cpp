@@ -1,5 +1,6 @@
 #include <noteinferencer.hpp>
 #include <iostream>
+#include <tensorflow/lite/logger.h>
 namespace GuitarMidi
 {
 
@@ -28,6 +29,7 @@ namespace GuitarMidi
         xnnpack_options.num_threads = 8; // Set number of threads as appropriate for your
                                          // platform and application needs.
         xnnpack_options.weight_cache_file_path = TfLiteXNNPackDelegateInMemoryFilePath();
+        // xnnpack_options.logging_level = TFLITE_XNNPACK_LOGGING_LEVEL_ERROR;
 
         if (m_interpreter->ModifyGraphWithDelegate(
                 TfLiteXNNPackDelegateCreate(&xnnpack_options)) != kTfLiteOk)
@@ -38,7 +40,8 @@ namespace GuitarMidi
         // Allocate tensor buffers.
         TFLITE_MINIMAL_CHECK(m_interpreter->AllocateTensors() == kTfLiteOk);
         printf("=== Pre-invoke Interpreter State ===\n");
-        tflite::PrintInterpreterState(m_interpreter.get());
+        // tflite::PrintInterpreterState(m_interpreter.get());
+        tflite::LoggerOptions::SetMinimumLogSeverity(tflite::TFLITE_LOG_ERROR);
     }
     void NoteInferencer::setMidiOutput(shared_ptr<MidiOutput> output)
     {
@@ -50,13 +53,40 @@ namespace GuitarMidi
     }
     void NoteInferencer::process(int nsamples)
     {
-        cout<<"Input tensor dims:";
+        stringstream msg;
         TfLiteTensor *input = m_interpreter->input_tensor(0);
         TfLiteIntArray* dims = input->dims;
-        cout<<"Input tensor dims:";
+        msg<<"Input tensor dims:";
         for(int i=0;i<dims->size;i++){
-            cout<<" "<<dims->data[i];
+            msg<<" "<<dims->data[i];
         }
+        //printf("%s\n",msg.str().c_str());
+
+        float* input_buffer=m_interpreter->typed_input_tensor<float>(0);
+        memcpy(input_buffer,m_audiobuffer.audio_buffer_2D,m_audiobuffer.num_filters*m_audiobuffer.window_size*sizeof(float));
         TFLITE_MINIMAL_CHECK(m_interpreter->Invoke() == kTfLiteOk);
+
+        TfLiteTensor *output = m_interpreter->output_tensor(0);
+        float* output_data=m_interpreter->typed_output_tensor<float>(0);
+        // print the output dims
+        TfLiteIntArray* output_dims = output->dims;
+        msg.str("");
+        msg<<"Output tensor dims:";
+        for(int i=0;i<output_dims->size;i++){
+            msg<<" "<<output_dims->data[i];
+        }
+        //printf("%s\n",msg.str().c_str());
+        int output_size=1;
+        for(int i=0;i<output_dims->size;i++){
+            output_size*=output_dims->data[i];
+        }
+        // print the output data
+        msg.str("");
+        msg<<"Output data:";
+        for(int i=0;i<output_size;i++){
+            if(output_data[i]>0.5)
+                msg<<" "<<i<<"("<<output_data[i]<<")";
+        }
+        printf("%s\n",msg.str().c_str());
     }
 }

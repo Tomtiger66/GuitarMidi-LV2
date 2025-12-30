@@ -161,7 +161,10 @@
         ],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",
-        "environment": [],
+        "environment": [{
+            "name": "TF_CPP_MIN_LOG_LEVEL",
+            "value": "3"
+        }],
         "externalConsole": false,
         "MIMode": "gdb",
         "setupCommands": [
