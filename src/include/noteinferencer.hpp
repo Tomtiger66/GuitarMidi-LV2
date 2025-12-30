@@ -2,10 +2,6 @@
 #include <memory>
 #include <midioutput.hpp>
 #include <common.hpp>
-#define TF_MAJOR_VERSION 2
-#define TF_MINOR_VERSION 20
-#define TF_PATCH_VERSION 0
-#define TF_VERSION_SUFFIX ""
 #include <tensorflow/lite/version.h>
 #include "tensorflow/core/public/release_version.h"
 #include "tensorflow/core/public/version.h"
@@ -17,8 +13,11 @@
 #include "tensorflow/lite/optional_debug_tools.h"
 #include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
 using namespace std;
+using namespace tflite;
 namespace GuitarMidi{
     class NoteInferencer{
+        unique_ptr<FlatBufferModel> m_model;
+        unique_ptr<Interpreter> m_interpreter;
         shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
         AudioBuffer2D m_audiobuffer;
         std::unique_ptr<tflite::FlatBufferModel> model;
