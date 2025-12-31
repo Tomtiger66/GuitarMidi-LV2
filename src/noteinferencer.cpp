@@ -87,7 +87,7 @@ namespace GuitarMidi
             if(output_data[i]>0.5){
                 msg<<" "<<i<<"("<<output_data[i]<<")";
 
-                if(!m_note_on[i]&&i!=OUTPUT_DIM-1){ // avoid sending note on for the extra output used for silence detection
+                if(!m_note_on[i]&&i!=(OUTPUT_DIM-1)){ // avoid sending note on for the extra output used for silence detection
                     uint8_t midinote[3]={0x90,i,0x7f};
                     m_midioutput->sendMidiMessage(midinote,nsamples);
                     m_note_on[i]=true;
