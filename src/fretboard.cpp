@@ -51,6 +51,7 @@ void FretBoard::setMidiOutput(LV2_Atom_Sequence *output)
     if (m_midioutput)
     {
         m_midioutput->setMidiOutput(output);
+        m_midioutput->initializeSequence();
 
         // for (auto notecl : m_noteClassifiers)
         // {
@@ -62,8 +63,8 @@ void FretBoard::setMidiOutput(LV2_Atom_Sequence *output)
 void FretBoard::initialize()
 {
     m_noteinferencer.initialize();
-    if (m_midioutput)
-        m_midioutput->initializeSequence();
+    // if (m_midioutput)
+    //     m_midioutput->initializeSequence();
     // omp_set_num_threads(1);
     // for (auto notecl : m_noteClassifiers)
     // {

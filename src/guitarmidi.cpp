@@ -79,6 +79,8 @@ connect_port(LV2_Handle instance,
 		fretboard->setAudioOutput((float *)data);
 		break;
 	case FRETBOARD_MIDIOUTPUT:
+		//printf("Connecting MIDI OUTPUT PORT\n");
+		lv2_log_note(&g_logger, "Connecting MIDI OUTPUT PORT\n");
 		fretboard->setMidiOutput((LV2_Atom_Sequence *)data);
 		break;
 	case FRETBOARD_POLYPHONIC_TOGGLE:
@@ -90,6 +92,7 @@ connect_port(LV2_Handle instance,
 static void
 activate(LV2_Handle instance)
 {
+	lv2_log_note(&g_logger, "Activating GuitarMidi-LV2 Plugin\n");
 	FretBoard *notecl = (FretBoard *)instance;
 	notecl->initialize();
 }

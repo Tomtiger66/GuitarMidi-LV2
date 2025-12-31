@@ -1,4 +1,5 @@
 #pragma once 
+#define OUTPUT_DIM 89
 namespace GuitarMidi{
 
     struct AudioBuffer2D{
