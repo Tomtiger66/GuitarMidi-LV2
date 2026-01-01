@@ -17,6 +17,7 @@ namespace GuitarMidi
     }
     void NoteInferencer::initialize()
     {
+        m_midioutput.initializeSequence();
         m_frames=0;
         // Load model
         // m_model = FlatBufferModel::BuildFromFile("/home/gerald/workspace/src/GuitarMidi-LV2/python/neuralnetmodelling/guitarmidi.tflite");

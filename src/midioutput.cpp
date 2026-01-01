@@ -96,7 +96,7 @@ void MidiOutput::setMidiOutput(LV2_Atom_Sequence *output)
 {
     
     m_midioutput = output;
-    initializeSequence();
+    // initializeSequence();
 }
 
 void MidiOutput::initializeSequence()
