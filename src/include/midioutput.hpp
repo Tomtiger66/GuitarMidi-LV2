@@ -45,8 +45,9 @@ namespace GuitarMidi {
         LV2_Atom_Forge_Frame m_frame;
         LV2_URID m_midiEvent;
         LV2_Atom_Sequence *m_midioutput;
-        int64_t m_frames;
-        std::mutex m_mutex;
+
+        // write position within the LV2_Atom_Sequence buffer (bytes)
+        uint32_t m_write_pos = 0;
 
         bool forge_midimessage(
             const uint8_t *const buffer,

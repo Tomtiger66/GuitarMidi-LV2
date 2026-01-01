@@ -20,8 +20,17 @@
 #include <mutex>
 using namespace GuitarMidi;
 
+// Helper: compute total atom bytes = header + payload + padding to 8 bytes
+static inline uint32_t atom_total_bytes(uint32_t payload_size)
+{
+    const uint32_t header = static_cast<uint32_t>(sizeof(LV2_Atom));
+    uint32_t total = header + payload_size;
+    uint32_t pad = (8 - (total % 8)) % 8;
+    return total + pad;
+}
+
 MidiOutput::MidiOutput(LV2_URID_Map *map)
-    : m_midioutput(nullptr), m_frames(0)
+    : m_midioutput(nullptr)
 {
     if (map) {
         lv2_atom_forge_init(&m_forge, map);
@@ -34,7 +43,7 @@ MidiOutput::MidiOutput(LV2_URID_Map *map)
 bool MidiOutput::forge_midimessage(const uint8_t *const buffer,
                                    uint32_t size, int64_t frames)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+
 
     if (!m_midioutput) {
         fprintf(stderr, "MidiOutput::forge_midimessage: output sequence not set\n");
@@ -43,6 +52,16 @@ bool MidiOutput::forge_midimessage(const uint8_t *const buffer,
 
     if (!buffer || size == 0) {
         fprintf(stderr, "MidiOutput::forge_midimessage: invalid buffer/size\n");
+        return false;
+    }
+
+    // Pre-check capacity using our write cursor
+    const uint32_t capacity = (m_midioutput) ? m_midioutput->atom.size : 0u;
+    uint32_t required = atom_total_bytes(size);
+    if (m_write_pos + required > capacity) {
+        fprintf(stderr,
+                "MidiOutput::forge_midimessage: insufficient buffer: need=%u pos=%u cap=%u frames=%lld\n",
+                required, m_write_pos, capacity, (long long)frames);
         return false;
     }
 
@@ -67,6 +86,9 @@ bool MidiOutput::forge_midimessage(const uint8_t *const buffer,
 
     lv2_atom_forge_pad(&m_forge, size * sizeof(uint8_t) + sizeof(LV2_Atom));
 
+    // Advance our write cursor by the number of bytes we wrote (header+payload+pad)
+    m_write_pos += required;
+
     return true;
 }
 
@@ -79,12 +101,12 @@ void MidiOutput::setMidiOutput(LV2_Atom_Sequence *output)
 
 void MidiOutput::initializeSequence()
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+
     if (m_midioutput) {
         const uint32_t out_capacity = m_midioutput->atom.size;
         lv2_atom_forge_set_buffer(&m_forge, reinterpret_cast<uint8_t *>(m_midioutput), out_capacity);
         lv2_atom_forge_sequence_head(&m_forge, &m_frame, 0);
-        m_frames = 0;
+      
     }
 }
 
@@ -92,14 +114,12 @@ void MidiOutput::sendMidiMessage(uint8_t midinote[3], int64_t frames)
 {
     if (!midinote) return;
 
-    // Use provided frames if > 0 otherwise advance by 1
-    int64_t at_frame = (frames > 0) ? frames : m_frames;
 
-    bool sent = forge_midimessage(midinote, 3, at_frame);
+
+    bool sent = forge_midimessage(midinote, 3, frames);
     if (!sent) {
         fprintf(stderr, "MidiOutput: Failed to send midinote (%u,%u,%u)\n", midinote[0], midinote[1], midinote[2]);
     }
 
-    // Advance internal frame counter conservatively
-    m_frames += (frames > 0) ? frames : 1;
+
 }
