@@ -17,109 +17,79 @@
  * Boston, MA  02110-1301  USA
  */
 #include <midioutput.hpp>
-#include <mutex>
 using namespace GuitarMidi;
-
-// Helper: compute total atom bytes = header + payload + padding to 8 bytes
-static inline uint32_t atom_total_bytes(uint32_t payload_size)
-{
-    const uint32_t header = static_cast<uint32_t>(sizeof(LV2_Atom));
-    uint32_t total = header + payload_size;
-    uint32_t pad = (8 - (total % 8)) % 8;
-    return total + pad;
-}
-
 MidiOutput::MidiOutput(LV2_URID_Map *map)
-    : m_midioutput(nullptr)
 {
-    if (map) {
+    if(map)
+    {
         lv2_atom_forge_init(&m_forge, map);
         m_midiEvent = map->map(map->handle, LV2_MIDI__MidiEvent);
-    } else {
-        m_midiEvent = 0;
+        m_frames = 0;
     }
+    m_midioutput=0;
 }
 
 bool MidiOutput::forge_midimessage(const uint8_t *const buffer,
                                    uint32_t size, int64_t frames)
 {
-
-
-    if (!m_midioutput) {
-        fprintf(stderr, "MidiOutput::forge_midimessage: output sequence not set\n");
-        return false;
-    }
-
-    if (!buffer || size == 0) {
-        fprintf(stderr, "MidiOutput::forge_midimessage: invalid buffer/size\n");
-        return false;
-    }
-
-    // Pre-check capacity using our write cursor
-    const uint32_t capacity = (m_midioutput) ? m_midioutput->atom.size : 0u;
-    uint32_t required = atom_total_bytes(size);
-    if (m_write_pos + required > capacity) {
-        fprintf(stderr,
-                "MidiOutput::forge_midimessage: insufficient buffer: need=%u pos=%u cap=%u frames=%lld\n",
-                required, m_write_pos, capacity, (long long)frames);
-        return false;
-    }
-
     LV2_Atom midiatom;
     midiatom.type = m_midiEvent;
     midiatom.size = size;
 
-    if (0 == lv2_atom_forge_frame_time(&m_forge, frames)) {
-        fprintf(stderr, "MidiOutput: lv2_atom_forge_frame_time failed\n");
+    if (0 == lv2_atom_forge_frame_time(&m_forge, frames))
+    {
+        printf("0 == lv2_atom_forge_frame_time\n");
         return false;
     }
-
-    if (0 == lv2_atom_forge_raw(&m_forge, &midiatom, sizeof(LV2_Atom))) {
-        fprintf(stderr, "MidiOutput: lv2_atom_forge_raw(midatom) failed\n");
+    if (0 == lv2_atom_forge_raw(&m_forge, &midiatom, sizeof(LV2_Atom)))
+    {
+        printf("0==lv2_atom_forge_raw(&m_forge, &midiatom, sizeof(LV2_Atom)\n");
         return false;
     }
-
-    if (0 == lv2_atom_forge_raw(&m_forge, buffer, size * sizeof(uint8_t))) {
-        fprintf(stderr, "MidiOutput: lv2_atom_forge_raw(buffer) failed\n");
+    if (0 == lv2_atom_forge_raw(&m_forge, buffer, size * sizeof(uint8_t)))
+    {
+        printf("0 == lv2_atom_forge_raw(&m_forge, buffer, size*sizeof(uint8_t))\n");
         return false;
     }
-
     lv2_atom_forge_pad(&m_forge, size * sizeof(uint8_t) + sizeof(LV2_Atom));
-
-    // Advance our write cursor by the number of bytes we wrote (header+payload+pad)
-    m_write_pos += required;
+    // lv2_atom_forge_frame_time(&m_forge, frames);
+    // lv2_atom_forge_raw(&m_forge, &midiatom, sizeof(LV2_Atom));
+    // lv2_atom_forge_raw(&m_forge, buffer, size*sizeof(uint8_t));
+    // lv2_atom_forge_pad(&m_forge, size*sizeof(uint8_t)+sizeof(LV2_Atom));
 
     return true;
 }
 
 void MidiOutput::setMidiOutput(LV2_Atom_Sequence *output)
 {
-    
     m_midioutput = output;
-    // initializeSequence();
+    // if (m_midioutput)
+    // {
+    //     const uint32_t out_capacity = m_midioutput->atom.size;
+    //     lv2_atom_forge_set_buffer(&m_forge, (uint8_t *)m_midioutput, out_capacity);
+    //     lv2_atom_forge_sequence_head(&m_forge, &m_frame, 0);
+    // }
 }
 
 void MidiOutput::initializeSequence()
 {
-
-    if (m_midioutput) {
+    if (m_midioutput)
+    {
         const uint32_t out_capacity = m_midioutput->atom.size;
-        lv2_atom_forge_set_buffer(&m_forge, reinterpret_cast<uint8_t *>(m_midioutput), out_capacity);
+        lv2_atom_forge_set_buffer(&m_forge, (uint8_t *)m_midioutput, out_capacity);
         lv2_atom_forge_sequence_head(&m_forge, &m_frame, 0);
-      
+        m_frames = 0;
     }
 }
 
 void MidiOutput::sendMidiMessage(uint8_t midinote[3], int64_t frames)
 {
-    if (!midinote) return;
 
-
-
-    bool sent = forge_midimessage(midinote, 3, frames);
-    if (!sent) {
-        fprintf(stderr, "MidiOutput: Failed to send midinote (%u,%u,%u)\n", midinote[0], midinote[1], midinote[2]);
-    }
-
-
+    bool messagesent = false;
+    for (int i = 0; i < 1 && !messagesent; i++)
+        messagesent = forge_midimessage(midinote, 3, m_frames);
+    if (!messagesent)
+        printf("Failed to send midinote (%d,%d,%d)\n", midinote[0], midinote[1], midinote[2]);
+    //  m_frames+=frames;
+    m_frames++;
 }

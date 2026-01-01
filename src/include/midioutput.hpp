@@ -31,7 +31,6 @@
 #include <lv2/atom/atom.h>
 #include <lv2/atom/forge.h>
 #include <logging.hpp>
-#include <mutex>
 /**
  * @brief MidiOutput abstracts lv2's midi messaging. It needs some debugging
  * 
@@ -45,9 +44,7 @@ namespace GuitarMidi {
         LV2_Atom_Forge_Frame m_frame;
         LV2_URID m_midiEvent;
         LV2_Atom_Sequence *m_midioutput;
-
-        // write position within the LV2_Atom_Sequence buffer (bytes)
-        uint32_t m_write_pos = 0;
+        int64_t m_frames;
 
         bool forge_midimessage(
             const uint8_t *const buffer,
