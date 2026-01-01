@@ -46,12 +46,12 @@ set(TENSORFLOW_SOURCE_DIR "${CMAKE_SOURCE_DIR}/ext/tensorflow" CACHE PATH
 
 message("TensorFlow source dir: ${TENSORFLOW_SOURCE_DIR}")
 set(TFLITE_ENABLE_XNNPACK ON CACHE BOOL "Enable XNNPACK" FORCE)
-include_directories(${TENSORFLOW_SOURCE_DIR}  ${TENSORFLOW_SOURCE_DIR}/tensorflow/lite/delegates/xnnpack)
-add_subdirectory(
-  "${TENSORFLOW_SOURCE_DIR}/tensorflow/lite"
-  "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite"
-  #EXCLUDE_FROM_ALL
-)
+# include_directories(${TENSORFLOW_SOURCE_DIR}  ${TENSORFLOW_SOURCE_DIR}/tensorflow/lite/delegates/xnnpack)
+# add_subdirectory(
+#   "${TENSORFLOW_SOURCE_DIR}/tensorflow/lite"
+#   "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite"
+#   #EXCLUDE_FROM_ALL
+# )
 
 
 
@@ -60,19 +60,13 @@ set(SRC guitarmidi.cpp  noteclassifier.cpp midioutput.cpp fretboard.cpp fretboar
 
 add_library(guitarmidi SHARED ${SRC})
 
-# # Add TensorFlow version macros to the guitarmidi target (target-specific)
-# target_compile_definitions(guitarmidi PUBLIC
-#   TF_MAJOR_VERSION=${TF_MAJOR}
-#   TF_MINOR_VERSION=${TF_MINOR}
-#   TF_PATCH_VERSION=${TF_PATCH}
-#   TF_VERSION_SUFFIX=\"${TF_VERSION_SUFFIX}\"
-# )
+
 if(WITH_AUBIO=On)
 message("Building with onset support")
 target_link_libraries(guitarmidi dsp aubio ${Pango_LIBRARIES})
 else()
 message("Building without onset support")
-target_link_libraries(guitarmidi PUBLIC dsp  ${Pango_LIBRARIES} tensorflow-lite  )
+target_link_libraries(guitarmidi PUBLIC dsp  ${Pango_LIBRARIES})# tensorflow-lite  )
 target_link_libraries(guitarmidi PUBLIC OpenMP::OpenMP_CXX )
 endif()
 

@@ -20,13 +20,13 @@
 #include <omp.h>
 
 using namespace GuitarMidi;
-FretBoard::FretBoard(LV2_URID_Map *map, float samplerate)
+FretBoard::FretBoard(LV2_URID_Map *map, float samplerate):m_noteinferencer(map)
 {
-    m_midioutput = make_shared<MidiOutput>(map);
+    
     m_fretboard_rep=FretBoardRepresentation();
     m_filterbank.setup(m_fretboard_rep.get_filterrepresentations(),samplerate);
     m_noteinferencer.setAudioInputBuffer(m_filterbank.get_buffer());
-    m_noteinferencer.setMidiOutput(m_midioutput);
+  
 
 
 
@@ -48,16 +48,17 @@ void FretBoard::setAudioOutput(float *output)
 
 void FretBoard::setMidiOutput(LV2_Atom_Sequence *output)
 {
-    if (m_midioutput)
-    {
-        m_midioutput->setMidiOutput(output);
-        m_midioutput->initializeSequence();
+    m_noteinferencer.setMidiOutput(output);
+    // if (m_midioutput)
+    // {
+    //     m_midioutput->setMidiOutput(output);
+    //     m_midioutput->initializeSequence();
 
-        // for (auto notecl : m_noteClassifiers)
-        // {
-        //     notecl->setMidiOutput(m_midioutput);
-        // }
-    }
+    //     // for (auto notecl : m_noteClassifiers)
+    //     // {
+    //     //     notecl->setMidiOutput(m_midioutput);
+    //     // }
+    // }
 }
 
 void FretBoard::initialize()

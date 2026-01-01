@@ -47,7 +47,7 @@ private:
 
     GuitarMidi::FretBoardRepresentation m_fretboard_rep;
 
-    shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
+
 
     FilterBank m_filterbank;
     NoteInferencer m_noteinferencer;

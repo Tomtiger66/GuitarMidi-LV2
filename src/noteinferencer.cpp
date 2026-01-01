@@ -1,6 +1,6 @@
 #include <noteinferencer.hpp>
 #include <iostream>
-#include <tensorflow/lite/logger.h>
+// #include <tensorflow/lite/logger.h>
 namespace GuitarMidi
 {
 
@@ -12,41 +12,42 @@ namespace GuitarMidi
         exit(1);                                                 \
     }
 
-    NoteInferencer::NoteInferencer():m_frames(0)
+    NoteInferencer::NoteInferencer(LV2_URID_Map *map):m_frames(0),m_midioutput(map)
     {
     }
     void NoteInferencer::initialize()
     {
         m_frames=0;
         // Load model
-        m_model = FlatBufferModel::BuildFromFile("/home/gerald/workspace/src/GuitarMidi-LV2/python/neuralnetmodelling/guitarmidi.tflite");
-        TFLITE_MINIMAL_CHECK(m_model != nullptr);
-        ops::builtin::BuiltinOpResolver resolver;
-        InterpreterBuilder builder(*m_model, resolver);
+        // m_model = FlatBufferModel::BuildFromFile("/home/gerald/workspace/src/GuitarMidi-LV2/python/neuralnetmodelling/guitarmidi.tflite");
+        // TFLITE_MINIMAL_CHECK(m_model != nullptr);
+        // ops::builtin::BuiltinOpResolver resolver;
+        // InterpreterBuilder builder(*m_model, resolver);
 
-        builder(&m_interpreter);
-        TfLiteXNNPackDelegateOptions xnnpack_options =
-            TfLiteXNNPackDelegateOptionsDefault();
-        xnnpack_options.num_threads = 8; // Set number of threads as appropriate for your
-                                         // platform and application needs.
-        xnnpack_options.weight_cache_file_path = TfLiteXNNPackDelegateInMemoryFilePath();
-        // xnnpack_options.logging_level = TFLITE_XNNPACK_LOGGING_LEVEL_ERROR;
+        // builder(&m_interpreter);
+        // TfLiteXNNPackDelegateOptions xnnpack_options =
+        //     TfLiteXNNPackDelegateOptionsDefault();
+        // xnnpack_options.num_threads = 8; // Set number of threads as appropriate for your
+        //                                  // platform and application needs.
+        // xnnpack_options.weight_cache_file_path = TfLiteXNNPackDelegateInMemoryFilePath();
+        // // xnnpack_options.logging_level = TFLITE_XNNPACK_LOGGING_LEVEL_ERROR;
 
-        if (m_interpreter->ModifyGraphWithDelegate(
-                TfLiteXNNPackDelegateCreate(&xnnpack_options)) != kTfLiteOk)
-        {
-            // Handle error, but usually optional
-            fprintf(stderr, "Warning: Failed to apply XNNPACK delegate.\n");
-        }
-        // Allocate tensor buffers.
-        TFLITE_MINIMAL_CHECK(m_interpreter->AllocateTensors() == kTfLiteOk);
-        printf("=== Pre-invoke Interpreter State ===\n");
-        // tflite::PrintInterpreterState(m_interpreter.get());
-        tflite::LoggerOptions::SetMinimumLogSeverity(tflite::TFLITE_LOG_ERROR);
+        // if (m_interpreter->ModifyGraphWithDelegate(
+        //         TfLiteXNNPackDelegateCreate(&xnnpack_options)) != kTfLiteOk)
+        // {
+        //     // Handle error, but usually optional
+        //     fprintf(stderr, "Warning: Failed to apply XNNPACK delegate.\n");
+        // }
+        // // Allocate tensor buffers.
+        // TFLITE_MINIMAL_CHECK(m_interpreter->AllocateTensors() == kTfLiteOk);
+        // printf("=== Pre-invoke Interpreter State ===\n");
+        // // tflite::PrintInterpreterState(m_interpreter.get());
+        // tflite::LoggerOptions::SetMinimumLogSeverity(tflite::TFLITE_LOG_ERROR);
     }
-    void NoteInferencer::setMidiOutput(shared_ptr<MidiOutput> output)
+    void NoteInferencer::setMidiOutput(LV2_Atom_Sequence *output)
     {
-        m_midioutput = output;
+        m_midioutput.setMidiOutput(output);
+        // m_midioutput.initializeSequence();
     }
     void NoteInferencer::setAudioInputBuffer(AudioBuffer2D input)
     {
@@ -109,12 +110,12 @@ namespace GuitarMidi
         if(m_frames%48000==0){
            if(m_note_on[40]){
                uint8_t midinote[3]={0x90,40,0x00};
-                m_midioutput->sendMidiMessage(midinote,m_frames);
+                m_midioutput.sendMidiMessage(midinote,m_frames);
                 m_note_on[40]=false; 
             }
            else{
                uint8_t midinote[3]={0x90,40,0x7f};
-                m_midioutput->sendMidiMessage(midinote,m_frames);
+                m_midioutput.sendMidiMessage(midinote,m_frames);
                 m_note_on[40]=true;
            }
         }
