@@ -21,6 +21,7 @@ namespace GuitarMidi{
         shared_ptr<GuitarMidi::MidiOutput> m_midioutput;
         AudioBuffer2D m_audiobuffer;
         std::unique_ptr<tflite::FlatBufferModel> model;
+        int64_t m_frames;
         bool m_note_on[OUTPUT_DIM]={false};
         public:
         NoteInferencer();

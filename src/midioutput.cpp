@@ -17,66 +17,72 @@
  * Boston, MA  02110-1301  USA
  */
 #include <midioutput.hpp>
+#include <mutex>
 using namespace GuitarMidi;
+
 MidiOutput::MidiOutput(LV2_URID_Map *map)
+    : m_midioutput(nullptr), m_frames(0)
 {
-    if(map)
-    {
+    if (map) {
         lv2_atom_forge_init(&m_forge, map);
         m_midiEvent = map->map(map->handle, LV2_MIDI__MidiEvent);
-        m_frames = 0;
+    } else {
+        m_midiEvent = 0;
     }
-    m_midioutput=0;
 }
 
 bool MidiOutput::forge_midimessage(const uint8_t *const buffer,
                                    uint32_t size, int64_t frames)
 {
+    std::lock_guard<std::mutex> lock(m_mutex);
+
+    if (!m_midioutput) {
+        fprintf(stderr, "MidiOutput::forge_midimessage: output sequence not set\n");
+        return false;
+    }
+
+    if (!buffer || size == 0) {
+        fprintf(stderr, "MidiOutput::forge_midimessage: invalid buffer/size\n");
+        return false;
+    }
+
     LV2_Atom midiatom;
     midiatom.type = m_midiEvent;
     midiatom.size = size;
 
-    if (0 == lv2_atom_forge_frame_time(&m_forge, frames))
-    {
-        printf("0 == lv2_atom_forge_frame_time\n");
+    if (0 == lv2_atom_forge_frame_time(&m_forge, frames)) {
+        fprintf(stderr, "MidiOutput: lv2_atom_forge_frame_time failed\n");
         return false;
     }
-    if (0 == lv2_atom_forge_raw(&m_forge, &midiatom, sizeof(LV2_Atom)))
-    {
-        printf("0==lv2_atom_forge_raw(&m_forge, &midiatom, sizeof(LV2_Atom)\n");
+
+    if (0 == lv2_atom_forge_raw(&m_forge, &midiatom, sizeof(LV2_Atom))) {
+        fprintf(stderr, "MidiOutput: lv2_atom_forge_raw(midatom) failed\n");
         return false;
     }
-    if (0 == lv2_atom_forge_raw(&m_forge, buffer, size * sizeof(uint8_t)))
-    {
-        printf("0 == lv2_atom_forge_raw(&m_forge, buffer, size*sizeof(uint8_t))\n");
+
+    if (0 == lv2_atom_forge_raw(&m_forge, buffer, size * sizeof(uint8_t))) {
+        fprintf(stderr, "MidiOutput: lv2_atom_forge_raw(buffer) failed\n");
         return false;
     }
+
     lv2_atom_forge_pad(&m_forge, size * sizeof(uint8_t) + sizeof(LV2_Atom));
-    // lv2_atom_forge_frame_time(&m_forge, frames);
-    // lv2_atom_forge_raw(&m_forge, &midiatom, sizeof(LV2_Atom));
-    // lv2_atom_forge_raw(&m_forge, buffer, size*sizeof(uint8_t));
-    // lv2_atom_forge_pad(&m_forge, size*sizeof(uint8_t)+sizeof(LV2_Atom));
 
     return true;
 }
 
 void MidiOutput::setMidiOutput(LV2_Atom_Sequence *output)
 {
+    
     m_midioutput = output;
-    // if (m_midioutput)
-    // {
-    //     const uint32_t out_capacity = m_midioutput->atom.size;
-    //     lv2_atom_forge_set_buffer(&m_forge, (uint8_t *)m_midioutput, out_capacity);
-    //     lv2_atom_forge_sequence_head(&m_forge, &m_frame, 0);
-    // }
+    initializeSequence();
 }
 
 void MidiOutput::initializeSequence()
 {
-    if (m_midioutput)
-    {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    if (m_midioutput) {
         const uint32_t out_capacity = m_midioutput->atom.size;
-        lv2_atom_forge_set_buffer(&m_forge, (uint8_t *)m_midioutput, out_capacity);
+        lv2_atom_forge_set_buffer(&m_forge, reinterpret_cast<uint8_t *>(m_midioutput), out_capacity);
         lv2_atom_forge_sequence_head(&m_forge, &m_frame, 0);
         m_frames = 0;
     }
@@ -84,12 +90,16 @@ void MidiOutput::initializeSequence()
 
 void MidiOutput::sendMidiMessage(uint8_t midinote[3], int64_t frames)
 {
+    if (!midinote) return;
 
-    bool messagesent = false;
-    for (int i = 0; i < 1 && !messagesent; i++)
-        messagesent = forge_midimessage(midinote, 3, m_frames);
-    if (!messagesent)
-        printf("Failed to send midinote (%d,%d,%d)\n", midinote[0], midinote[1], midinote[2]);
-    //  m_frames+=frames;
-    m_frames++;
+    // Use provided frames if > 0 otherwise advance by 1
+    int64_t at_frame = (frames > 0) ? frames : m_frames;
+
+    bool sent = forge_midimessage(midinote, 3, at_frame);
+    if (!sent) {
+        fprintf(stderr, "MidiOutput: Failed to send midinote (%u,%u,%u)\n", midinote[0], midinote[1], midinote[2]);
+    }
+
+    // Advance internal frame counter conservatively
+    m_frames += (frames > 0) ? frames : 1;
 }

@@ -1,4 +1,5 @@
 #pragma once 
+#include <logging.hpp>
 #define OUTPUT_DIM 89
 namespace GuitarMidi{
 

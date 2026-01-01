@@ -12,11 +12,12 @@ namespace GuitarMidi
         exit(1);                                                 \
     }
 
-    NoteInferencer::NoteInferencer()
+    NoteInferencer::NoteInferencer():m_frames(0)
     {
     }
     void NoteInferencer::initialize()
     {
+        m_frames=0;
         // Load model
         m_model = FlatBufferModel::BuildFromFile("/home/gerald/workspace/src/GuitarMidi-LV2/python/neuralnetmodelling/guitarmidi.tflite");
         TFLITE_MINIMAL_CHECK(m_model != nullptr);
@@ -86,21 +87,25 @@ namespace GuitarMidi
         for(int i=0;i<min(output_size,OUTPUT_DIM);i++){
             if(output_data[i]>0.5){
                 msg<<" "<<i<<"("<<output_data[i]<<")";
+                
 
                 if(!m_note_on[i]&&i!=(OUTPUT_DIM-1)){ // avoid sending note on for the extra output used for silence detection
                     uint8_t midinote[3]={0x90,i,0x7f};
-                    m_midioutput->sendMidiMessage(midinote,nsamples);
+                    lv2_log_note(&g_logger, "Notes: %s\n", msg.str().c_str());
+                    m_midioutput->sendMidiMessage(midinote,m_frames);
                     m_note_on[i]=true;
                 }
             }
             else{
+               // lv2_log_note(&g_logger, "Note %d OFF with confidence %f\n", i, output_data[i]);
                 if(m_note_on[i]){
                    uint8_t midinote[3]={0x90,i,0x00};
-                    m_midioutput->sendMidiMessage(midinote,nsamples);
+                    m_midioutput->sendMidiMessage(midinote,m_frames);
                     m_note_on[i]=false; 
                 }
             }
         }
+        m_frames+=nsamples;
         // printf("%s\n",msg.str().c_str());
     }
 }
