@@ -53,11 +53,10 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height,image_width), outp
     # model.add(layers.Lambda(
     #     lambda x: tf.reduce_mean(x, axis=2)))  # (batch_sz, 39)
     model.add(layers.Lambda(partitioned_average_pooling_1d))  # NOW: (64, 1536)
-    model.add(layers.Reshape((1, 1536)))  # (64, 1, 1536) for LSTM
+    # model.add(layers.Reshape((1, 1536)))  # (64, 1, 1536) for LSTM
 
-    model.add(layers.LSTM(126, stateful=True, return_sequences=False, 
-                          dropout=0.2 if training else 0.0))  # Works! Shape matches
-    # model.add(layers.Lambda(partitioned_average_pooling_1d))  # NOW: (64, 39)
+    # model.add(layers.LSTM(126, stateful=True, return_sequences=False, 
+    #                       dropout=0.2 if training else 0.0))  # Works! Shape matches
    
     if training: model.add(layers.Dropout(0.4))
     model.add(layers.Dense(output_dim, activation='sigmoid', dtype=tf.float32))
