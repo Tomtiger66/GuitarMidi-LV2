@@ -5,11 +5,11 @@ import seaborn as sns
 import tensorflow as tf
 # Common parameters
 frame_size=256
-image_height = 256
-image_width = 312 # Assuming this is your updated 288+some context/padding, or just 288 filter outputs
+image_width = 256
+image_height = 312 # Assuming this is your updated 288+some context/padding, or just 288 filter outputs
 num_channels = 1
 num_classes = 89 # For MIDI notes
-INPUT_SHAPE = (image_width,image_height, num_channels)
+INPUT_SHAPE = (image_height,image_width, num_channels)
 OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
 

@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 from tensorflow.keras.models import Model
-
+from common import OUTPUT_DIM_NOTES,image_height,image_width
     # --- Configuration for your specific input ---
 IMG_H, IMG_W = 312, 256  
 NUM_CLASSES = 89        
@@ -22,53 +22,48 @@ def partitioned_average_pooling_1d(x):
     return tf.concat(pooled, axis=1)
 
 
-def build_1d_cnn_model(input_shape, output_dim,training=True):
+def build_1d_cnn_model(batch_sz=64, input_shape=(image_height,image_width), output_dim=OUTPUT_DIM_NOTES, training=True):
     model = models.Sequential()
-    model.add(layers.Input(shape=input_shape, dtype=tf.float32))
-    # get max along time axis
-    model.add(layers.Lambda(lambda x: tf.reduce_max(x, axis=2)))
+    print("Input shape for 1D CNN model:", input_shape)
+    model.add(layers.Input(batch_shape=(batch_sz, *input_shape), dtype=tf.float32))  # Static batch_sz!
+    model.add(layers.Lambda(lambda x: tf.reduce_max(x, axis=2)))  # (64, 312)
+
+    # Your 4 Conv1D blocks EXACTLY as-is...
     model.add(layers.Conv1D(filters=32, kernel_size=5, padding='same', activation=None))
-    
     model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU(alpha=0.2))#model.add(layers.Activation('relu'))
-    
-    if training:
-        model.add(layers.SpatialDropout1D(0.2))
-    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
+    model.add(layers.LeakyReLU(alpha=0.2))
+    if training: model.add(layers.SpatialDropout1D(0.2))
+    model.add(layers.MaxPooling1D(2, strides=2))
 
-    model.add(layers.Conv1D(filters=64, kernel_size=5, padding='same', activation=None))
-    model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU(alpha=0.2))#model.add(layers.Activation('relu'))
-  
-    if training:
-        model.add(layers.SpatialDropout1D(0.2))
-    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
+    model.add(layers.Conv1D(64, 5, padding='same', activation=None))
+    model.add(layers.BatchNormalization()); model.add(layers.LeakyReLU(0.2))
+    if training: model.add(layers.SpatialDropout1D(0.2))
+    model.add(layers.MaxPooling1D(2, strides=2))
 
-    model.add(layers.Conv1D(filters=128, kernel_size=5, padding='same', activation=None))
-    model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU(alpha=0.2))#model.add(layers.Activation('relu'))
-    
-    if training:
-        model.add(layers.SpatialDropout1D(0.2))
-    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
+    model.add(layers.Conv1D(128, 5, padding='same', activation=None))
+    model.add(layers.BatchNormalization()); model.add(layers.LeakyReLU(0.2))
+    if training: model.add(layers.SpatialDropout1D(0.2))
+    model.add(layers.MaxPooling1D(2, strides=2))
 
-    model.add(layers.Conv1D(filters=256, kernel_size=5, padding='same', activation=None))
-    model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU(alpha=0.2))#model.add(layers.Activation('relu'))
-    
-    if training:
-        model.add(layers.SpatialDropout1D(0.3))
-    #model.add(layers.MaxPooling1D(pool_size=7, strides=7))
+    model.add(layers.Conv1D(256, 5, padding='same', activation=None))
+    model.add(layers.BatchNormalization()); model.add(layers.LeakyReLU(0.2))
+    if training: model.add(layers.SpatialDropout1D(0.3))
 
-    model.add(layers.Lambda(partitioned_average_pooling_1d))#
-    #model.add(layers.GlobalAveragePooling1D())#
-    # model.add(layers.Flatten())
-    if training:
-        model.add(layers.Dropout(0.4))
+    # # Pool to 39 features
+    # model.add(layers.Lambda(
+    #     lambda x: tf.reduce_mean(x, axis=2)))  # (batch_sz, 39)
+    model.add(layers.Lambda(partitioned_average_pooling_1d))  # NOW: (64, 1536)
+    model.add(layers.Reshape((1, 1536)))  # (64, 1, 1536) for LSTM
 
+    model.add(layers.LSTM(126, stateful=True, return_sequences=False, 
+                          dropout=0.2 if training else 0.0))  # Works! Shape matches
+    # model.add(layers.Lambda(partitioned_average_pooling_1d))  # NOW: (64, 39)
+   
+    if training: model.add(layers.Dropout(0.4))
     model.add(layers.Dense(output_dim, activation='sigmoid', dtype=tf.float32))
 
     return model
+
 
 # class FASTBlock(layers.Layer):
 #     """
