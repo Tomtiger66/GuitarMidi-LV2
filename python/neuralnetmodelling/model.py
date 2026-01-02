@@ -21,8 +21,8 @@ def partitioned_average_pooling_1d(x):
     pooled = [tf.reduce_mean(part, axis=[1]) for part in splits]
     return tf.concat(pooled, axis=1)
 
-
-def build_1d_cnn_model(batch_sz=64, input_shape=(image_height,image_width), output_dim=OUTPUT_DIM_NOTES, training=True):
+def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
+                       gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
     model = models.Sequential()
     print("Input shape for 1D CNN model:", input_shape)
     model.add(layers.Input(batch_shape=(batch_sz, *input_shape), dtype=tf.float32))  # Static batch_sz!
@@ -49,15 +49,24 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height,image_width), outp
     model.add(layers.BatchNormalization()); model.add(layers.LeakyReLU(0.2))
     if training: model.add(layers.SpatialDropout1D(0.3))
 
-    # # Pool to 39 features
-    # model.add(layers.Lambda(
-    #     lambda x: tf.reduce_mean(x, axis=2)))  # (batch_sz, 39)
-    model.add(layers.Lambda(partitioned_average_pooling_1d))  # NOW: (64, 1536)
-    # model.add(layers.Reshape((1, 1536)))  # (64, 1, 1536) for LSTM
+    model.add(layers.GRU(gru_units, return_sequences=True, stateful=stateful))
+    if training:
+        model.add(layers.Dropout(0.2))
+    # Apply GRU stack BEFORE final pooling/classification
+    # Post-CNN: (batch, 39, 256)
+    # for i in range(gru_layers):
+    #     return_seq = (i < gru_layers - 1)
+    #     gru_layer = layers.GRU(gru_units, return_sequences=True, stateful=stateful)  # Keep sequences for pooling
+    #     if bidirectional:
+    #         model.add(layers.Bidirectional(gru_layer))
+    #     else:
+    #         model.add(gru_layer)
+    #     if training and return_seq:
+    #         model.add(layers.Dropout(0.2))
 
-    # model.add(layers.LSTM(126, stateful=True, return_sequences=False, 
-    #                       dropout=0.2 if training else 0.0))  # Works! Shape matches
-   
+    # After GRUs: still sequential (batch, 39, gru_units*2), now apply partitioned pooling
+    model.add(layers.Lambda(partitioned_average_pooling_1d))  # Adapted for 1D post-GRU (axis=1 timesteps)
+    
     if training: model.add(layers.Dropout(0.4))
     model.add(layers.Dense(output_dim, activation='sigmoid', dtype=tf.float32))
 
