@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
   
   TfLiteXNNPackDelegateOptions xnnpack_options =
       TfLiteXNNPackDelegateOptionsDefault();
-  xnnpack_options.num_threads = 8;  // Set number of threads as appropriate for your
+  xnnpack_options.num_threads = 1;  // Set number of threads as appropriate for your
                                     // platform and application needs.  
   xnnpack_options.weight_cache_file_path =TfLiteXNNPackDelegateInMemoryFilePath();
   // xnnpack_options.flags |= TFLITE_XNNPACK_DELEGATE_FLAG_FORCE_FP16;
