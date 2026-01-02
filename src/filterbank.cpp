@@ -13,6 +13,7 @@ GuitarMidi::FilterBank::~FilterBank()
 
 void GuitarMidi::FilterBank::setup(map<uint, FilterRepresentation> filterreps, int samplerate)
 {
+    lv2_log_note(&g_logger,"Setting up filterbank\n");
     if (filterreps.size()==0)
         throw std::runtime_error("No filter representations");
     
@@ -20,7 +21,7 @@ void GuitarMidi::FilterBank::setup(map<uint, FilterRepresentation> filterreps, i
     m_filterbankbuffer.num_filters=filterreps.size();
     m_filterbankbuffer.window_size=BUFFER_SIZE;
     
-
+    lv2_log_note(&g_logger,"Setting up filterbank with %d filters and windowsize %d\n",m_filterbankbuffer.num_filters,m_filterbankbuffer.window_size);
 
     m_filterbankbuffer.audio_buffer_2D=new float[m_filterbankbuffer.num_filters*m_filterbankbuffer.window_size];
     for(auto f:filterreps){

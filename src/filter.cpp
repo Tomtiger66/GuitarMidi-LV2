@@ -23,9 +23,11 @@ namespace GuitarMidi
         m_filter.reset();
 
 #ifdef USE_ELLIPTIC_FILTERS
+        printf("USE_ELLIPTIC_FILTERS\n");
         m_filter.setup(m_order, m_samplerate, m_filter_rep.center_freq, m_bandwidth, m_passbandatten, 18.0);
 #else
-        m_filter.setup(m_order, m_samplerate, m_centerfreq, m_bandwidth);
+        printf("DO NOT USE_ELLIPTIC_FILTERS\n");
+        m_filter.setup(m_order, m_samplerate, m_filter_rep.center_freq, m_bandwidth);
 #endif
     }
 

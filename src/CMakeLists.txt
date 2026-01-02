@@ -46,12 +46,12 @@ set(TENSORFLOW_SOURCE_DIR "${CMAKE_SOURCE_DIR}/ext/tensorflow" CACHE PATH
 
 message("TensorFlow source dir: ${TENSORFLOW_SOURCE_DIR}")
 set(TFLITE_ENABLE_XNNPACK ON CACHE BOOL "Enable XNNPACK" FORCE)
-# include_directories(${TENSORFLOW_SOURCE_DIR}  ${TENSORFLOW_SOURCE_DIR}/tensorflow/lite/delegates/xnnpack)
-# add_subdirectory(
-#   "${TENSORFLOW_SOURCE_DIR}/tensorflow/lite"
-#   "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite"
-#   #EXCLUDE_FROM_ALL
-# )
+include_directories(${TENSORFLOW_SOURCE_DIR}  ${TENSORFLOW_SOURCE_DIR}/tensorflow/lite/delegates/xnnpack)
+add_subdirectory(
+  "${TENSORFLOW_SOURCE_DIR}/tensorflow/lite"
+  "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite"
+  #EXCLUDE_FROM_ALL
+)
 
 
 
@@ -66,7 +66,7 @@ message("Building with onset support")
 target_link_libraries(guitarmidi dsp aubio ${Pango_LIBRARIES})
 else()
 message("Building without onset support")
-target_link_libraries(guitarmidi PUBLIC dsp  ${Pango_LIBRARIES})# tensorflow-lite  )
+target_link_libraries(guitarmidi PUBLIC dsp  ${Pango_LIBRARIES} tensorflow-lite  )
 target_link_libraries(guitarmidi PUBLIC OpenMP::OpenMP_CXX )
 endif()
 
