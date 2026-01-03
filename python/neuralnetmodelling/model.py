@@ -49,9 +49,9 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     model.add(layers.BatchNormalization()); model.add(layers.LeakyReLU(0.2))
     if training: model.add(layers.SpatialDropout1D(0.3))
 
-    model.add(layers.GRU(gru_units, return_sequences=True, stateful=stateful))
-    if training:
-        model.add(layers.Dropout(0.2))
+    # model.add(layers.GRU(gru_units, return_sequences=True, stateful=stateful))
+    # if training:
+    #     model.add(layers.Dropout(0.2))
     # Apply GRU stack BEFORE final pooling/classification
     # Post-CNN: (batch, 39, 256)
     # for i in range(gru_layers):
