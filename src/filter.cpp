@@ -1,11 +1,11 @@
 #include <filter.hpp>
 namespace GuitarMidi
 {
-    Filter::Filter(FilterRepresentation filter_rep, float samplerate, float bandwidth, float passbandatten)
+    Filter::Filter(FilterRepresentation filter_rep, float samplerate, float q, float passbandatten)
     {
         m_filter_rep=filter_rep;
         m_passbandatten = passbandatten;
-        m_bandwidth = bandwidth;
+        m_q = q;
         m_samplerate = samplerate;
 
         m_bufferSize = BUFFER_SIZE;
@@ -14,20 +14,21 @@ namespace GuitarMidi
         initialize();
     }
 
-    void Filter::setFilterParameters(float bandwidth, float passbandatten, int order)
+    void Filter::setFilterParameters(float q, float passbandatten, int order)
     {
-        m_bandwidth = bandwidth;
+        m_q = q;
         m_passbandatten = passbandatten;
         m_order = order;
 
         m_filter.reset();
+        float bw=m_filter_rep.center_freq/m_q;
 
 #ifdef USE_ELLIPTIC_FILTERS
         printf("USE_ELLIPTIC_FILTERS\n");
-        m_filter.setup(m_order, m_samplerate, m_filter_rep.center_freq, m_bandwidth, m_passbandatten, 18.0);
+        m_filter.setup(m_order, m_samplerate, m_filter_rep.center_freq, bw, m_passbandatten, 18.0);
 #else
         printf("DO NOT USE_ELLIPTIC_FILTERS\n");
-        m_filter.setup(m_order, m_samplerate, m_filter_rep.center_freq, m_bandwidth);
+        m_filter.setup(m_order, m_samplerate, m_filter_rep.center_freq, bw);
 #endif
     }
 
@@ -42,7 +43,7 @@ namespace GuitarMidi
     {
         // Setup FILTERORDER 1st order filters. Currently Elliptic::BandPass crashes when running setup() with orders higher than 1
         // When we solve this we can run sharper filters with narrower bandwidth and maybe drop the pitch validation below in process()
-        setFilterParameters(m_bandwidth, m_passbandatten);
+        setFilterParameters(m_q, m_passbandatten);
 
         if (m_bufferSize)
             m_buffer = new float[m_bufferSize];

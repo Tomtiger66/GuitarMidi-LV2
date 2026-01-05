@@ -20,7 +20,7 @@ namespace GuitarMidi
          * @brief m_bandwidth: The bandwidth frequency of the bandpass filters
          *
          */
-        float m_bandwidth;
+        float m_q;
 
         /**
          * @brief m_passbandatten: The attenuation in db of amplitude of the ripple in the pass and stopband of the elliptic filters
@@ -59,10 +59,10 @@ namespace GuitarMidi
         Dsp::SimpleFilter<Dsp::Elliptic::BandPass<MAXORDER>, 1> m_filter;
 #endif
 
-        void setFilterParameters(float bandwidth = 20, float passbandatten = 2, int order = FILTERORDER);
+        void setFilterParameters(float q = 17.5, float passbandatten = 2, int order = FILTERORDER);
 
     public:
-        Filter(FilterRepresentation filter_rep, float samplerate,  float bandwidth = 20, float passbandatten = 2);
+        Filter(FilterRepresentation filter_rep, float samplerate,  float q = 17.5, float passbandatten = 2);
         ~Filter();
         void initialize();
 
