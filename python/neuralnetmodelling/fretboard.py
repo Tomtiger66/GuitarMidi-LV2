@@ -4,10 +4,10 @@ num_strings=6
 from scipy import signal 
 import numpy as np
 class Filter:
-    def __init__(self, fret,stringid,harmonic,center_freq, bw,sample_rate):
+    def __init__(self, fret,stringid,harmonic,center_freq, q,sample_rate):
         self.id=fret*num_strings*num_harmonics+stringid*num_harmonics+harmonic
         self.sample_rate=sample_rate
-            
+        bw=center_freq/q 
         # create the filter
         N = 2
         low = (center_freq-bw/2) 
@@ -39,20 +39,20 @@ class HarmonicGroup:
           
             
 class Fret:
-    def __init__(self,fret,s0,s1,s2,s3,s4,s5, bw,sample_rate):
+    def __init__(self,fret,s0,s1,s2,s3,s4,s5, q,sample_rate):
         
         self.strings=[]
-        self.strings.append(HarmonicGroup(fret,0,s0,bw,sample_rate))
+        self.strings.append(HarmonicGroup(fret,0,s0,q,sample_rate))
    
-        self.strings.append(HarmonicGroup(fret,1,s1,bw,sample_rate))
+        self.strings.append(HarmonicGroup(fret,1,s1,q,sample_rate))
 
-        self.strings.append(HarmonicGroup(fret,2,s2,bw,sample_rate))
+        self.strings.append(HarmonicGroup(fret,2,s2,q,sample_rate))
 
-        self.strings.append(HarmonicGroup(fret,3,s3,bw,sample_rate))
+        self.strings.append(HarmonicGroup(fret,3,s3,q,sample_rate))
 
-        self.strings.append(HarmonicGroup(fret,4,s4,bw,sample_rate))
+        self.strings.append(HarmonicGroup(fret,4,s4,q,sample_rate))
 
-        self.strings.append(HarmonicGroup(fret,5,s5,bw,sample_rate))
+        self.strings.append(HarmonicGroup(fret,5,s5,q,sample_rate))
 
         
     def process(self, input_audio, filterbank_out: np.array):
@@ -69,22 +69,22 @@ class Fret:
         return res
             
 class FretBoard:
-    def __init__(self,bw,sample_rate):
+    def __init__(self,q,sample_rate):
         self.frets=[]
        
-        self.frets.append(Fret(0,82,11,147,196,247,329,bw,sample_rate))
-        self.frets.append(Fret(1,87,117,156,208,262,349,bw,sample_rate))
-        self.frets.append(Fret(2,92,123,165,220,277,370,bw,sample_rate))
-        self.frets.append(Fret(3,98,131,175,233,294,392,bw,sample_rate))
-        self.frets.append(Fret(4,104,139,185,247,311,415,bw,sample_rate))
-        self.frets.append(Fret(5,110,147,196,262,329,440,bw,sample_rate))
-        self.frets.append(Fret(6,117,156,208,277,349,466,bw,sample_rate))
-        self.frets.append(Fret(7,123,165,220,294,370,494,bw,sample_rate))
-        self.frets.append(Fret(8,131,175,233,311,392,523,bw,sample_rate))
-        self.frets.append(Fret(9,139,185,247,329,415,554,bw,sample_rate))
-        self.frets.append(Fret(10,147,196,262,349,440,587,bw,sample_rate))
-        self.frets.append(Fret(11,156,208,277,370,466,622,bw,sample_rate))
-        self.frets.append(Fret(12,165,220,294,392,494,659,bw,sample_rate))
+        self.frets.append(Fret(0,82,11,147,196,247,329,q,sample_rate))
+        self.frets.append(Fret(1,87,117,156,208,262,349,q,sample_rate))
+        self.frets.append(Fret(2,92,123,165,220,277,370,q,sample_rate))
+        self.frets.append(Fret(3,98,131,175,233,294,392,q,sample_rate))
+        self.frets.append(Fret(4,104,139,185,247,311,415,q,sample_rate))
+        self.frets.append(Fret(5,110,147,196,262,329,440,q,sample_rate))
+        self.frets.append(Fret(6,117,156,208,277,349,466,q,sample_rate))
+        self.frets.append(Fret(7,123,165,220,294,370,494,q,sample_rate))
+        self.frets.append(Fret(8,131,175,233,311,392,523,q,sample_rate))
+        self.frets.append(Fret(9,139,185,247,329,415,554,q,sample_rate))
+        self.frets.append(Fret(10,147,196,262,349,440,587,q,sample_rate))
+        self.frets.append(Fret(11,156,208,277,370,466,622,q,sample_rate))
+        self.frets.append(Fret(12,165,220,294,392,494,659,q,sample_rate))
         
     def process(self, input_audio, filterbank_out: np.array):
       

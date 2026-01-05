@@ -100,7 +100,7 @@ namespace GuitarMidi
             }
             else{
                // lv2_log_note(&g_logger, "Note %d OFF with confidence %f\n", i, output_data[i]);
-                if(m_note_on[i]){
+                if(m_note_on[i]&&output_data[i]<0.3&&i!=(OUTPUT_DIM-1)){
                    uint8_t midinote[3]={0x90,i,0x00};
                     m_midioutput.sendMidiMessage(midinote,m_frames);
                     m_note_on[i]=false; 
