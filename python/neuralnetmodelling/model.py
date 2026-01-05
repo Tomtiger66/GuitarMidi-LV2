@@ -32,12 +32,12 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # We use a small 2D kernel to look at neighboring filters and time
     x = layers.Conv1D(32, 5, padding='same', activation=None)(x)
     x = layers.BatchNormalization()(x)
-    x = layers.ReLU()(x)
+    x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
     x = layers.Conv1D(64, 5, padding='same', activation=None)(x)
     x = layers.BatchNormalization()(x)
-    x = layers.ReLU()(x)
-    # x=layers.MaxPooling1D(2)(x)
+    x = layers.LeakyReLU()(x)
+    x=layers.MaxPooling1D(2)(x)
     print(f"After first Conv2D: {x.shape}")
     #x = layers.MaxPooling2D((1, 4))(x) # Reduce time, keep filter resolution
     # print(f"After first Conv2D and MaxPooling2D: {x.shape}")
@@ -46,24 +46,24 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # Assuming 312 filters / 6 strings = 52 filters per string
     string_features = []
     for i in range(6):
-        start=i*52
-        end=(i+1)*52
+        start=i*26
+        end=(i+1)*26
         print(f"Extracting string {i+1} from filters {start} to {end}")
         s = layers.Lambda(lambda y: y[:, start:end, :])(x)
         print(f"String {i+1} section shape: {s.shape}")
         # String-specific processing
         s = layers.Conv1D(128, 5, padding='same', activation=None)(s)
         s = layers.BatchNormalization()(s)
-        s = layers.ReLU()(s)
+        s = layers.LeakyReLU()(s)
         print(f"String {i+1} after first Conv1D: {s.shape}")
         s=layers.MaxPooling1D(4)(s)
         #s = layers.MaxPooling2D((1, 4))(s)
         s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
         s = layers.BatchNormalization()(s)
-        s = layers.ReLU()(s)
+        s = layers.LeakyReLU()(s)
         print(f"String {i+1} after second Conv1D: {s.shape}")
         s=layers.MaxPooling1D(4)(s)
-        #s = layers.MaxPooling2D((1, 4))(s)
+
 
         s = layers.GlobalAveragePooling1D()(s)
         string_features.append(s)
