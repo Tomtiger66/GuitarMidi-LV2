@@ -65,7 +65,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
         s=layers.MaxPooling1D(4)(s)
 
 
-        s = layers.GlobalAveragePooling1D()(s)
+        s = layers.GlobalMaxPooling1D()(s)
         string_features.append(s)
     
     # 4. Recombine for Note Classification

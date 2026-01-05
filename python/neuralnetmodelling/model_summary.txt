@@ -170,30 +170,30 @@ Model: "functional"
 │ max_pooling1d_12    │ (64, 1, 256)      │          0 │ leaky_re_lu_13[0… │
 │ (MaxPooling1D)      │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_average_poo… │ (64, 256)         │          0 │ max_pooling1d_2[… │
-│ (GlobalAveragePool… │                   │            │                   │
+│ global_max_pooling… │ (64, 256)         │          0 │ max_pooling1d_2[… │
+│ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_average_poo… │ (64, 256)         │          0 │ max_pooling1d_4[… │
-│ (GlobalAveragePool… │                   │            │                   │
+│ global_max_pooling… │ (64, 256)         │          0 │ max_pooling1d_4[… │
+│ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_average_poo… │ (64, 256)         │          0 │ max_pooling1d_6[… │
-│ (GlobalAveragePool… │                   │            │                   │
+│ global_max_pooling… │ (64, 256)         │          0 │ max_pooling1d_6[… │
+│ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_average_poo… │ (64, 256)         │          0 │ max_pooling1d_8[… │
-│ (GlobalAveragePool… │                   │            │                   │
+│ global_max_pooling… │ (64, 256)         │          0 │ max_pooling1d_8[… │
+│ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_average_poo… │ (64, 256)         │          0 │ max_pooling1d_10… │
-│ (GlobalAveragePool… │                   │            │                   │
+│ global_max_pooling… │ (64, 256)         │          0 │ max_pooling1d_10… │
+│ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_average_poo… │ (64, 256)         │          0 │ max_pooling1d_12… │
-│ (GlobalAveragePool… │                   │            │                   │
+│ global_max_pooling… │ (64, 256)         │          0 │ max_pooling1d_12… │
+│ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ concatenate         │ (64, 1536)        │          0 │ global_average_p… │
-│ (Concatenate)       │                   │            │ global_average_p… │
-│                     │                   │            │ global_average_p… │
-│                     │                   │            │ global_average_p… │
-│                     │                   │            │ global_average_p… │
-│                     │                   │            │ global_average_p… │
+│ concatenate         │ (64, 1536)        │          0 │ global_max_pooli… │
+│ (Concatenate)       │                   │            │ global_max_pooli… │
+│                     │                   │            │ global_max_pooli… │
+│                     │                   │            │ global_max_pooli… │
+│                     │                   │            │ global_max_pooli… │
+│                     │                   │            │ global_max_pooli… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ dense (Dense)       │ (64, 129)         │    198,273 │ concatenate[0][0] │
 └─────────────────────┴───────────────────┴────────────┴───────────────────┘
