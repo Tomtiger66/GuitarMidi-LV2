@@ -23,54 +23,57 @@ def partitioned_average_pooling_1d(x):
 
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
                        gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
-    model = models.Sequential()
-    print("Input shape for 1D CNN model:", input_shape)
-    model.add(layers.Input(batch_shape=(batch_sz, *input_shape), dtype=tf.float32))  # Static batch_sz!
-    model.add(layers.Lambda(lambda x: tf.reduce_max(x, axis=2)))  # (64, 312)
-
-    # Your 4 Conv1D blocks EXACTLY as-is...
-    model.add(layers.Conv1D(filters=32, kernel_size=5, padding='same', activation=None))
-    model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU(alpha=0.2))
-    if training: model.add(layers.SpatialDropout1D(0.2))
-    model.add(layers.MaxPooling1D(2, strides=2))
-
-    model.add(layers.Conv1D(64, 5, padding='same', activation=None))
-    model.add(layers.BatchNormalization()); model.add(layers.LeakyReLU(0.2))
-    if training: model.add(layers.SpatialDropout1D(0.2))
-    model.add(layers.MaxPooling1D(2, strides=2))
-
-    model.add(layers.Conv1D(128, 5, padding='same', activation=None))
-    model.add(layers.BatchNormalization()); model.add(layers.LeakyReLU(0.2))
-    if training: model.add(layers.SpatialDropout1D(0.2))
-    model.add(layers.MaxPooling1D(2, strides=2))
-
-    model.add(layers.Conv1D(256, 5, padding='same', activation=None))
-    model.add(layers.BatchNormalization()); model.add(layers.LeakyReLU(0.2))
-    if training: model.add(layers.SpatialDropout1D(0.3))
-
-    # model.add(layers.GRU(gru_units, return_sequences=True, stateful=stateful))
-    # if training:
-    #     model.add(layers.Dropout(0.2))
-    # Apply GRU stack BEFORE final pooling/classification
-    # Post-CNN: (batch, 39, 256)
-    # for i in range(gru_layers):
-    #     return_seq = (i < gru_layers - 1)
-    #     gru_layer = layers.GRU(gru_units, return_sequences=True, stateful=stateful)  # Keep sequences for pooling
-    #     if bidirectional:
-    #         model.add(layers.Bidirectional(gru_layer))
-    #     else:
-    #         model.add(gru_layer)
-    #     if training and return_seq:
-    #         model.add(layers.Dropout(0.2))
-
-    # After GRUs: still sequential (batch, 39, gru_units*2), now apply partitioned pooling
-    model.add(layers.Lambda(partitioned_average_pooling_1d))  # Adapted for 1D post-GRU (axis=1 timesteps)
+# Input: (Batch, Filters, Time)
+    inputs = layers.Input(batch_shape=(batch_sz, *input_shape))
     
-    if training: model.add(layers.Dropout(0.4))
-    model.add(layers.Dense(output_dim, activation='sigmoid', dtype=tf.float32))
+    x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
+    print(f"Initial input shape: {x.shape}")
+    # 2. Time-Domain Processing (per filter)
+    # We use a small 2D kernel to look at neighboring filters and time
+    x = layers.Conv1D(32, 5, padding='same', activation=None)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.ReLU()(x)
+    # x=layers.MaxPooling1D(2)(x)
+    x = layers.Conv1D(64, 5, padding='same', activation=None)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.ReLU()(x)
+    # x=layers.MaxPooling1D(2)(x)
+    print(f"After first Conv2D: {x.shape}")
+    #x = layers.MaxPooling2D((1, 4))(x) # Reduce time, keep filter resolution
+    # print(f"After first Conv2D and MaxPooling2D: {x.shape}")
+    # 3. String-Specific Partitioning
+    # Instead of manual slicing at the END, slice now.
+    # Assuming 312 filters / 6 strings = 52 filters per string
+    string_features = []
+    for i in range(6):
+        start=i*52
+        end=(i+1)*52
+        print(f"Extracting string {i+1} from filters {start} to {end}")
+        s = layers.Lambda(lambda y: y[:, start:end, :])(x)
+        print(f"String {i+1} section shape: {s.shape}")
+        # String-specific processing
+        s = layers.Conv1D(128, 5, padding='same', activation=None)(s)
+        s = layers.BatchNormalization()(s)
+        s = layers.ReLU()(s)
+        print(f"String {i+1} after first Conv1D: {s.shape}")
+        s=layers.MaxPooling1D(4)(s)
+        #s = layers.MaxPooling2D((1, 4))(s)
+        s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
+        s = layers.BatchNormalization()(s)
+        s = layers.ReLU()(s)
+        print(f"String {i+1} after second Conv1D: {s.shape}")
+        s=layers.MaxPooling1D(4)(s)
+        #s = layers.MaxPooling2D((1, 4))(s)
 
-    return model
+        s = layers.GlobalAveragePooling1D()(s)
+        string_features.append(s)
+    
+    # 4. Recombine for Note Classification
+    concat = layers.Concatenate()(string_features)
+    # x = layers.Dense(256, activation='relu')(concat)
+    outputs = layers.Dense(output_dim, activation='sigmoid')(concat)
+    
+    return models.Model(inputs, outputs)
 
 
 # class FASTBlock(layers.Layer):
