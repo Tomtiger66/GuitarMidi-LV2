@@ -26,7 +26,15 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
 # Input: (Batch, Filters, Time)
     inputs = layers.Input(batch_shape=(batch_sz, *input_shape))
     
-    x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
+        # 1. Temporal Compression: Keep some temporal info rather than just 'max'
+    # We use a large stride to reduce 256 -> 32 while learning features
+    x = layers.Reshape((312, 256, 1))(inputs)
+    x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
+    x = layers.LeakyReLU(0.2)(x)
+    
+    # Flatten time into features so we can use Conv1D on filters
+    # Shape: (Batch, 312, 16 * 32)
+    x = layers.Reshape((312, 512))(x)
     print(f"Initial input shape: {x.shape}")
     # 2. Time-Domain Processing (per filter)
     # We use a small 2D kernel to look at neighboring filters and time
@@ -49,7 +57,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
         start=i*26
         end=(i+1)*26
         print(f"Extracting string {i+1} from filters {start} to {end}")
-        s = layers.Lambda(lambda y: y[:, start:end, :])(x)
+        s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :])(x)
         print(f"String {i+1} section shape: {s.shape}")
         # String-specific processing
         s = layers.Conv1D(128, 5, padding='same', activation=None)(s)
