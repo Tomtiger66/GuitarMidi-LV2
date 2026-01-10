@@ -12,7 +12,7 @@ num_classes = 129 # For MIDI notes+silence class
 INPUT_SHAPE = (image_height,image_width, num_channels)
 OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
-
+SAMPLES_PER_CHUNK = 316
 # Common functions
 def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
     totalsamples=nn_slices.shape[0]
@@ -41,6 +41,7 @@ def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
 # Load a single sample from files    
 def load_sample_from_files(input_path_tensor):
     input_path = input_path_tensor.numpy().decode('utf-8')
+    print("Loaded sample from ",input_path)
     inputname=os.path.basename(input_path)
     
     parentdir=os.path.dirname(os.path.dirname(input_path))
@@ -50,24 +51,56 @@ def load_sample_from_files(input_path_tensor):
     # print("input: "+input_path)
     # print("output: "+output_path)
     # Load data
-    image = np.load(input_path).astype(np.float32).reshape(INPUT_SHAPE)
-    label = np.load(output_path).astype(np.float32).reshape(OUTPUT_DIM_NOTES)
+
+    image = np.load(input_path).astype(np.float32)#.reshape(INPUT_SHAPE)
+    
+    print("Image shape: ",image.shape)
+    label = np.load(output_path).astype(np.float32)#.reshape(OUTPUT_DIM_NOTES)
+    
+    print("Label shape: ",label.shape)
 
     # Ensure shape
-    image = tf.ensure_shape(image, INPUT_SHAPE)
-    label = tf.ensure_shape(label, (OUTPUT_DIM_NOTES,)) 
+    # image = tf.ensure_shape(image, INPUT_SHAPE)
+    # label = tf.ensure_shape(label, (OUTPUT_DIM_NOTES,)) 
     
     # Return features and label
     return image, label
+
+
+
+def load_chunk_from_file(ipath_tensor, opath_tensor):
+    ipath = ipath_tensor.numpy().decode('utf-8')
+    opath = opath_tensor.numpy().decode('utf-8')
+    
+    # Use mmap_mode='r' to read only what is needed from the SATA HDD
+    image_chunk = np.load(ipath, mmap_mode='r').astype(np.float32)
+    label_chunk = np.load(opath, mmap_mode='r').astype(np.float32)
+    
+    return image_chunk, label_chunk
+
+def tf_load_chunk(ipath, opath):
+    # This returns the full 316-sample blocks
+    return tf.py_function(load_chunk_from_file, [ipath, opath], [tf.float32, tf.float32])
+
+def unchunk_mapper(ipath, opath):
+    img_chunk, lbl_chunk = tf_load_chunk(ipath, opath)
+    # This turns the (316, ...) array into a stream of 316 individual samples
+    return tf.data.Dataset.from_tensor_slices((img_chunk, lbl_chunk))
 
 # TensorFlow wrapper for loading sample from files
 def tf_load_sample_from_files(ipath):
     image, label = tf.py_function(
         load_sample_from_files, [ipath], [tf.float32, tf.float32]
     )
-    image.set_shape(INPUT_SHAPE)
-    label.set_shape((OUTPUT_DIM_NOTES,))
-    return image, label # Return (features, labels, sample_weights)   
+    print("Loaded sample from ",ipath)
+    print("Image shape: ",image.shape)
+    print("Label shape: ",label.shape)
+    image.set_shape([None, INPUT_SHAPE[0], INPUT_SHAPE[1]])#,INPUT_SHAPE[2]])#image.set_shape(INPUT_SHAPE)
+    label.set_shape([None, OUTPUT_DIM_NOTES])#label.set_shape((OUTPUT_DIM_NOTES,))
+    print("Loaded sample from ",ipath)
+    print("Image shape: ",image.shape)
+    print("Label shape: ",label.shape)
+    return image,label#tf.data.Dataset.from_tensor_slices((image, label)) # Return (features, labels, sample_weights)   
     
 def plot_heatmap(plotdata,downsample_factor=1000):
     num_cols=plotdata.shape[1]
