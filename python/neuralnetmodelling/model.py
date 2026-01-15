@@ -79,7 +79,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # 4. Recombine for Note Classification
     concat = layers.Concatenate()(string_features)
     # x = layers.Dense(256, activation='relu')(concat)
-    outputs = layers.Dense(output_dim, activation='sigmoid')(concat)
+    outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
     return models.Model(inputs, outputs)
 
