@@ -50,8 +50,8 @@ def load_sample_from_files(input_path_tensor):
     # print("input: "+input_path)
     # print("output: "+output_path)
     # Load data
-    image = np.load(input_path).astype(np.float32).reshape(INPUT_SHAPE)
-    label = np.load(output_path).astype(np.float32).reshape(OUTPUT_DIM_NOTES)
+    image = (np.load(input_path).astype(np.float32)/127.0).reshape(INPUT_SHAPE)
+    label = (np.load(output_path).astype(np.float32)/127.0).reshape(OUTPUT_DIM_NOTES)
 
     # Ensure shape
     image = tf.ensure_shape(image, INPUT_SHAPE)
