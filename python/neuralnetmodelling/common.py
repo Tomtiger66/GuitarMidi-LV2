@@ -12,7 +12,7 @@ num_classes = 129 # For MIDI notes+silence class
 INPUT_SHAPE = (image_height,image_width, num_channels)
 OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
-SAMPLES_PER_CHUNK = 316
+
 # Common functions
 def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
     totalsamples=nn_slices.shape[0]
@@ -41,7 +41,6 @@ def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
 # Load a single sample from files    
 def load_sample_from_files(input_path_tensor):
     input_path = input_path_tensor.numpy().decode('utf-8')
-    print("Loaded sample from ",input_path)
     inputname=os.path.basename(input_path)
     
     parentdir=os.path.dirname(os.path.dirname(input_path))
@@ -51,89 +50,24 @@ def load_sample_from_files(input_path_tensor):
     # print("input: "+input_path)
     # print("output: "+output_path)
     # Load data
+    image = np.load(input_path).astype(np.float32).reshape(INPUT_SHAPE)
+    label = np.load(output_path).astype(np.float32).reshape(OUTPUT_DIM_NOTES)
 
-    images = np.load(input_path).astype(np.float32)#.reshape(INPUT_SHAPE)
-    
-    print("Image shape: ",images.shape)
-    labels = np.load(output_path).astype(np.float32)#.reshape(OUTPUT_DIM_NOTES)
-    
-    print("Label shape: ",labels.shape)
-
-    image=[]
-    label=[]
-    # Reshape data
-    for i in range(10):#images.shape[0]):
-        img=images[i].reshape(INPUT_SHAPE)
-        lbl=labels[i].reshape((OUTPUT_DIM_NOTES,))
-        #Ensure shape
-        img=tf.ensure_shape(img, INPUT_SHAPE)
-        lbl=tf.ensure_shape(lbl, (OUTPUT_DIM_NOTES,)) 
-        # Append to list
-        image.append(img)
-        label.append(lbl)
     # Ensure shape
-    # image = tf.ensure_shape(image, INPUT_SHAPE)
-    # label = tf.ensure_shape(label, (OUTPUT_DIM_NOTES,)) 
+    image = tf.ensure_shape(image, INPUT_SHAPE)
+    label = tf.ensure_shape(label, (OUTPUT_DIM_NOTES,)) 
     
     # Return features and label
-    #print sizes of image and label
-    print("Loaded sample from ",input_path)
-    print("Image shape: ",len(image),image[0].shape)
-    print("Label shape: ",len(label),label[0].shape)
-    return image,label  # Return (features, labels)
-
-
-
-def load_chunk_from_file(input_path_tensor):
-    input_path = input_path_tensor.numpy().decode('utf-8')
-    #print("Loaded sample from ",input_path)
-    inputname=os.path.basename(input_path)
-    
-    parentdir=os.path.dirname(os.path.dirname(input_path))
-    # print("current dir: "+parentdir)
-    output_path=os.path.join(parentdir,'output',inputname)
-
-    # print("input: "+input_path)
-    # print("output: "+output_path)
-    # Load data
-
-    images = np.load(input_path, mmap_mode='r').astype(np.float32)#.reshape(INPUT_SHAPE)
-    
-    #print("Image shape: ",images.shape)
-    labels = np.load(output_path, mmap_mode='r').astype(np.float32)#.reshape(OUTPUT_DIM_NOTES)
-    
-    #print("Label shape: ",labels.shape)
-    
-    image_chunk=images.reshape((SAMPLES_PER_CHUNK,image_height,image_width,num_channels))
-    label_chunk=labels.reshape((SAMPLES_PER_CHUNK,OUTPUT_DIM_NOTES))
-    
-    return image_chunk, label_chunk
-
-def tf_load_chunk(ipath):
-    # This returns the full 316-sample blocks
-    return tf.py_function(load_chunk_from_file, [ipath], [tf.float32, tf.float32])
-
-def unchunk_mapper(ipath):
-    # img_chunk shape: (316, 312, 256, 1)
-    # lbl_chunk shape: (316, OUTPUT_DIM_NOTES)
-    img_chunk, lbl_chunk = tf_load_chunk(ipath)
-    
-# Explicitly set the shapes of the chunks before slicing
-    img_chunk.set_shape([None, 312, 256, 1])
-    lbl_chunk.set_shape([None, OUTPUT_DIM_NOTES])
-    # from_tensor_slices slices along the FIRST dimension (the 316)
-    return tf.data.Dataset.from_tensor_slices((img_chunk, lbl_chunk))
+    return image, label
 
 # TensorFlow wrapper for loading sample from files
 def tf_load_sample_from_files(ipath):
     image, label = tf.py_function(
         load_sample_from_files, [ipath], [tf.float32, tf.float32]
     )
-
     image.set_shape(INPUT_SHAPE)
     label.set_shape((OUTPUT_DIM_NOTES,))
-
-    return image,label,#tf.data.Dataset.from_tensor_slices((image, label)) # Return (features, labels, sample_weights)   
+    return image, label # Return (features, labels, sample_weights)   
     
 def plot_heatmap(plotdata,downsample_factor=1000):
     num_cols=plotdata.shape[1]
