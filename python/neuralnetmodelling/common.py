@@ -59,15 +59,25 @@ def load_sample_from_files(input_path_tensor):
     
     # Return features and label
     return image, label
+feature_description = {
+    "input":  tf.io.FixedLenFeature([], tf.string),
+    "output": tf.io.FixedLenFeature([], tf.string),
+}
+
 
 # TensorFlow wrapper for loading sample from files
 def tf_load_sample_from_files(ipath):
-    image, label = tf.py_function(
-        load_sample_from_files, [ipath], [tf.float32, tf.float32]
-    )
-    image.set_shape(INPUT_SHAPE)
-    label.set_shape((OUTPUT_DIM_NOTES,))
-    return image, label # Return (features, labels, sample_weights)   
+    parsed=tf.io.parse_single_example(ipath,feature_description)
+ 
+    input=tf.io.decode_raw(parsed["input"],tf.int8)
+   
+    output=tf.io.decode_raw(parsed["output"],tf.int8)
+
+    input=tf.reshape(input,INPUT_SHAPE)
+
+    output=tf.reshape(output,[OUTPUT_DIM_NOTES])
+    print(output.shape)
+    return input/127,output/127
     
 def plot_heatmap(plotdata,downsample_factor=1000):
     num_cols=plotdata.shape[1]
