@@ -31,7 +31,7 @@ class HarmonicGroup:
     def process(self, input_audio, filterbank_out: np.array):
         def process_harmonic(h):
             h.process(input_audio,filterbank_out)
-        Parallel(n_jobs=num_harmonics,backend="threading")(delayed(process_harmonic)(h) for h in self.harmonics)
+        Parallel(n_jobs=1,backend="threading")(delayed(process_harmonic)(h) for h in self.harmonics)
         
         # for h in self.harmonics:
         #     #filterbank_out.append(h.process(input_audio))
@@ -62,7 +62,7 @@ class Fret:
     def process(self, input_audio, filterbank_out: np.array):
         def process_string(h):
             h.process(input_audio,filterbank_out)
-        Parallel(n_jobs=6,backend="threading")(delayed(process_string)(h) for h in self.strings)
+        Parallel(n_jobs=2,backend="threading")(delayed(process_string)(h) for h in self.strings)
         # for h in self.strings:
         #     #filterbank_out.append(h.process(input_audio,filterbank_out))
         #     h.process(input_audio,filterbank_out)
