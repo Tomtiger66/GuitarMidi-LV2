@@ -67,17 +67,20 @@ feature_description = {
 
 # TensorFlow wrapper for loading sample from files
 def tf_load_sample_from_files(ipath):
-    parsed=tf.io.parse_single_example(ipath,feature_description)
+    parsed = tf.io.parse_single_example(ipath, feature_description)
  
-    input=tf.io.decode_raw(parsed["input"],tf.int8)
-   
-    output=tf.io.decode_raw(parsed["output"],tf.int8)
+    # Decode as int8 as planned
+    input_raw = tf.io.decode_raw(parsed["input"], tf.int8)
+    output_raw = tf.io.decode_raw(parsed["output"], tf.int8)
 
-    input=tf.reshape(input,INPUT_SHAPE)
+    # Explicitly cast to float16 to match your 5080's Mixed Precision policy
+    # This is faster than implicit casting during division
+    input_tensor = tf.cast(tf.reshape(input_raw, INPUT_SHAPE), tf.float16)
+    output_tensor = tf.cast(tf.reshape(output_raw, [OUTPUT_DIM_NOTES]), tf.float16)
 
-    output=tf.reshape(output,[OUTPUT_DIM_NOTES])
-    print(output.shape)
-    return input/127,output/127
+    # Use multiplication by the reciprocal (1/127 ≈ 0.007874) 
+    # Multiplications are generally faster for CPUs than divisions
+    return input_tensor * 0.007874, output_tensor * 0.007874
     
 def plot_heatmap(plotdata,downsample_factor=1000):
     num_cols=plotdata.shape[1]
