@@ -75,8 +75,8 @@ def tf_load_sample_from_files(ipath):
 
     # Explicitly cast to float16 to match your 5080's Mixed Precision policy
     # This is faster than implicit casting during division
-    input_tensor = tf.cast(tf.reshape(input_raw, INPUT_SHAPE), tf.float16)
-    output_tensor = tf.cast(tf.reshape(output_raw, [OUTPUT_DIM_NOTES]), tf.float16)
+    input_tensor = tf.cast(tf.reshape(input_raw, INPUT_SHAPE), tf.float32)
+    output_tensor = tf.cast(tf.reshape(output_raw, [OUTPUT_DIM_NOTES]), tf.float32)
 
     # Use multiplication by the reciprocal (1/127 ≈ 0.007874) 
     # Multiplications are generally faster for CPUs than divisions
