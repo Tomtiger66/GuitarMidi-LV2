@@ -65,12 +65,12 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
         s = layers.LeakyReLU()(s)
         print(f"String {i+1} after first Conv1D: {s.shape}")
         s=layers.MaxPooling1D(4)(s)
-        #s = layers.MaxPooling2D((1, 4))(s)
-        s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
-        s = layers.BatchNormalization()(s)
-        s = layers.LeakyReLU()(s)
-        print(f"String {i+1} after second Conv1D: {s.shape}")
-        s=layers.MaxPooling1D(4)(s)
+        # #s = layers.MaxPooling2D((1, 4))(s)
+        # s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
+        # s = layers.BatchNormalization()(s)
+        # s = layers.LeakyReLU()(s)
+        # print(f"String {i+1} after second Conv1D: {s.shape}")
+        # s=layers.MaxPooling1D(4)(s)
 
 
         s = layers.GlobalMaxPooling1D()(s)
