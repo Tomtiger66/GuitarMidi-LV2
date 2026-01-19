@@ -78,9 +78,9 @@ def tf_load_sample_from_files(ipath):
     input_tensor = tf.cast(tf.reshape(input_raw, INPUT_SHAPE), tf.float32)
     output_tensor = tf.cast(tf.reshape(output_raw, [OUTPUT_DIM_NOTES]), tf.float32)
 
-    # Use multiplication by the reciprocal (1/127 ≈ 0.007874) 
+    # Use multiplication by the reciprocal (1/127 ≈ 0.007874016) 
     # Multiplications are generally faster for CPUs than divisions
-    return input_tensor * 0.007874, output_tensor * 0.007874
+    return input_tensor * 0.007874016, output_tensor
     
 def plot_heatmap(plotdata,downsample_factor=1000):
     num_cols=plotdata.shape[1]
