@@ -29,13 +29,13 @@ class HarmonicGroup:
     
             
     def process(self, input_audio, filterbank_out: np.array):
-        def process_harmonic(h):
-            h.process(input_audio,filterbank_out)
-        Parallel(n_jobs=1,backend="threading")(delayed(process_harmonic)(h) for h in self.harmonics)
-        
-        # for h in self.harmonics:
-        #     #filterbank_out.append(h.process(input_audio))
+        # def process_harmonic(h):
         #     h.process(input_audio,filterbank_out)
+        # Parallel(n_jobs=1,backend="threading")(delayed(process_harmonic)(h) for h in self.harmonics)
+        
+        for h in self.harmonics:
+            #filterbank_out.append(h.process(input_audio))
+            h.process(input_audio,filterbank_out)
             
   
     def get_num_filters(self):
@@ -60,12 +60,12 @@ class Fret:
 
         
     def process(self, input_audio, filterbank_out: np.array):
-        def process_string(h):
-            h.process(input_audio,filterbank_out)
-        Parallel(n_jobs=2,backend="threading")(delayed(process_string)(h) for h in self.strings)
-        # for h in self.strings:
-        #     #filterbank_out.append(h.process(input_audio,filterbank_out))
+        # def process_string(h):
         #     h.process(input_audio,filterbank_out)
+        # Parallel(n_jobs=2,backend="threading")(delayed(process_string)(h) for h in self.strings)
+        for h in self.strings:
+            #filterbank_out.append(h.process(input_audio,filterbank_out))
+            h.process(input_audio,filterbank_out)
       
     def get_num_filters(self):
         res=0
@@ -94,12 +94,12 @@ class FretBoard:
    #Parallel(n_jobs=5)(delayed(prepare_audio_midi_data)(f) for f in all_jams_files)      
     def process(self, input_audio, filterbank_out: np.array):
       
-        def process_fret(h):
-            h.process(input_audio,filterbank_out)
-        Parallel(n_jobs=12,backend="threading")(delayed(process_fret)(h) for h in self.frets)
-        # for h in self.frets:
-        #     # filterbank_out.append(h.process(input_audio,filterbank_out))    
-        #     res=h.process(input_audio,filterbank_out)
+        # def process_fret(h):
+        #     h.process(input_audio,filterbank_out)
+        # Parallel(n_jobs=12,backend="threading")(delayed(process_fret)(h) for h in self.frets)
+        for h in self.frets:
+            # filterbank_out.append(h.process(input_audio,filterbank_out))    
+            res=h.process(input_audio,filterbank_out)
        
     def get_num_filters(self):
         res=0

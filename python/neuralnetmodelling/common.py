@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import tensorflow as tf
+from fretboard import FretBoard
 # Common parameters
 frame_size=256
 image_width = 256
@@ -10,9 +11,10 @@ image_height = 312 # Assuming this is your updated 288+some context/padding, or 
 num_channels = 1
 num_classes = 129 # For MIDI notes+silence class
 INPUT_SHAPE = (image_height,image_width, num_channels)
+INPUT_SHAPE_AUDIO = (1,image_width, num_channels)
 OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
-
+SAMPLERATE=48000
 # Common functions
 def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
     totalsamples=nn_slices.shape[0]
@@ -81,6 +83,8 @@ def tf_load_sample_from_files(ipath):
     # Use multiplication by the reciprocal (1/127 ≈ 0.007874016) 
     # Multiplications are generally faster for CPUs than divisions
     return input_tensor * 0.007874016, output_tensor
+
+
     
 def plot_heatmap(plotdata,downsample_factor=1000):
     num_cols=plotdata.shape[1]
