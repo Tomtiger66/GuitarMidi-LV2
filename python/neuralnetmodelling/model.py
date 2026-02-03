@@ -42,10 +42,12 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
+    x = layers.SpatialDropout1D(0.2)(x, training=training)
     x = layers.Conv1D(64, 5, padding='same', activation=None)(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
+    x = layers.SpatialDropout1D(0.2)(x, training=training)
     print(f"After first Conv2D: {x.shape}")
     #x = layers.MaxPooling2D((1, 4))(x) # Reduce time, keep filter resolution
     # print(f"After first Conv2D and MaxPooling2D: {x.shape}")
@@ -65,6 +67,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
         s = layers.LeakyReLU()(s)
         print(f"String {i+1} after first Conv1D: {s.shape}")
         s=layers.MaxPooling1D(4)(s)
+        s = layers.SpatialDropout1D(0.3)(s, training=training)
         # #s = layers.MaxPooling2D((1, 4))(s)
         # s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
         # s = layers.BatchNormalization()(s)
@@ -79,6 +82,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # 4. Recombine for Note Classification
     concat = layers.Concatenate()(string_features)
     # x = layers.Dense(256, activation='relu')(concat)
+    x = layers.Dropout(0.4)(x, training=training)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
     return models.Model(inputs, outputs)
