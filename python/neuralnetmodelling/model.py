@@ -26,15 +26,16 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
 # Input: (Batch, Filters, Time)
     inputs = layers.Input(batch_shape=(batch_sz, *input_shape))
     
-        # 1. Temporal Compression: Keep some temporal info rather than just 'max'
-    # We use a large stride to reduce 256 -> 32 while learning features
-    x = layers.Reshape((312, 256, 1))(inputs)
-    x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
-    x = layers.LeakyReLU(0.2)(x)
+    #     # 1. Temporal Compression: Keep some temporal info rather than just 'max'
+    # # We use a large stride to reduce 256 -> 32 while learning features
+    # x = layers.Reshape((312, 256, 1))(inputs)
+    # x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
+    # x = layers.LeakyReLU(0.2)(x)
     
-    # Flatten time into features so we can use Conv1D on filters
-    # Shape: (Batch, 312, 16 * 32)
-    x = layers.Reshape((312, 512))(x)
+    # # Flatten time into features so we can use Conv1D on filters
+    # # Shape: (Batch, 312, 16 * 32)
+    # x = layers.Reshape((312, 512))(x)
+    x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
     print(f"Initial input shape: {x.shape}")
     # 2. Time-Domain Processing (per filter)
     # We use a small 2D kernel to look at neighboring filters and time
@@ -42,10 +43,10 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.2)(x, training=training)
-    x = layers.Conv1D(64, 5, padding='same', activation=None)(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU()(x)
+    # x = layers.SpatialDropout1D(0.2)(x, training=training)
+    # x = layers.Conv1D(64, 5, padding='same', activation=None)(x)
+    # x = layers.BatchNormalization()(x)
+    # x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
     x = layers.SpatialDropout1D(0.2)(x, training=training)
     print(f"After first Conv2D: {x.shape}")
@@ -62,7 +63,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
         s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :])(x)
         print(f"String {i+1} section shape: {s.shape}")
         # String-specific processing
-        s = layers.Conv1D(128, 5, padding='same', activation=None)(s)
+        s = layers.Conv1D(64, 5, padding='same', activation=None)(s)
         s = layers.BatchNormalization()(s)
         s = layers.LeakyReLU()(s)
         print(f"String {i+1} after first Conv1D: {s.shape}")
