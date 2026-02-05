@@ -45,7 +45,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.Conv1D(32, 5, padding='same', activation=None)(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
-    x=layers.MaxPooling1D(2)(x)
+    # x=layers.MaxPooling1D(2)(x)
     x = layers.SpatialDropout1D(0.2)(x, training=training)
     x = layers.Conv1D(64, 5, padding='same', activation=None)(x)
     x = layers.BatchNormalization()(x)
