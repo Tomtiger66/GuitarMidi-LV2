@@ -23,56 +23,73 @@ def partitioned_average_pooling_1d(x):
 
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
                        gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
-    model = models.Sequential()
-    model.add(layers.Input(shape=input_shape, dtype=tf.float32))
-    # get max along time axis
-    model.add(layers.Lambda(lambda x: tf.reduce_max(x, axis=2)))
-
-    model.add(layers.Normalization(axis=-1))
-    model.add(layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-6)))
+# Input: (Batch, Filters, Time)
+    inputs = layers.Input(batch_shape=(batch_sz, *input_shape))
     
-    model.add(layers.Conv1D(filters=32, kernel_size=5, padding='same', activation=None))
+    #     # 1. Temporal Compression: Keep some temporal info rather than just 'max'
+    # # We use a large stride to reduce 256 -> 32 while learning features
+    # x = layers.Reshape((312, 256, 1))(inputs)
+    # x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
+    # x = layers.LeakyReLU(0.2)(x)
     
-    model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU(alpha=0.2))#model.add(layers.Activation('relu'))
+    # # Flatten time into features so we can use Conv1D on filters
+    # # Shape: (Batch, 312, 16 * 32)
+    # x = layers.Reshape((312, 512))(x)
+    x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
+
+    x=layers.Normalization(axis=-1)(x)
+    x=layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-4))(x)
+    print(f"Initial input shape: {x.shape}")
+    # 2. Time-Domain Processing (per filter)
+    # We use a small 2D kernel to look at neighboring filters and time
+    x = layers.Conv1D(32, 5, padding='same', activation=None)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.LeakyReLU()(x)
+    x=layers.MaxPooling1D(2)(x)
+    x = layers.SpatialDropout1D(0.2)(x, training=training)
+    x = layers.Conv1D(64, 5, padding='same', activation=None)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.LeakyReLU()(x)
+    x=layers.MaxPooling1D(2)(x)
+    x = layers.SpatialDropout1D(0.2)(x, training=training)
+    print(f"After first Conv2D: {x.shape}")
+    #x = layers.MaxPooling2D((1, 4))(x) # Reduce time, keep filter resolution
+    # print(f"After first Conv2D and MaxPooling2D: {x.shape}")
+    # 3. String-Specific Partitioning
+    # Instead of manual slicing at the END, slice now.
+    # Assuming 312 filters / 6 strings = 52 filters per string
+    string_features = []
+    for i in range(6):
+        start=i*26
+        end=(i+1)*26
+        print(f"Extracting string {i+1} from filters {start} to {end}")
+        s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :])(x)
+        print(f"String {i+1} section shape: {s.shape}")
+        # String-specific processing
+        s = layers.Conv1D(128, 5, padding='same', activation=None)(s)
+        s = layers.BatchNormalization()(s)
+        s = layers.LeakyReLU()(s)
+        print(f"String {i+1} after first Conv1D: {s.shape}")
+        s=layers.MaxPooling1D(4)(s)
+        s = layers.SpatialDropout1D(0.3)(s, training=training)
+        # #s = layers.MaxPooling2D((1, 4))(s)
+        # s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
+        # s = layers.BatchNormalization()(s)
+        # s = layers.LeakyReLU()(s)
+        # print(f"String {i+1} after second Conv1D: {s.shape}")
+        # s=layers.MaxPooling1D(4)(s)
+
+
+        s = layers.GlobalMaxPooling1D()(s)
+        string_features.append(s)
     
-    if training:
-        model.add(layers.SpatialDropout1D(0.2))
-    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
-
-    model.add(layers.Conv1D(filters=64, kernel_size=5, padding='same', activation=None))
-    model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU(alpha=0.2))#model.add(layers.Activation('relu'))
-  
-    if training:
-        model.add(layers.SpatialDropout1D(0.3))
-    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
-
-    model.add(layers.Conv1D(filters=128, kernel_size=5, padding='same', activation=None))
-    model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU(alpha=0.2))#model.add(layers.Activation('relu'))
+    # 4. Recombine for Note Classification
+    concat = layers.Concatenate()(string_features)
+    # x = layers.Dense(256, activation='relu')(concat)
+    concat = layers.Dropout(0.4)(concat, training=training)
+    outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
-    if training:
-        model.add(layers.SpatialDropout1D(0.4))
-    model.add(layers.MaxPooling1D(pool_size=2, strides=2))
-
-    # model.add(layers.Conv1D(filters=256, kernel_size=5, padding='same', activation=None))
-    # model.add(layers.BatchNormalization())
-    # model.add(layers.LeakyReLU(alpha=0.2))#model.add(layers.Activation('relu'))
-    
-    if training:
-        model.add(layers.SpatialDropout1D(0.5))
-    #model.add(layers.MaxPooling1D(pool_size=7, strides=7))
-
-    model.add(layers.Lambda(partitioned_average_pooling_1d))#
-    #model.add(layers.GlobalAveragePooling1D())#
-    # model.add(layers.Flatten())
-    if training:
-        model.add(layers.Dropout(0.6))
-
-    model.add(layers.Dense(output_dim, activation='sigmoid', dtype=tf.float32))
-
-    return model
+    return models.Model(inputs, outputs)
 
 
 # class FASTBlock(layers.Layer):
