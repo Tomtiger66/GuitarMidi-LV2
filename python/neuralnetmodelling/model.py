@@ -58,33 +58,38 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # 3. String-Specific Partitioning
     # Instead of manual slicing at the END, slice now.
     # Assuming 312 filters / 6 strings = 52 filters per string
-    string_features = []
-    for i in range(6):
-        start=i*26
-        end=(i+1)*26
-        print(f"Extracting string {i+1} from filters {start} to {end}")
-        s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :])(x)
-        print(f"String {i+1} section shape: {s.shape}")
-        # String-specific processing
-        s = layers.Conv1D(128, 5, padding='same', activation=None)(s)
-        s = layers.BatchNormalization()(s)
-        s = layers.LeakyReLU()(s)
-        print(f"String {i+1} after first Conv1D: {s.shape}")
-        s=layers.MaxPooling1D(4)(s)
-        s = layers.SpatialDropout1D(0.3)(s, training=training)
-        # #s = layers.MaxPooling2D((1, 4))(s)
-        # s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
-        # s = layers.BatchNormalization()(s)
-        # s = layers.LeakyReLU()(s)
-        # print(f"String {i+1} after second Conv1D: {s.shape}")
-        # s=layers.MaxPooling1D(4)(s)
+    # string_features = []
+    # for i in range(6):
+    #     start=i*26
+    #     end=(i+1)*26
+    #     print(f"Extracting string {i+1} from filters {start} to {end}")
+    #     s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :])(x)
+    #     print(f"String {i+1} section shape: {s.shape}")
+    #     # String-specific processing
+    #     s = layers.Conv1D(128, 5, padding='same', activation=None)(s)
+    #     s = layers.BatchNormalization()(s)
+    #     s = layers.LeakyReLU()(s)
+    #     print(f"String {i+1} after first Conv1D: {s.shape}")
+    #     s=layers.MaxPooling1D(4)(s)
+    #     s = layers.SpatialDropout1D(0.3)(s, training=training)
+    #     # #s = layers.MaxPooling2D((1, 4))(s)
+    #     # s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
+    #     # s = layers.BatchNormalization()(s)
+    #     # s = layers.LeakyReLU()(s)
+    #     # print(f"String {i+1} after second Conv1D: {s.shape}")
+    #     # s=layers.MaxPooling1D(4)(s)
 
 
-        s = layers.GlobalMaxPooling1D()(s)
-        string_features.append(s)
+    #     s = layers.GlobalMaxPooling1D()(s)
+    #     string_features.append(s)
     
-    # 4. Recombine for Note Classification
-    concat = layers.Concatenate()(string_features)
+    # # 4. Recombine for Note Classification
+    # concat = layers.Concatenate()(string_features)
+    x = layers.Conv1D(128, 5, padding='same', activation=None)(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.LeakyReLU()(x)
+    x=layers.MaxPooling1D(2)(x)
+    concat = layers.SpatialDropout1D(0.3)(x, training=training)
     # concat = layers.Dense(256, activation='relu')(concat)
     concat = layers.Dropout(0.4)(concat, training=training)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
