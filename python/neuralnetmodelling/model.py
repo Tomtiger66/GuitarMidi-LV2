@@ -26,19 +26,19 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
 # Input: (Batch, Filters, Time)
     inputs = layers.Input(batch_shape=(batch_sz, *input_shape))
     
-    #     # 1. Temporal Compression: Keep some temporal info rather than just 'max'
-    # # We use a large stride to reduce 256 -> 32 while learning features
-    # x = layers.Reshape((312, 256, 1))(inputs)
-    # x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
-    # x = layers.LeakyReLU(0.2)(x)
+        # 1. Temporal Compression: Keep some temporal info rather than just 'max'
+    # We use a large stride to reduce 256 -> 32 while learning features
+    x = layers.Reshape((312, 256, 1))(inputs)
+    x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
+    x = layers.LeakyReLU(0.2)(x)
     
-    # # Flatten time into features so we can use Conv1D on filters
-    # # Shape: (Batch, 312, 16 * 32)
-    # x = layers.Reshape((312, 512))(x)
-    x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
+    # Flatten time into features so we can use Conv1D on filters
+    # Shape: (Batch, 312, 16 * 32)
+    x = layers.Reshape((312, 512))(x)
+    # x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
 
-    x=layers.Normalization(axis=-1)(x)
-    x=layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-4))(x)
+    # x=layers.Normalization(axis=-1)(x)
+    # x=layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-4))(x)
     print(f"Initial input shape: {x.shape}")
     # 2. Time-Domain Processing (per filter)
     # We use a small 2D kernel to look at neighboring filters and time
@@ -85,7 +85,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     
     # 4. Recombine for Note Classification
     concat = layers.Concatenate()(string_features)
-    # x = layers.Dense(256, activation='relu')(concat)
+    # concat = layers.Dense(256, activation='relu')(concat)
     concat = layers.Dropout(0.4)(concat, training=training)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
