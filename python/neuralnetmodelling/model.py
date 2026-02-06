@@ -28,14 +28,14 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     
         # 1. Temporal Compression: Keep some temporal info rather than just 'max'
     # We use a large stride to reduce 256 -> 32 while learning features
-    # x = layers.Reshape((312, 256, 1))(inputs)
-    # x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
-    # x = layers.LeakyReLU(0.2)(x)
+    x = layers.Reshape((312, 256, 1))(inputs)
+    x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
+    x = layers.LeakyReLU(0.2)(x)
     
-    # # Flatten time into features so we can use Conv1D on filters
-    # # Shape: (Batch, 312, 16 * 32)
-    # x = layers.Reshape((312, 512))(x)
-    x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
+    # Flatten time into features so we can use Conv1D on filters
+    # Shape: (Batch, 312, 16 * 32)
+    x = layers.Reshape((312, 512))(x)
+    # x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
 
     # x=layers.Normalization(axis=-1)(x)
     # x=layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-4))(x)
@@ -51,7 +51,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.3)(x, training=training)
+    x = layers.SpatialDropout1D(0.2)(x, training=training)
     print(f"After first Conv2D: {x.shape}")
     #x = layers.MaxPooling2D((1, 4))(x) # Reduce time, keep filter resolution
     # print(f"After first Conv2D and MaxPooling2D: {x.shape}")
@@ -89,10 +89,10 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
-    concat = layers.SpatialDropout1D(0.5)(x, training=training)
+    concat = layers.SpatialDropout1D(0.3)(x, training=training)
     concat = layers.GlobalAveragePooling1D()(concat)
     # concat = layers.Dense(256, activation='relu')(concat)
-    concat = layers.Dropout(0.6)(concat, training=training)
+    concat = layers.Dropout(0.4)(concat, training=training)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
     return models.Model(inputs, outputs)
