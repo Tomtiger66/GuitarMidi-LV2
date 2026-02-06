@@ -22,10 +22,9 @@ Model: "functional"
 │ leaky_re_lu_1       │ (64, 312, 32)     │          0 │ batch_normalizat… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ spatial_dropout1d   │ (64, 312, 32)     │          0 │ leaky_re_lu_1[0]… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ dropout (Dropout)   │ (64, 312, 32)     │          0 │ leaky_re_lu_1[0]… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ conv1d_1 (Conv1D)   │ (64, 312, 64)     │     10,304 │ spatial_dropout1… │
+│ conv1d_1 (Conv1D)   │ (64, 312, 64)     │     10,304 │ dropout[0][0]     │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ batch_normalizatio… │ (64, 312, 64)     │        256 │ conv1d_1[0][0]    │
 │ (BatchNormalizatio… │                   │            │                   │
@@ -36,20 +35,19 @@ Model: "functional"
 │ max_pooling1d       │ (64, 156, 64)     │          0 │ leaky_re_lu_2[0]… │
 │ (MaxPooling1D)      │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ spatial_dropout1d_1 │ (64, 156, 64)     │          0 │ max_pooling1d[0]… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ dropout_1 (Dropout) │ (64, 156, 64)     │          0 │ max_pooling1d[0]… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ lambda (Lambda)     │ (64, 26, 64)      │          0 │ spatial_dropout1… │
+│ lambda (Lambda)     │ (64, 26, 64)      │          0 │ dropout_1[0][0]   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ lambda_1 (Lambda)   │ (64, 26, 64)      │          0 │ spatial_dropout1… │
+│ lambda_1 (Lambda)   │ (64, 26, 64)      │          0 │ dropout_1[0][0]   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ lambda_2 (Lambda)   │ (64, 26, 64)      │          0 │ spatial_dropout1… │
+│ lambda_2 (Lambda)   │ (64, 26, 64)      │          0 │ dropout_1[0][0]   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ lambda_3 (Lambda)   │ (64, 26, 64)      │          0 │ spatial_dropout1… │
+│ lambda_3 (Lambda)   │ (64, 26, 64)      │          0 │ dropout_1[0][0]   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ lambda_4 (Lambda)   │ (64, 26, 64)      │          0 │ spatial_dropout1… │
+│ lambda_4 (Lambda)   │ (64, 26, 64)      │          0 │ dropout_1[0][0]   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ lambda_5 (Lambda)   │ (64, 26, 64)      │          0 │ spatial_dropout1… │
+│ lambda_5 (Lambda)   │ (64, 26, 64)      │          0 │ dropout_1[0][0]   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ conv1d_2 (Conv1D)   │ (64, 26, 128)     │     41,088 │ lambda[0][0]      │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
@@ -117,40 +115,34 @@ Model: "functional"
 │ max_pooling1d_6     │ (64, 6, 128)      │          0 │ leaky_re_lu_8[0]… │
 │ (MaxPooling1D)      │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ spatial_dropout1d_2 │ (64, 6, 128)      │          0 │ max_pooling1d_1[… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ dropout_2 (Dropout) │ (64, 6, 128)      │          0 │ max_pooling1d_1[… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ spatial_dropout1d_3 │ (64, 6, 128)      │          0 │ max_pooling1d_2[… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ dropout_3 (Dropout) │ (64, 6, 128)      │          0 │ max_pooling1d_2[… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ spatial_dropout1d_4 │ (64, 6, 128)      │          0 │ max_pooling1d_3[… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ dropout_4 (Dropout) │ (64, 6, 128)      │          0 │ max_pooling1d_3[… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ spatial_dropout1d_5 │ (64, 6, 128)      │          0 │ max_pooling1d_4[… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ dropout_5 (Dropout) │ (64, 6, 128)      │          0 │ max_pooling1d_4[… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ spatial_dropout1d_6 │ (64, 6, 128)      │          0 │ max_pooling1d_5[… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ dropout_6 (Dropout) │ (64, 6, 128)      │          0 │ max_pooling1d_5[… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ spatial_dropout1d_7 │ (64, 6, 128)      │          0 │ max_pooling1d_6[… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ dropout_7 (Dropout) │ (64, 6, 128)      │          0 │ max_pooling1d_6[… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_max_pooling… │ (64, 128)         │          0 │ spatial_dropout1… │
+│ global_max_pooling… │ (64, 128)         │          0 │ dropout_2[0][0]   │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_max_pooling… │ (64, 128)         │          0 │ spatial_dropout1… │
+│ global_max_pooling… │ (64, 128)         │          0 │ dropout_3[0][0]   │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_max_pooling… │ (64, 128)         │          0 │ spatial_dropout1… │
+│ global_max_pooling… │ (64, 128)         │          0 │ dropout_4[0][0]   │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_max_pooling… │ (64, 128)         │          0 │ spatial_dropout1… │
+│ global_max_pooling… │ (64, 128)         │          0 │ dropout_5[0][0]   │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_max_pooling… │ (64, 128)         │          0 │ spatial_dropout1… │
+│ global_max_pooling… │ (64, 128)         │          0 │ dropout_6[0][0]   │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ global_max_pooling… │ (64, 128)         │          0 │ spatial_dropout1… │
+│ global_max_pooling… │ (64, 128)         │          0 │ dropout_7[0][0]   │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ concatenate         │ (64, 768)         │          0 │ global_max_pooli… │
@@ -160,9 +152,9 @@ Model: "functional"
 │                     │                   │            │ global_max_pooli… │
 │                     │                   │            │ global_max_pooli… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ dropout (Dropout)   │ (64, 768)         │          0 │ concatenate[0][0] │
+│ dropout_8 (Dropout) │ (64, 768)         │          0 │ concatenate[0][0] │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ dense (Dense)       │ (64, 129)         │     99,201 │ dropout[0][0]     │
+│ dense (Dense)       │ (64, 129)         │     99,201 │ dropout_8[0][0]   │
 └─────────────────────┴───────────────────┴────────────┴───────────────────┘
  Total params: 441,713 (1.69 MB)
  Trainable params: 439,985 (1.68 MB)
