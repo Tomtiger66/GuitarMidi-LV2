@@ -1,3 +1,5 @@
 python/neuralnetmodelling/synthtab_dataprep.ipynb filter=lfs diff=lfs merge=lfs -text
 python/neuralnetmodelling/data_slices filter=lfs diff=lfs merge=lfs -text
 python/neuralnetmodelling/data_slices/12[[:space:]]Stones[[:space:]]-[[:space:]]Crash[[:space:]]-[[:space:]]gp4__1[[:space:]]-[[:space:]]Electric[[:space:]]Clean[[:space:]]Guitar__midi/0s_to_120s/input/data.tfrecord filter=lfs diff=lfs merge=lfs -text
+python/neuralnetmodelling/data_slices/training_subset/filtered_data.tfrecord filter=lfs diff=lfs merge=lfs -text
+python/neuralnetmodelling/training_subset-createsubset-git8588ad8d21a47632ed70581904be4159498938e6/filtered_data.tfrecord filter=lfs diff=lfs merge=lfs -text
