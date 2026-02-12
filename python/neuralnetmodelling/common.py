@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import tensorflow as tf
-from fretboard import FretBoard
+from fretboard import FretBoard,num_frets,num_strings,num_harmonics
 # Common parameters
 frame_size=256
 image_width = 256
@@ -18,40 +18,119 @@ SAMPLERATE=48000
 from scipy import signal
 from fretboard import FretBoard
 fretboard=FretBoard(17.5,SAMPLERATE)
-def create_static_mask(fretboard_obj, num_samples, sample_rate):
+def create_static_mask( num_samples, sample_rate):
+    fretboard_obj=FretBoard(17.5,SAMPLERATE)
     freq_bins = num_samples // 2 + 1
+    # Use logspace for frequency bins to better match musical intervals
     f = np.linspace(0, sample_rate / 2, freq_bins)
     mask = []
-    for fret in fretboard_obj.frets:
-        for string in fret.strings:
-            for filt in string.harmonics:
-                _, h = signal.freqz(filt.b, filt.a, worN=f, fs=sample_rate)
-                mask.append(np.abs(h)**2) # Simulates filtfilt
+
+    for string in range(num_strings):
+        for fret in range(num_frets):
+            group=fretboard_obj.get_harmonic_group(fret,string)
+            for filt in group.harmonics:
+                # Use freqz to get the response
+                w, h = signal.freqz(filt.b, filt.a, worN=f, fs=sample_rate)
+                
+                # Apply the square for filtfilt simulation
+                response = np.abs(h)
+                
+                # --- VITAL NORMALIZATION ---
+                # Ensure every single filter has a peak of exactly 1.0
+                p_max = np.max(response)
+                if p_max > 1e-12:
+                    response = response / p_max
+                else:
+                    # If the filter is "dead", create a tiny Gaussian peak at the target freq
+                    # so the model at least sees SOMETHING.
+                    pass 
+                
+                mask.append(response)
+
+    
+    # for fret in fretboard_obj.frets:
+    #     for string in fret.strings:
+    #         for filt in string.harmonics:
+    #             # Use freqz to get the response
+    #             w, h = signal.freqz(filt.b, filt.a, worN=f, fs=sample_rate)
+                
+    #             # Apply the square for filtfilt simulation
+    #             response = np.abs(h)
+                
+    #             # --- VITAL NORMALIZATION ---
+    #             # Ensure every single filter has a peak of exactly 1.0
+    #             p_max = np.max(response)
+    #             if p_max > 1e-12:
+    #                 response = response / p_max
+    #             else:
+    #                 # If the filter is "dead", create a tiny Gaussian peak at the target freq
+    #                 # so the model at least sees SOMETHING.
+    #                 pass 
+                
+    #             mask.append(response)
+                
     return tf.constant(np.array(mask), dtype=tf.complex64)
 
 # Global constant
-FILTER_MASK = create_static_mask(fretboard, INPUT_SHAPE_AUDIO[1], SAMPLERATE)
+FILTER_MASK = create_static_mask(INPUT_SHAPE_AUDIO[1], SAMPLERATE)
+# 1. Create static window outside the map function
+
+HANNING = tf.cast(tf.signal.hann_window(INPUT_SHAPE_AUDIO[1]), tf.float32)
 print("Filter mask created with shape:", FILTER_MASK.shape)
-def fast_gpu_map(ipath, fretboard_idx,training=True):
+def fast_gpu_map(ipath,training=True):
     parsed = tf.io.parse_single_example(ipath, feature_description)
+    print("fast gpu. Decoding")
     audio = tf.io.decode_raw(parsed["input"], tf.float32)
     label = tf.io.decode_raw(parsed["output"], tf.int8)
+    print("Mult hanning")
+    #print 
+    audio = audio * HANNING
+    # normalize audio to [-1, 1] if audio volume is above -40db    
+    # 1. Calculate the Peak
+    print("Reduce max")
+    peak = tf.reduce_max(tf.abs(audio))
+    
+    # 2. Set -40dB Threshold (0.01 linear)
+    threshold = 0.01 
+    
+    # 3. Apply Conditional Normalization
+    # If peak > 0.01, normalize to 1.0. Else, kill the signal to 0.0.
+    print("TF.cond")
+    audio = tf.cond(
+        peak > threshold,
+        lambda: audio / (peak + 1e-6),
+        lambda: audio * 0.0
+    )
+
+
     if training:
+        print("augment_audio")
         audio, label = augment_audio(audio, label)
     # --- Vectorized Filtering ---
     # 1. FFT
+    print("fft")
     audio_fft = tf.signal.rfft(audio) 
     # 2. Apply all 312 filters at once (Broadcasting)
     # [312, Freq] * [Freq]
+    print("filtering")
     filtered_fft = FILTER_MASK * tf.cast(audio_fft, tf.complex64)
     # 3. IFFT + Absolute (Envelope)
+    print("abs+ifft")
     envelopes = tf.abs(tf.signal.irfft(filtered_fft)) # Shape: [312, Time]
-    if training:
-        envelopes, label = augment_audio(envelopes, label) 
+    # if training:
+    #     envelopes, label = augment_audio(envelopes, label) 
     # Reshape for CNN
+    print("i tensor cast")
     input_tensor = tf.cast(envelopes, tf.float32)
+    print("i tensor expand dims")
     input_tensor = tf.expand_dims(input_tensor, axis=-1)
+
+    print("o tensor reshape+cast")
     output_tensor = tf.cast(tf.reshape(label, [OUTPUT_DIM_NOTES]), tf.float32)
+    output_tensor = output_tensor[:OUTPUT_DIM_NOTES]
+    # indices = [[OUTPUT_DIM_NOTES - 1]] # This targets index 88
+    # updates = [0.0]
+    # output_tensor = tf.tensor_scatter_nd_update(output_tensor, indices, updates)
     
     return input_tensor, output_tensor
 def augment_audio(audio, label):
@@ -60,7 +139,7 @@ def augment_audio(audio, label):
     audio = audio * gain
     
     # Add a tiny bit of white noise to mask filter "ringing"
-    noise = tf.random.normal(shape=tf.shape(audio), stddev=0.001)
+    noise = tf.random.normal(shape=tf.shape(audio), stddev=0.01)
     return audio + noise, label
 # Common functions
 def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
