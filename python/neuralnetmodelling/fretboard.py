@@ -107,3 +107,5 @@ class FretBoard:
             res=res+h.get_num_filters()
             
         return res
+    def get_harmonic_group(self,fret,string):
+        return self.frets[fret].strings[string]
