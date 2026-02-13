@@ -82,6 +82,9 @@ def fast_gpu_map(ipath,training=True,threshold = 0.01 ):
     print("fast gpu. Decoding")
     audio = tf.io.decode_raw(parsed["input"], tf.float32)
     label = tf.io.decode_raw(parsed["output"], tf.int8)
+    #print shapes
+    print("audio shape:", audio.shape)
+    print("label shape:", label.shape)
     print("Mult hanning")
     #print 
     audio = audio * HANNING
