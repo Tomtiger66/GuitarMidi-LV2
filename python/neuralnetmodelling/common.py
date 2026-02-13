@@ -77,7 +77,7 @@ FILTER_MASK = create_static_mask(INPUT_SHAPE_AUDIO[1], SAMPLERATE)
 
 HANNING = tf.cast(tf.signal.hann_window(INPUT_SHAPE_AUDIO[1]), tf.float32)
 print("Filter mask created with shape:", FILTER_MASK.shape)
-def fast_gpu_map(ipath,training=True):
+def fast_gpu_map(ipath,training=True,threshold = 0.01 ):
     parsed = tf.io.parse_single_example(ipath, feature_description)
     print("fast gpu. Decoding")
     audio = tf.io.decode_raw(parsed["input"], tf.float32)
@@ -91,7 +91,7 @@ def fast_gpu_map(ipath,training=True):
     peak = tf.reduce_max(tf.abs(audio))
     
     # 2. Set -40dB Threshold (0.01 linear)
-    threshold = 0.01 
+    
     
     # 3. Apply Conditional Normalization
     # If peak > 0.01, normalize to 1.0. Else, kill the signal to 0.0.
