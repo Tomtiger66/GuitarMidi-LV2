@@ -17,7 +17,7 @@ class Filter:
         self.b, self.a =signal.butter(N, [low, high], btype='band',fs=sample_rate)
         
     def process(self,input_audio,filterbank_out: np.array):
-        filterbank_out[self.id]=np.abs(signal.filtfilt(self.b, self.a, input_audio))
+        filterbank_out[self.id]=np.abs(signal.lfilter(self.b, self.a, input_audio))
 
 
 class HarmonicGroup:
