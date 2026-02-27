@@ -19,8 +19,30 @@ INPUT_SHAPE_AUDIO = (1,image_width, num_channels)
 OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
 
+def fast_gpu_map(parsed,training=True):
+    # parsed = tf.io.parse_single_example(ipath, feature_description)
+    print("fast gpu. Decoding")
+    input = tf.io.decode_raw(parsed["input"], tf.float32)
+    label = tf.io.decode_raw(parsed["output"], tf.int8)
+    input = tf.reshape(input, INPUT_SHAPE)
+    input_tensor=tf.cast(input, tf.float32)
+    #augment the input with random noise during training
+    if training:
+        noise = tf.random.normal(shape=tf.shape(input_tensor), mean=0.0, stddev=0.01)
+        input_tensor = input_tensor + noise
+        input_tensor = tf.clip_by_value(input_tensor, -1.0, 1.0)
+    output_tensor = tf.cast(tf.reshape(label, [OUTPUT_DIM_NOTES]), tf.float32)
+   # output_tensor = output_tensor[60:80]  # Focus on MIDI notes 40-79 (E2 to G5)
+    # indices = [[OUTPUT_DIM_NOTES - 1]] # This targets index 88
+    # updates = [0.0]
+    # output_tensor = tf.tensor_scatter_nd_update(output_tensor, indices, updates)
+    # print the shapes using tf.print
+    #tf.print("Input shape:", tf.shape(input_tensor), "Output shape:", tf.shape(output_tensor))
 
 
+    return input_tensor, output_tensor
+def parse_example(example_proto):
+    return tf.io.parse_single_example(example_proto, feature_description)
 
 def save_data_slices(output_dir,nn_slices,batch_size,filenum_offset=0):
     totalsamples=nn_slices.shape[0]
