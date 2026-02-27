@@ -28,7 +28,7 @@ def string_layer(x,start,end,max_x,training):
     s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :])(x)
     print(f"String {start} section shape: {s.shape}")
     # String-specific processing
-    s = layers.Conv1D(128, 5, padding='same', activation=None,kernel_regularizer=tf.keras.regularizers.l2(1e-4))(s)
+    s = layers.Conv1D(128, 7, padding='same', activation=None,kernel_regularizer=tf.keras.regularizers.l2(1e-4))(s)
     s = layers.BatchNormalization()(s)
     s = layers.LeakyReLU()(s)
     print(f"String {start} after first Conv1D: {s.shape}")
@@ -36,12 +36,12 @@ def string_layer(x,start,end,max_x,training):
     s = layers.SpatialDropout1D(0.3)(s, training=training)
         
         
-        # #s = layers.MaxPooling2D((1, 4))(s)
-        # s = layers.Conv1D(256, 5, padding='same', activation=None)(s)
-        # s = layers.BatchNormalization()(s)
-        # s = layers.LeakyReLU()(s)
-        # print(f"String {i+1} after second Conv1D: {s.shape}")
-        # s=layers.MaxPooling1D(4)(s)
+
+    # s = layers.Conv1D(256, 7, padding='same', activation=None)(s)
+    # s = layers.BatchNormalization()(s)
+    # s = layers.LeakyReLU()(s)
+        
+    # s=layers.MaxPooling1D(2)(s)
 
 
     s = layers.GlobalMaxPooling1D()(s)
@@ -68,13 +68,13 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     print(f"Initial input shape: {x.shape}")
     # 2. Time-Domain Processing (per filter)
     # We use a small 2D kernel to look at neighboring filters and time
-    x = layers.Conv1D(32, 5, padding='same', activation=None)(x)
+    x = layers.Conv1D(32, 7, padding='same', activation=None)(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
     x = layers.SpatialDropout1D(0.2)(x, training=training)
     
-    x = layers.Conv1D(64, 5, padding='same', activation=None)(x)
+    x = layers.Conv1D(64, 7, padding='same', activation=None)(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
