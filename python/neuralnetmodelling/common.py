@@ -41,6 +41,9 @@ def fast_gpu_map(parsed,training=True):
 
 
     return input_tensor, output_tensor
+
+
+    return input_tensor, output_tensor
 def parse_example(example_proto):
     return tf.io.parse_single_example(example_proto, feature_description)
 
