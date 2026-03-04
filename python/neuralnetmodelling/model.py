@@ -44,7 +44,9 @@ def string_layer(x,start,end,max_x,training):
     # s=layers.MaxPooling1D(2)(s)
 
 
-    s = layers.GlobalMaxPooling1D()(s)
+    smax = layers.GlobalMaxPooling1D()(s)
+    savg= layers.GlobalAveragePooling1D()(s)
+    s=layers.Concatenate()([smax,savg])
     return s
 
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
