@@ -12,3 +12,5 @@ bin
 guitarmidi_epoch*_valAcc*.weights.h5
 guitarmidi_epoch*_valLoss*.weights.h5
 python/neuralnetmodelling/data_slices/**
+python/neuralnetmodelling/*.tfrecord
+python/neuralnetmodelling/*.csv
