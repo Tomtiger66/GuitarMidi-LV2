@@ -20,30 +20,44 @@ OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
 
 def fast_gpu_map(parsed,training=True):
-    # parsed = tf.io.parse_single_example(ipath, feature_description)
-    print("fast gpu. Decoding")
-    input = tf.io.decode_raw(parsed["input"], tf.float32)
-    label = tf.io.decode_raw(parsed["output"], tf.int8)
-    input = tf.reshape(input, INPUT_SHAPE)
-    input_tensor=tf.cast(input, tf.float32)
-    #augment the input with random noise during training
-    if training:
-        noise = tf.random.normal(shape=tf.shape(input_tensor), mean=0.0, stddev=0.01)
-        input_tensor = input_tensor + noise
-        input_tensor = tf.clip_by_value(input_tensor, -1.0, 1.0)
-    output_tensor = tf.cast(tf.reshape(label, [OUTPUT_DIM_NOTES]), tf.float32)
-   # output_tensor = output_tensor[60:80]  # Focus on MIDI notes 40-79 (E2 to G5)
-    # indices = [[OUTPUT_DIM_NOTES - 1]] # This targets index 88
-    # updates = [0.0]
-    # output_tensor = tf.tensor_scatter_nd_update(output_tensor, indices, updates)
-    # print the shapes using tf.print
-    #tf.print("Input shape:", tf.shape(input_tensor), "Output shape:", tf.shape(output_tensor))
+# 1. Decoding and Basic Setup
+    input_raw = tf.io.decode_raw(parsed["input"], tf.float32)
+    label_raw = tf.io.decode_raw(parsed["output"], tf.int8)
+    
+    input_tensor = tf.reshape(input_raw, INPUT_SHAPE)
+    input_tensor = tf.cast(input_tensor, tf.float32)
+    
+    output_tensor = tf.cast(tf.reshape(label_raw, [OUTPUT_DIM_NOTES]), tf.float32)
+    
+    # Constants for clarity
+    SILENCE_IDX = OUTPUT_DIM_NOTES - 1
+    silence_vector = tf.one_hot(SILENCE_IDX, depth=OUTPUT_DIM_NOTES, dtype=tf.float32)
+    zero_input = tf.zeros_like(input_tensor)
+
+    # 2. Extract Logic Components
+    # Identify if any actual notes are active (indices 0 to 87)
+    note_labels = output_tensor[:SILENCE_IDX]
+    any_notes_active = tf.reduce_any(tf.greater(note_labels, 0.5))
+    
+    # # Check current states
+    # silence_label_is_up = tf.greater(output_tensor[SILENCE_IDX], 0.5)
+    # energy_is_low = tf.reduce_max(tf.abs(input_tensor)) < 0.1
+    
+    # 3. The "Vice Versa" Logic
+    # We "Force Silence" if: 
+    # - Energy is low OR 
+    # - The silence label was already up OR 
+    # - No notes are active
+    should_force_silence = (~any_notes_active)#energy_is_low | silence_label_is_up | (~any_notes_active)
+
+    # Apply transformations
+    output_tensor = tf.where(should_force_silence, silence_vector, output_tensor)
+    input_tensor = tf.where(should_force_silence, zero_input, input_tensor)
+
 
 
     return input_tensor, output_tensor
 
-
-    return input_tensor, output_tensor
 def parse_example(example_proto):
     return tf.io.parse_single_example(example_proto, feature_description)
 
