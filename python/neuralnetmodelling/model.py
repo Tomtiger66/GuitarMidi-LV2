@@ -33,21 +33,22 @@ def string_layer(x,start,end,max_x,training):
     s = layers.LeakyReLU()(s)
     print(f"String {start} after first Conv1D: {s.shape}")
     s=layers.MaxPooling1D(4)(s)
-    s = layers.SpatialDropout1D(0.3)(s, training=training)
+    s = layers.SpatialDropout1D(0.4)(s, training=training)
         
         
 
-    # s = layers.Conv1D(256, 7, padding='same', activation=None)(s)
-    # s = layers.BatchNormalization()(s)
-    # s = layers.LeakyReLU()(s)
+    s = layers.Conv1D(256, 7, padding='same', activation=None)(s)
+    s = layers.BatchNormalization()(s)
+    s = layers.LeakyReLU()(s)
         
-    # s=layers.MaxPooling1D(2)(s)
+    s=layers.MaxPooling1D(2)(s)
 
 
     smax = layers.GlobalMaxPooling1D()(s)
-    savg= layers.GlobalAveragePooling1D()(s)
-    s=layers.Concatenate()([smax,savg])
-    return s
+    # savg= layers.GlobalAveragePooling1D()(s)
+    # s=layers.Concatenate()([smax,savg])
+    # return s
+    return smax
 
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
                        gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
@@ -80,7 +81,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.2)(x, training=training)
+    x = layers.SpatialDropout1D(0.3)(x, training=training)
     num_pool_layers=1
     max_x=image_height/(num_pool_layers+1)
     
@@ -107,7 +108,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # 4. Recombine for Note Classification
     concat = layers.Concatenate()(string_features)
     # concat = layers.Dense(256, activation='relu')(concat)
-    concat = layers.Dropout(0.4)(concat, training=training)
+    concat = layers.Dropout(0.5)(concat, training=training)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
     return models.Model(inputs, outputs)
