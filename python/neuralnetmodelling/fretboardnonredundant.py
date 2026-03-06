@@ -1,4 +1,4 @@
-num_harmonics=16 
+num_harmonics=8 
 num_frets=13
 num_strings=6
 from scipy import signal 
