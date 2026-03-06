@@ -31,7 +31,7 @@ def fast_gpu_map(parsed,training=True):
     
     # Constants for clarity
     SILENCE_IDX = OUTPUT_DIM_NOTES - 1
-    silence_vector = tf.one_hot(SILENCE_IDX, depth=OUTPUT_DIM_NOTES, dtype=tf.float32)
+    silence_vector = tf.zeros_like(output_tensor)# tf.one_hot(SILENCE_IDX, depth=OUTPUT_DIM_NOTES, dtype=tf.float32)
     zero_input = tf.zeros_like(input_tensor)
 
     # 2. Extract Logic Components
@@ -39,16 +39,18 @@ def fast_gpu_map(parsed,training=True):
     note_labels = output_tensor[:SILENCE_IDX]
     any_notes_active = tf.reduce_any(tf.greater(note_labels, 0.5))
     
-    # # Check current states
-    # silence_label_is_up = tf.greater(output_tensor[SILENCE_IDX], 0.5)
-    # energy_is_low = tf.reduce_max(tf.abs(input_tensor)) < 0.1
-    
+    # Check current states
+    silence_label_is_up = tf.greater(output_tensor[SILENCE_IDX], 0.5)
+    max_en=tf.reduce_max(tf.abs(input_tensor)) 
+    energy_is_low = max_en< 0.01
+    # if ~energy_is_low:
+    #     input_tensor/=max_en
     # 3. The "Vice Versa" Logic
     # We "Force Silence" if: 
     # - Energy is low OR 
     # - The silence label was already up OR 
     # - No notes are active
-    should_force_silence = (~any_notes_active)#energy_is_low | silence_label_is_up | (~any_notes_active)
+    should_force_silence = energy_is_low | silence_label_is_up | (~any_notes_active)
 
     # Apply transformations
     output_tensor = tf.where(should_force_silence, silence_vector, output_tensor)

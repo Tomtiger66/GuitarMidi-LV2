@@ -28,7 +28,7 @@ def string_layer(x,start,end,max_x,training):
     s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :])(x)
     print(f"String {start} section shape: {s.shape}")
     # String-specific processing
-    s = layers.Conv1D(128, 7, padding='same', activation=None,kernel_regularizer=tf.keras.regularizers.l2(1e-4))(s)
+    s = layers.Conv1D(128, 7, padding='same', activation=None,kernel_initializer='he_normal')(s)
     s = layers.BatchNormalization()(s)
     s = layers.LeakyReLU()(s)
     print(f"String {start} after first Conv1D: {s.shape}")
@@ -37,7 +37,7 @@ def string_layer(x,start,end,max_x,training):
         
         
 
-    s = layers.Conv1D(256, 7, padding='same', activation=None)(s)
+    s = layers.Conv1D(256, 7, padding='same', activation=None,kernel_initializer='he_normal')(s)
     s = layers.BatchNormalization()(s)
     s = layers.LeakyReLU()(s)
         
@@ -49,7 +49,34 @@ def string_layer(x,start,end,max_x,training):
     # s=layers.Concatenate()([smax,savg])
     # return s
     return smax
+def string_layer2d(x,start,end,max_x,training):
+    end=min(end,max_x)
+    start=max(0,start)
+    print(f"Extracting string from filters {start} to {end}")
+    s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :,:])(x)
+    print(f"String {start} section shape: {s.shape}")
+    # String-specific processing
+    s = layers.Conv2D(128, 7, padding='same', activation=None,kernel_initializer='he_normal')(s)
+    s = layers.BatchNormalization()(s)
+    s = layers.LeakyReLU()(s)
+    print(f"String {start} after first Conv1D: {s.shape}")
+    s=layers.MaxPooling2D(4)(s)
+    s = layers.SpatialDropout2D(0.4)(s, training=training)
+        
+        
 
+    s = layers.Conv2D(256, 7, padding='same', activation=None,kernel_initializer='he_normal')(s)
+    s = layers.BatchNormalization()(s)
+    s = layers.LeakyReLU()(s)
+        
+    s=layers.MaxPooling2D(2)(s)
+
+
+    smax = layers.GlobalMaxPooling2D()(s)
+    # savg= layers.GlobalAveragePooling1D()(s)
+    # s=layers.Concatenate()([smax,savg])
+    # return s
+    return smax
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
                        gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
 # Input: (Batch, Filters, Time)
@@ -58,26 +85,27 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
         # 1. Temporal Compression: Keep some temporal info rather than just 'max'
     # We use a large stride to reduce 256 -> 32 while learning features
     x = layers.Reshape((image_height, 256, 1))(inputs)
-    x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same')(x)
+    x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same',kernel_initializer='he_normal')(x)
+    x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU(0.2)(x)
-    
+    x = layers.SpatialDropout2D(0.2)(x, training=training)
     # Flatten time into features so we can use Conv1D on filters
     # Shape: (Batch, 312, 16 * 32)
     x = layers.Reshape((image_height, 512))(x)
     # x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
 
-    # x=layers.Normalization(axis=-1)(x)
+    x=layers.Normalization(axis=-1)(x)
     # x=layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-4))(x)
     print(f"Initial input shape: {x.shape}")
     # 2. Time-Domain Processing (per filter)
     # We use a small 2D kernel to look at neighboring filters and time
-    x = layers.Conv1D(32, 7, padding='same', activation=None)(x)
+    x = layers.Conv1D(32, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
     x = layers.SpatialDropout1D(0.2)(x, training=training)
     
-    x = layers.Conv1D(64, 7, padding='same', activation=None)(x)
+    x = layers.Conv1D(64, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
@@ -113,6 +141,57 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     
     return models.Model(inputs, outputs)
 
+
+def build_2d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
+                       gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
+# Input: (Batch, Filters, Time)
+    inputs = layers.Input(batch_shape=(batch_sz, *input_shape))
+    
+    x=inputs
+    print(f"Initial input shape: {x.shape}")
+    # 2. Time-Domain Processing (per filter)
+    # We use a small 2D kernel to look at neighboring filters and time
+    x = layers.Conv2D(32, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.LeakyReLU()(x)
+    # x=layers.MaxPooling1D(2)(x)
+    x = layers.SpatialDropout2D(0.2)(x, training=training)
+    
+    x = layers.Conv2D(64, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.LeakyReLU()(x)
+    x=layers.MaxPooling2D(2)(x)
+    x = layers.SpatialDropout2D(0.3)(x, training=training)
+    num_pool_layers=1
+    max_x=image_height/(num_pool_layers+1)
+    
+    print(f"After first Conv2D: {x.shape}")
+    # total notes 3*5+4+5+13=37
+    totalnotes=37
+    E_frac=5/totalnotes
+    A_frac=5/totalnotes+E_frac
+    d_frac=5/totalnotes+A_frac
+    g_frac=4/totalnotes+d_frac
+    b_frac=5/totalnotes+g_frac
+    e_frac=13/totalnotes+b_frac
+
+    string_features = []
+    Estr=string_layer2d(x,0,int(E_frac*max_x),max_x,training)
+    Astr=string_layer2d(x,int(E_frac*max_x)+1,int(A_frac*max_x),max_x,training)
+    dstr=string_layer2d(x,int(A_frac*max_x)+1,int(d_frac*max_x),max_x,training)
+    gstr=string_layer2d(x,int(d_frac*max_x)+1,int(g_frac*max_x),max_x,training)
+    bstr=string_layer2d(x,int(g_frac*max_x)+1,int(b_frac*max_x),max_x,training)
+    estr=string_layer2d(x,int(b_frac*max_x)+1,int(max_x-1),max_x,training)
+
+    string_features = [Estr,Astr,dstr,gstr,bstr,estr]
+    
+    # 4. Recombine for Note Classification
+    concat = layers.Concatenate()(string_features)
+    # concat = layers.Dense(256, activation='relu')(concat)
+    concat = layers.Dropout(0.5)(concat, training=training)
+    outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
+    
+    return models.Model(inputs, outputs)
 
 # class FASTBlock(layers.Layer):
 #     """
