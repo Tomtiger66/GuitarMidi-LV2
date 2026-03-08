@@ -34,19 +34,19 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
     # Conv block 1
     x=conv_block(x,32)
-    x = layers.MaxPooling1D(pool_size=4, strides=4)(x)
+    x = layers.MaxPooling1D(4)(x)
     x = layers.SpatialDropout1D(0.2)(x, training=training)
     x=conv_block(x,64)
 
     
-    x = layers.MaxPooling1D(pool_size=2, strides=2)(x)
+    x = layers.MaxPooling1D(2)(x)
     x = layers.SpatialDropout1D(0.2)(x, training=training)
     # x = layers.Dropout(0.2)(x, training=training)
     x=conv_block(x,64)
 
     
     
-    x = layers.MaxPooling1D(pool_size=2, strides=2)(x)
+    x = layers.MaxPooling1D(2)(x)
     x = layers.SpatialDropout1D(0.3)(x, training=training)
     # x = layers.Dropout(0.2)(x, training=training)
 
@@ -54,7 +54,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # x=layers.Flatten()(x)
     # x = layers.GlobalMaxPooling1D()(x)
     # x=layers.Dense(128,activation='linear')(x)
-    x = layers.Dropout(0.2)(x, training=training)
+    x = layers.Dropout(0.4)(x, training=training)
     outputs = layers.Dense(output_dim, activation='sigmoid')(x)
     
     model = models.Model(inputs, outputs)
