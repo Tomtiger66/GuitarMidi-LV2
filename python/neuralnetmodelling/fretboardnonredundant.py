@@ -15,9 +15,11 @@ class Filter:
         high = (center_freq+bw/2) 
         #self.b, self.a = signal.ellip(N,0.5,40,[low, high], btype='band',fs=sampleRate)
         self.b, self.a =signal.butter(N, [low, high], btype='band',fs=sample_rate)
+        self.zi=signal.lfilter_zi(self.b,self.a)
         
     def process(self,input_audio,filterbank_out: np.array):
-        filterbank_out[self.id]=np.abs(signal.lfilter(self.b, self.a, input_audio))
+        out, self.zi = signal.lfilter(self.b, self.a, input_audio, zi=self.zi)
+        filterbank_out[self.id] = np.abs(out)
 
 
 class GuitarNote:
