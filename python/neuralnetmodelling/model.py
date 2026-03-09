@@ -33,7 +33,7 @@ def string_layer(x,start,end,max_x,training):
     s = layers.LeakyReLU()(s)
     print(f"String {start} after first Conv1D: {s.shape}")
     s=layers.MaxPooling1D(4)(s)
-    s = layers.SpatialDropout1D(0.4)(s, training=training)
+    s = layers.SpatialDropout1D(0.4)(s)
         
         
 
@@ -41,14 +41,14 @@ def string_layer(x,start,end,max_x,training):
     s = layers.BatchNormalization()(s)
     s = layers.LeakyReLU()(s)
         
-    s=layers.MaxPooling1D(2)(s)
+    #s=layers.MaxPooling1D(2)(s)
 
-
-    smax = layers.GlobalMaxPooling1D()(s)
+    #s = layers.AveragePooling1D(pool_size=2)(s)  # small reduction
+    s = layers.Flatten()(s)  
     # savg= layers.GlobalAveragePooling1D()(s)
     # s=layers.Concatenate()([smax,savg])
     # return s
-    return smax
+    return s
 def string_layer2d(x,start,end,max_x,training):
     end=min(end,max_x)
     start=max(0,start)
@@ -61,7 +61,7 @@ def string_layer2d(x,start,end,max_x,training):
     s = layers.LeakyReLU()(s)
     print(f"String {start} after first Conv1D: {s.shape}")
     s=layers.MaxPooling2D(4)(s)
-    s = layers.SpatialDropout2D(0.4)(s, training=training)
+    s = layers.SpatialDropout2D(0.5)(s)
         
         
 
@@ -72,11 +72,12 @@ def string_layer2d(x,start,end,max_x,training):
     s=layers.MaxPooling2D(2)(s)
 
 
-    smax = layers.GlobalMaxPooling2D()(s)
+    s = layers.AveragePooling2D(pool_size=2)(s)  # small reduction
+    s = layers.Flatten()(s)  
     # savg= layers.GlobalAveragePooling1D()(s)
     # s=layers.Concatenate()([smax,savg])
     # return s
-    return smax
+    return s
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
                        gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
 # Input: (Batch, Filters, Time)
@@ -88,7 +89,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same',kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU(0.2)(x)
-    x = layers.SpatialDropout2D(0.2)(x, training=training)
+    x = layers.SpatialDropout2D(0.4)(x)
     # Flatten time into features so we can use Conv1D on filters
     # Shape: (Batch, 312, 16 * 32)
     x = layers.Reshape((image_height, 512))(x)
@@ -103,18 +104,20 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.2)(x, training=training)
+    x = layers.SpatialDropout1D(0.4)(x)
     
     x = layers.Conv1D(64, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.3)(x, training=training)
+    x = layers.SpatialDropout1D(0.5)(x)
     num_pool_layers=1
     max_x=image_height/(num_pool_layers+1)
     
     print(f"After first Conv2D: {x.shape}")
     # total notes 3*5+4+5+13=37
+    # 4*5+4*5+4*5+4*4+4*5+4*13=148
+    # [0:20]+[20:40]+[40:60]+[60:76]+[76:96]+[96:148]
     totalnotes=37
     E_frac=5/totalnotes
     A_frac=5/totalnotes+E_frac
@@ -124,19 +127,19 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     e_frac=13/totalnotes+b_frac
 
     string_features = []
-    Estr=string_layer(x,0,int(E_frac*max_x),max_x,training)
-    Astr=string_layer(x,int(E_frac*max_x)+1,int(A_frac*max_x),max_x,training)
-    dstr=string_layer(x,int(A_frac*max_x)+1,int(d_frac*max_x),max_x,training)
-    gstr=string_layer(x,int(d_frac*max_x)+1,int(g_frac*max_x),max_x,training)
-    bstr=string_layer(x,int(g_frac*max_x)+1,int(b_frac*max_x),max_x,training)
-    estr=string_layer(x,int(b_frac*max_x)+1,int(max_x-1),max_x,training)
+    Estr=string_layer(x,0,20,max_x,training)
+    Astr=string_layer(x,20,40,max_x,training)
+    dstr=string_layer(x,40,60,max_x,training)
+    gstr=string_layer(x,60,76,max_x,training)
+    bstr=string_layer(x,76,96,max_x,training)
+    estr=string_layer(x,96,148,max_x,training)
 
     string_features = [Estr,Astr,dstr,gstr,bstr,estr]
     
     # 4. Recombine for Note Classification
     concat = layers.Concatenate()(string_features)
     # concat = layers.Dense(256, activation='relu')(concat)
-    concat = layers.Dropout(0.5)(concat, training=training)
+    concat = layers.Dropout(0.5)(concat)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
     return models.Model(inputs, outputs)
@@ -155,13 +158,13 @@ def build_2d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout2D(0.2)(x, training=training)
+    x = layers.SpatialDropout2D(0.2)(x)
     
     x = layers.Conv2D(64, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling2D(2)(x)
-    x = layers.SpatialDropout2D(0.3)(x, training=training)
+    x = layers.SpatialDropout2D(0.3)(x)
     num_pool_layers=1
     max_x=image_height/(num_pool_layers+1)
     
@@ -188,7 +191,7 @@ def build_2d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # 4. Recombine for Note Classification
     concat = layers.Concatenate()(string_features)
     # concat = layers.Dense(256, activation='relu')(concat)
-    concat = layers.Dropout(0.5)(concat, training=training)
+    concat = layers.Dropout(0.5)(concat)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
     return models.Model(inputs, outputs)
