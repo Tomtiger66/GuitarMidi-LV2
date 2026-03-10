@@ -21,17 +21,17 @@ OUTPUT_DIM_ONSETS = 1 # For onsets output
 
 def fast_gpu_map(parsed,training=True):
 # 1. Decoding and Basic Setup
-    input_raw = tf.io.decode_raw(parsed["input"], tf.float32)
+    input_raw = tf.io.decode_raw(parsed["input"], tf.int8)
     label_raw = tf.io.decode_raw(parsed["output"], tf.int8)
     
     input_tensor = tf.reshape(input_raw, INPUT_SHAPE)
     input_tensor = tf.cast(input_tensor, tf.float32)
-    
+    input_tensor=input_tensor/127
     output_tensor = tf.cast(tf.reshape(label_raw, [OUTPUT_DIM_NOTES]), tf.float32)
     
     # Constants for clarity
     SILENCE_IDX = OUTPUT_DIM_NOTES - 1
-    silence_vector = tf.zeros_like(output_tensor)# tf.one_hot(SILENCE_IDX, depth=OUTPUT_DIM_NOTES, dtype=tf.float32)
+    silence_vector = tf.one_hot(SILENCE_IDX, depth=OUTPUT_DIM_NOTES, dtype=tf.float32)
     zero_input = tf.zeros_like(input_tensor)
 
     # 2. Extract Logic Components
@@ -54,9 +54,26 @@ def fast_gpu_map(parsed,training=True):
 
     # Apply transformations
     output_tensor = tf.where(should_force_silence, silence_vector, output_tensor)
+    output_tensor=output_tensor[40:84]
     input_tensor = tf.where(should_force_silence, zero_input, input_tensor)
 
-
+    # 4. Augmentation (Only if we aren't in a forced silence state)
+    if training:
+        noise = tf.random.normal(shape=tf.shape(input_tensor), mean=0.0, stddev=0.01)
+        # We only add noise to frames that actually have content to avoid 
+        # teaching the model that "noise = note"
+        input_tensor = tf.where(should_force_silence, zero_input, input_tensor + noise)
+        input_tensor = tf.clip_by_value(input_tensor, -1.0, 1.0)
+        num_masks = 2
+        mask_width = 5 # How many filter bins to hide
+        for _ in range(num_masks):
+            start = tf.random.uniform([], 0, INPUT_SHAPE[0] - mask_width, dtype=tf.int32)
+            indices = tf.range(start, start + mask_width)
+            # Create a mask of 1s, then set the specific indices to 0
+            mask = tf.one_hot(indices, depth=INPUT_SHAPE[0])
+            mask = 1.0 - tf.reduce_sum(mask, axis=0)
+            mask = tf.reshape(mask, (INPUT_SHAPE[0],1, 1))
+            input_tensor = input_tensor * mask
 
     return input_tensor, output_tensor
 
