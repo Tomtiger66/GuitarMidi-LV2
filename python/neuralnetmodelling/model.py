@@ -127,12 +127,12 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     e_frac=13/totalnotes+b_frac
 
     string_features = []
-    Estr=string_layer(x,0,20,max_x,training)
-    Astr=string_layer(x,20,40,max_x,training)
-    dstr=string_layer(x,40,60,max_x,training)
-    gstr=string_layer(x,60,76,max_x,training)
-    bstr=string_layer(x,76,96,max_x,training)
-    estr=string_layer(x,96,148,max_x,training)
+    Estr=string_layer(x,0,int(E_frac*max_x),max_x,training)
+    Astr=string_layer(x,int(E_frac*max_x)+1,int(A_frac*max_x),max_x,training)
+    dstr=string_layer(x,int(A_frac*max_x)+1,int(d_frac*max_x),max_x,training)
+    gstr=string_layer(x,int(d_frac*max_x)+1,int(g_frac*max_x),max_x,training)
+    bstr=string_layer(x,int(g_frac*max_x)+1,int(b_frac*max_x),max_x,training)
+    estr=string_layer(x,int(b_frac*max_x)+1,int(max_x-1),max_x,training)
 
     string_features = [Estr,Astr,dstr,gstr,bstr,estr]
     

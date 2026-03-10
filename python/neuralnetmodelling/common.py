@@ -205,6 +205,8 @@ def reshape_to_nn_output(outdata,collapse_time=True):
     num_midi_classes=outdata.shape[0]
     downsample_factor = frame_size
     # --- Downsampling the data ---
+    print("Reshape to nn output. Collapse time: ",collapse_time)
+    print("data shape",outdata.shape)
     print(f"reshape data by a factor of {downsample_factor}...")
     # Calculate the new number of columns after downsampling
     num_frames = num_samples // downsample_factor
@@ -214,7 +216,7 @@ def reshape_to_nn_output(outdata,collapse_time=True):
     # For simplicity, we'll slice to a multiple of downsample_factor
     effective_cols = num_frames * downsample_factor
     data_sliced = outdata[:, :effective_cols]
-    print(data_sliced.shape)
+    print("effective data shape",data_sliced.shape)
     # Reshape the data for averaging:
     # -1: infer dimension
     # downsample_factor: group columns into blocks
