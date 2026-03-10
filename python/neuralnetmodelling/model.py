@@ -49,35 +49,7 @@ def string_layer(x,start,end,max_x,training):
     # s=layers.Concatenate()([smax,savg])
     # return s
     return s
-def string_layer2d(x,start,end,max_x,training):
-    end=min(end,max_x)
-    start=max(0,start)
-    print(f"Extracting string from filters {start} to {end}")
-    s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :,:])(x)
-    print(f"String {start} section shape: {s.shape}")
-    # String-specific processing
-    s = layers.Conv2D(128, 7, padding='same', activation=None,kernel_initializer='he_normal')(s)
-    s = layers.BatchNormalization()(s)
-    s = layers.LeakyReLU()(s)
-    print(f"String {start} after first Conv1D: {s.shape}")
-    s=layers.MaxPooling2D(4)(s)
-    s = layers.SpatialDropout2D(0.5)(s)
-        
-        
 
-    s = layers.Conv2D(256, 7, padding='same', activation=None,kernel_initializer='he_normal')(s)
-    s = layers.BatchNormalization()(s)
-    s = layers.LeakyReLU()(s)
-        
-    s=layers.MaxPooling2D(2)(s)
-
-
-    s = layers.AveragePooling2D(pool_size=2)(s)  # small reduction
-    s = layers.Flatten()(s)  
-    # savg= layers.GlobalAveragePooling1D()(s)
-    # s=layers.Concatenate()([smax,savg])
-    # return s
-    return s
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
                        gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
 # Input: (Batch, Filters, Time)
@@ -89,7 +61,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same',kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU(0.2)(x)
-    x = layers.SpatialDropout2D(0.4)(x)
+    x = layers.SpatialDropout2D(0.3)(x)
     # Flatten time into features so we can use Conv1D on filters
     # Shape: (Batch, 312, 16 * 32)
     x = layers.Reshape((image_height, 512))(x)
@@ -104,13 +76,13 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.4)(x)
+    x = layers.SpatialDropout1D(0.3)(x)
     
     x = layers.Conv1D(64, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.5)(x)
+    x = layers.SpatialDropout1D(0.4)(x)
     num_pool_layers=1
     max_x=image_height/(num_pool_layers+1)
     
@@ -139,193 +111,9 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # 4. Recombine for Note Classification
     concat = layers.Concatenate()(string_features)
     # concat = layers.Dense(256, activation='relu')(concat)
-    concat = layers.Dropout(0.5)(concat)
+    concat = layers.Dropout(0.6)(concat)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
     return models.Model(inputs, outputs)
 
 
-def build_2d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
-                       gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
-# Input: (Batch, Filters, Time)
-    inputs = layers.Input(batch_shape=(batch_sz, *input_shape))
-    
-    x=inputs
-    print(f"Initial input shape: {x.shape}")
-    # 2. Time-Domain Processing (per filter)
-    # We use a small 2D kernel to look at neighboring filters and time
-    x = layers.Conv2D(32, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU()(x)
-    # x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout2D(0.2)(x)
-    
-    x = layers.Conv2D(64, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU()(x)
-    x=layers.MaxPooling2D(2)(x)
-    x = layers.SpatialDropout2D(0.3)(x)
-    num_pool_layers=1
-    max_x=image_height/(num_pool_layers+1)
-    
-    print(f"After first Conv2D: {x.shape}")
-    # total notes 3*5+4+5+13=37
-    totalnotes=37
-    E_frac=5/totalnotes
-    A_frac=5/totalnotes+E_frac
-    d_frac=5/totalnotes+A_frac
-    g_frac=4/totalnotes+d_frac
-    b_frac=5/totalnotes+g_frac
-    e_frac=13/totalnotes+b_frac
-
-    string_features = []
-    Estr=string_layer2d(x,0,int(E_frac*max_x),max_x,training)
-    Astr=string_layer2d(x,int(E_frac*max_x)+1,int(A_frac*max_x),max_x,training)
-    dstr=string_layer2d(x,int(A_frac*max_x)+1,int(d_frac*max_x),max_x,training)
-    gstr=string_layer2d(x,int(d_frac*max_x)+1,int(g_frac*max_x),max_x,training)
-    bstr=string_layer2d(x,int(g_frac*max_x)+1,int(b_frac*max_x),max_x,training)
-    estr=string_layer2d(x,int(b_frac*max_x)+1,int(max_x-1),max_x,training)
-
-    string_features = [Estr,Astr,dstr,gstr,bstr,estr]
-    
-    # 4. Recombine for Note Classification
-    concat = layers.Concatenate()(string_features)
-    # concat = layers.Dense(256, activation='relu')(concat)
-    concat = layers.Dropout(0.5)(concat)
-    outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
-    
-    return models.Model(inputs, outputs)
-
-# class FASTBlock(layers.Layer):
-#     """
-#     A single FAST (MobileViT-inspired) block for Audio Spectrograms.
-    
-#     This block integrates CNN-based local processing with Transformer-based 
-#     global processing and subsequent fusion.
-#     """
-#     def __init__(self, dim, patch_size=(16, 16), num_heads=12, name='fast_block', **kwargs):
-#         super().__init__(name=name, **kwargs)
-#         self.dim = dim
-#         self.ph, self.pw = patch_size
-        
-#         # --- Local Feature Extraction ---
-#         # 3x3 Conv + 1x1 Point-wise Conv (to increase channels to `dim`)
-#         self.conv_3x3 = layers.Conv2D(dim, kernel_size=3, padding='same', use_bias=False)
-#         self.conv_1x1_local = layers.Conv2D(dim, kernel_size=1, padding='same')
-        
-#         # --- Global Feature Extraction (Transformer) ---
-#         # NOTE: The paper uses a custom CenterNorm and Scaled Cosine Similarity Attention (SCSA).
-#         # We use standard LayerNormalization and MultiHeadAttention as structural placeholders.
-#         # The user MUST substitute these with the custom Lipschitz-Aware layers for the official FAST model.
-        
-#         self.norm1 = layers.LayerNormalization(epsilon=1e-6) # Placeholder for CenterNorm
-#         self.mha = layers.MultiHeadAttention(num_heads=num_heads, key_dim=dim // num_heads, dropout=DROPOUT_RATE) # Placeholder for SCSA
-#         self.norm2 = layers.LayerNormalization(epsilon=1e-6) # Placeholder for CenterNorm
-        
-#         self.mlp = tf.keras.Sequential([
-#             layers.Dense(dim * 4, activation=tf.nn.gelu),
-#             layers.Dense(dim),
-#             layers.Dropout(DROPOUT_RATE)
-#         ], name="mlp")
-        
-#         # --- Feature Fusion ---
-#         self.conv_1x1_fusion = layers.Conv2D(dim, kernel_size=1, padding='same')
-
-#     def call(self, inputs, training=False):
-#         B, H, W, C = tf.shape(inputs)[0], tf.shape(inputs)[1], tf.shape(inputs)[2], tf.shape(inputs)[3]
-        
-#         # 1. Local Representation (CNN-based)
-#         # 3x3 Conv -> Activation (ReLU) -> 1x1 Conv
-#         x_local = self.conv_3x3(inputs)
-#         x_local = layers.ReLU()(x_local)
-#         x_local = self.conv_1x1_local(x_local) # Output shape: (B, H, W, dim)
-        
-#         # 2. Global Representation (Transformer-based)
-#         # Unroll into patches
-#         # Reshape (B, H, W, dim) -> (B * N_patches, Ph, Pw, dim)
-#         x_unrolled = tf.reshape(x_local, (B * (H // self.ph) * (W // self.pw), self.ph, self.pw, self.dim))
-        
-#         # Flatten patches (B * N_patches, Ph, Pw, dim) -> (B * N_patches, Ph*Pw, dim)
-#         x_patches = tf.reshape(x_unrolled, (-1, self.ph * self.pw, self.dim))
-        
-#         # Transformer Block (MHA + MLP)
-#         x_norm = self.norm1(x_patches)
-#         attn_output = self.mha(x_norm, x_norm)
-        
-#         # Add residual connection (NOTE: Paper uses Weighted Residual Shortcuts)
-#         x_transformer = x_patches + attn_output
-#         x_transformer = x_transformer + self.mlp(self.norm2(x_transformer))
-        
-#         # Re-roll patches back to feature map
-#         # Reshape (B * N_patches, Ph*Pw, dim) -> (B, H, W, dim)
-#         x_rerolled = tf.reshape(x_transformer, (B, H, W, self.dim))
-
-#         # 3. Feature Fusion (CNN-based)
-#         # Output is combined with the Local Representation through a 1x1 Conv
-#         fused_output = self.conv_1x1_fusion(x_rerolled + x_local)
-        
-#         return fused_output
-    
-
-# def create_fast_model(input_shape=(IMG_H, IMG_W, CHANNELS), num_classes=NUM_CLASSES, 
-#                       hidden_dim=HIDDEN_D, patch_size=(PATCH_H, PATCH_W), 
-#                       transformer_layers=TRANSFORMER_LAYERS):
-#     """
-#     Constructs the overall FAST Model with corrected CNN stem for perfect feature map division.
-#     """
-#     inputs = layers.Input(shape=input_shape)
-#     x = inputs
-
-#     # --- CNN Stem (Corrected for Divisibility) ---
-    
-#     # 1. First Downsample (312 -> 156, 256 -> 128) - Stride 2
-#     x = layers.Conv2D(32, kernel_size=3, strides=2, padding='same', use_bias=False)(x)
-#     x = layers.BatchNormalization()(x)
-#     x = layers.ReLU()(x)
-    
-#     # 2. Second Downsample (156 -> 78, 128 -> 64) - Stride 2
-#     x = layers.Conv2D(hidden_dim // 2, kernel_size=3, strides=2, padding='same', use_bias=False)(x)
-#     x = layers.BatchNormalization()(x)
-#     x = layers.ReLU()(x)
-    
-#     # 3. Third Downsample (78 -> 72, 64 -> 64) - Stride is set to 1 for Height, but we need 78 to go to 72.
-#     # To get 78 -> 72, we need a separate block, or we modify the previous strides.
-#     # To simplify and ensure perfect divisibility: use three downsampling blocks where:
-#     # 312 -> 156 (S=2) -> 78 (S=2) -> 72 (Custom, padding/valid conv)
-    
-#     # *Alternative Fix: Let's use 3 Conv blocks to reach a manageable (78, 64) and rely on the model 
-#     # to handle the slight indivisibility or use a final 1x1 Conv with padding:
-    
-#     # Let's trust the MobileViT structure, which forces the output shape to be divisible:
-#     # 312 -> 78, 256 -> 64. (Final FM Shape: 78x64)
-#     # The fix is to add a small VALID padding/cropping layer to get 78 -> 72.
-    
-#     # Crop layer to make 78 -> 72 (72 is divisible by 24)
-#     # 78 - 72 = 6. Crop 3 from top, 3 from bottom.
-#     cropping_pixels_h = 3
-#     x = layers.Cropping2D(cropping=((cropping_pixels_h, cropping_pixels_h), (0, 0)))(x)
-    
-#     # Final Feature Map Shape entering FASTBlock is (72, 64) - divisible by (24, 16)!
-#     print(f"--- Input to FASTBlock will have a feature map size of: {x.shape[1]}x{x.shape[2]} ---")
-    
-#     # --- Stacked FAST Blocks ---
-#     for i in range(transformer_layers):
-#         x = FASTBlock(dim=hidden_dim, patch_size=patch_size, num_heads=NUM_HEADS, name=f'fast_block_{i}')(x)
-        
-#     # --- Classification Head ---
-#     x = layers.GlobalAveragePooling2D()(x)
-#     x = layers.Dropout(0.5)(x)
-    
-#     # Output activation: 'sigmoid' for multi-label (common for large audio datasets)
-#     output_activation = 'sigmoid' if num_classes > 2 else 'softmax'
-
-#     outputs = layers.Dense(num_classes, activation=output_activation)(x)
-
-#     # --- Model Compilation ---
-#     model = Model(inputs, outputs, name="FAST_AudioSpectrogramTransformer")
-    
-#     return model
-
-# # Create and summarize the model
-# fast_model = create_fast_model()
-# fast_model.summary()
