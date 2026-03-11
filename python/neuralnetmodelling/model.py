@@ -44,7 +44,8 @@ def string_layer(x,start,end,max_x,training):
     #s=layers.MaxPooling1D(2)(s)
 
     #s = layers.AveragePooling1D(pool_size=2)(s)  # small reduction
-    s = layers.Flatten()(s)  
+    # s = layers.Flatten()(s)  
+    return layers.GlobalAveragePooling1D()(s)
     # savg= layers.GlobalAveragePooling1D()(s)
     # s=layers.Concatenate()([smax,savg])
     # return s
@@ -93,7 +94,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.Reshape((image_height, 512))(x)
     # x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
 
-    x = transformer_block(x, num_heads=4, head_size=64, ff_dim=512, dropout=0.2)
+   # x = transformer_block(x, num_heads=4, head_size=64, ff_dim=512, dropout=0.2)
 
     # x=layers.Normalization(axis=-1)(x)
     # x=layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-4))(x)
@@ -119,26 +120,64 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # 4*5+4*5+4*5+4*4+4*5+4*13=148
     # [0:20]+[20:40]+[40:60]+[60:76]+[76:96]+[96:148]
     totalnotes=37
-    E_frac=5/totalnotes
-    A_frac=5/totalnotes+E_frac
-    d_frac=5/totalnotes+A_frac
-    g_frac=4/totalnotes+d_frac
-    b_frac=5/totalnotes+g_frac
-    e_frac=13/totalnotes+b_frac
+    window_size = 13
 
+    # E string (Low)
+    offset = 0
+    E_begin = offset / totalnotes
+    E_end = (window_size + offset) / totalnotes
+
+    # A string (Offset 5)
+    offset += 5
+    A_begin = offset / totalnotes
+    A_end = (window_size + offset) / totalnotes
+
+    # d string (Offset 5)
+    offset += 5
+    d_begin = offset / totalnotes
+    d_end = (window_size + offset) / totalnotes
+
+    # g string (Offset 5)
+    offset += 5
+    g_begin = offset / totalnotes
+    g_end = (window_size + offset) / totalnotes
+
+    # B string (Offset 4 - The Major Third shift)
+    offset += 4
+    b_begin = offset / totalnotes
+    b_end = (window_size + offset) / totalnotes
+
+    # e string (High - Offset 5)
+    offset += 5
+    e_begin = offset / totalnotes
+    e_end = (window_size + offset) / totalnotes # Final end is 24 + 13 = 37 (1.0)
     string_features = []
-    Estr=string_layer(x,0,int(E_frac*max_x),max_x,training)
-    Astr=string_layer(x,int(E_frac*max_x)+1,int(A_frac*max_x),max_x,training)
-    dstr=string_layer(x,int(A_frac*max_x)+1,int(d_frac*max_x),max_x,training)
-    gstr=string_layer(x,int(d_frac*max_x)+1,int(g_frac*max_x),max_x,training)
-    bstr=string_layer(x,int(g_frac*max_x)+1,int(b_frac*max_x),max_x,training)
-    estr=string_layer(x,int(b_frac*max_x)+1,int(max_x-1),max_x,training)
+    Estr=string_layer(x,E_begin,int(E_end*max_x),max_x,training)
+    Astr=string_layer(x,int(A_begin*max_x)+1,int(A_end*max_x),max_x,training)
+    dstr=string_layer(x,int(d_begin*max_x)+1,int(d_end*max_x),max_x,training)
+    gstr=string_layer(x,int(g_begin*max_x)+1,int(g_end*max_x),max_x,training)
+    bstr=string_layer(x,int(b_begin*max_x)+1,int(b_end*max_x),max_x,training)
+    estr=string_layer(x,int(e_begin*max_x)+1,int(max_x-1),max_x,training)
+
+    
+
+
 
     string_features = [Estr,Astr,dstr,gstr,bstr,estr]
+# 1. Stack into a 2D Map: (Batch, 6, 256)
+    stacked = layers.Lambda(lambda x: tf.stack(x, axis=1))(string_features)
     
-    # 4. Recombine for Note Classification
-    concat = layers.Concatenate()(string_features)
-    # concat = layers.Dense(256, activation='relu')(concat)
+    # 2. Reshape for 2D Conv: (Batch, 6, 256, 1)
+    stacked_2d = layers.Reshape((6, 256, 1))(stacked)
+    
+    # 3. Chord Logic Conv2D: Looks at 3 strings at a time (e.g., power chords/triads)
+    x = layers.Conv2D(32, kernel_size=(3, 7), padding='same')(stacked_2d)
+    x = layers.BatchNormalization()(x)
+    x = layers.LeakyReLU()(x)
+    x = layers.SpatialDropout2D(0.2)(x)
+    
+    # 4. Final Classification
+    concat = layers.Flatten()(x)
     concat = layers.Dropout(0.4)(concat)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
