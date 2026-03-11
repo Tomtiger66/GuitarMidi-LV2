@@ -49,6 +49,32 @@ def string_layer(x,start,end,max_x,training):
     # s=layers.Concatenate()([smax,savg])
     # return s
     return s
+def transformer_block(x, num_heads=4, head_size=64, ff_dim=512, dropout=0.2):
+    """
+    A lightweight Transformer layer designed for real-time audio feature maps.
+    x shape: (Batch, Sequence_Length, Embedding_Dim)
+    """
+    # 1. Multi-Head Self-Attention
+    # This allows the model to look 'across' frequency bins for harmonics
+    attn_output = layers.MultiHeadAttention(
+        num_heads=num_heads, 
+        key_dim=head_size, 
+        dropout=dropout
+    )(x, x)
+    
+    # Residual Connection + Layer Norm
+    x1 = layers.Add()([x, attn_output])
+    x1 = layers.LayerNormalization(epsilon=1e-6)(x1)
+    
+    # 2. Feed-Forward Network (Position-wise)
+    # We use a smaller ff_dim (512) to keep the parameter count lean
+    ffn = layers.Dense(ff_dim, activation="relu")(x1)
+    ffn = layers.Dense(x.shape[-1])(ffn) # Project back to original dim
+    ffn = layers.Dropout(dropout)(ffn)
+    
+    # Second Residual Connection + Layer Norm
+    x2 = layers.Add()([x1, ffn])
+    return layers.LayerNormalization(epsilon=1e-6)(x2)
 
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), output_dim=OUTPUT_DIM_NOTES, training=True,
                        gru_units=128, gru_layers=1, bidirectional=True, stateful=False):  # Added GRU params
@@ -67,7 +93,9 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.Reshape((image_height, 512))(x)
     # x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
 
-    x=layers.Normalization(axis=-1)(x)
+    x = transformer_block(x, num_heads=4, head_size=64, ff_dim=512, dropout=0.2)
+
+    # x=layers.Normalization(axis=-1)(x)
     # x=layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-4))(x)
     print(f"Initial input shape: {x.shape}")
     # 2. Time-Domain Processing (per filter)
