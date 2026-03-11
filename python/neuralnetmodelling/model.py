@@ -94,7 +94,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.Reshape((image_height, 512))(x)
     # x=layers.Lambda(lambda x: tf.reduce_max(x, axis=2))(inputs)
 
-   # x = transformer_block(x, num_heads=4, head_size=64, ff_dim=512, dropout=0.2)
+    x = transformer_block(x, num_heads=2, head_size=64, ff_dim=256, dropout=0.2)
 
     # x=layers.Normalization(axis=-1)(x)
     # x=layers.Lambda(lambda x: tf.math.log(tf.abs(x) + 1e-4))(x)
