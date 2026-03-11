@@ -33,7 +33,7 @@ def string_layer(x,start,end,max_x,training):
     s = layers.LeakyReLU()(s)
     print(f"String {start} after first Conv1D: {s.shape}")
     s=layers.MaxPooling1D(4)(s)
-    s = layers.SpatialDropout1D(0.4)(s)
+    s = layers.SpatialDropout1D(0.3)(s)
         
         
 
@@ -61,7 +61,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.Conv2D(16, (1, 16), strides=(1, 8), padding='same',kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU(0.2)(x)
-    x = layers.SpatialDropout2D(0.3)(x)
+    x = layers.SpatialDropout2D(0.2)(x)
     # Flatten time into features so we can use Conv1D on filters
     # Shape: (Batch, 312, 16 * 32)
     x = layers.Reshape((image_height, 512))(x)
@@ -76,13 +76,13 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     # x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.3)(x)
+    x = layers.SpatialDropout1D(0.2)(x)
     
     x = layers.Conv1D(64, 7, padding='same', activation=None,kernel_initializer='he_normal')(x)
     x = layers.BatchNormalization()(x)
     x = layers.LeakyReLU()(x)
     x=layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.4)(x)
+    x = layers.SpatialDropout1D(0.2)(x)
     num_pool_layers=1
     max_x=image_height/(num_pool_layers+1)
     
@@ -111,7 +111,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width), out
     # 4. Recombine for Note Classification
     concat = layers.Concatenate()(string_features)
     # concat = layers.Dense(256, activation='relu')(concat)
-    concat = layers.Dropout(0.6)(concat)
+    concat = layers.Dropout(0.4)(concat)
     outputs = layers.Dense(output_dim, activation='sigmoid',dtype='float32')(concat)
     
     return models.Model(inputs, outputs)
