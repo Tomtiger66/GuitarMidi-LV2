@@ -98,3 +98,72 @@ class FretBoard:
     #     return self.frets[fret].strings[string]
     
 
+import math
+# Get the highest and  the lowest delay of a guitarnote
+def get_guitarnote_delays(midi_note: int, q: float, sample_rate: int):
+    highest_harmonic=get_butterworth_group_delay(midi_note,num_harmonics,q,sample_rate)
+    fundamental=get_butterworth_group_delay(midi_note,1,q,sample_rate)
+    return (highest_harmonic,fundamental)
+def get_butterworth_group_delay(
+    midi_note: int,
+    harmonic: int,
+    q: float,
+    sample_rate: int
+) -> int:
+    """
+    Calculates the group delay of a 2nd-order Butterworth BANDPASS filter
+    at the center frequency, for a given harmonic of a MIDI note.
+
+    Args:
+        midi_note (int):   The MIDI note number (0-127).
+        harmonic (int):    The harmonic number (1 = fundamental, 2 = 2nd, etc.).
+        q (float):         The Q factor (controls bandwidth: BW = f_c / Q).
+        sample_rate (int): The sample rate in Hz (e.g. 44100, 48000).
+
+    Returns:
+        float: The group delay in samples at the center frequency.
+
+    Raises:
+        ValueError: If inputs are out of valid range or exceed Nyquist.
+    """
+    # --- Input validation ---
+    if not (0 <= midi_note <= 127):
+        raise ValueError(f"midi_note must be 0-127, got {midi_note}")
+    if harmonic < 1:
+        raise ValueError(f"harmonic must be >= 1, got {harmonic}")
+    if q <= 0:
+        raise ValueError(f"Q factor must be positive, got {q}")
+    if sample_rate <= 0:
+        raise ValueError(f"sample_rate must be positive, got {sample_rate}")
+
+    # --- Step 1: MIDI note → fundamental frequency (Hz) ---
+    # Standard formula: f = 440 * 2^((n - 69) / 12)
+    # MIDI note 69 = A4 = 440 Hz
+    fundamental = 440.0 * (2.0 ** ((midi_note - 69) / 12.0))
+
+    # --- Step 2: Scale by harmonic number ---
+    frequency = harmonic * fundamental
+
+    # --- Step 3: Frequency → normalized digital angular frequency ---
+    # w_c = 2π * f / fs  (radians per sample)
+    w_c = 2.0 * math.pi * frequency / sample_rate
+
+    # Guard against Nyquist aliasing
+    if w_c >= math.pi:
+        raise ValueError(
+            f"Harmonic {harmonic} frequency {frequency:.1f} Hz exceeds "
+            f"Nyquist ({sample_rate / 2:.0f} Hz). "
+            f"Max harmonic for this note: "
+            f"{int((sample_rate / 2) / fundamental)}"  # helpful hint
+        )
+
+    # --- Step 4: Bandpass group delay at center frequency ---
+    # For a 2nd-order bandpass transfer function:
+    #   H(s) = (w_c/Q)s / (s^2 + (w_c/Q)s + w_c^2)
+    #
+    # Group delay τ(ω) = -d(phase)/dω
+    # At ω = w_c this simplifies to:
+    #   τ(w_c) = Q / w_c
+    delay_samples = q / w_c
+
+    return int(delay_samples)

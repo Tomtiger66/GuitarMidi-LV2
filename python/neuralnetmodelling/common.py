@@ -8,12 +8,12 @@ from fretboardnonredundant import FretBoard
 # Common parameters
 frame_size=256
 image_width = 256
-
+Q_FACTOR=6
 SAMPLERATE=48000
 fretboard=FretBoard(2,SAMPLERATE)
 image_height = fretboard.get_num_filters() 
 num_channels = 1
-num_classes = 44 # For MIDI notes+silence class
+num_classes = 129 # For MIDI notes+silence class
 INPUT_SHAPE = (image_height,image_width, num_channels)
 INPUT_SHAPE_AUDIO = (1,image_width, num_channels)
 OUTPUT_DIM_NOTES = num_classes # For notes output
