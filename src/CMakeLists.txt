@@ -56,7 +56,7 @@ add_subdirectory(
 
 
 
-set(SRC guitarmidi.cpp  noteclassifier.cpp midioutput.cpp fretboard.cpp fretboardrepresentation.cpp harmonicgroup.cpp logging.cpp filterbank.cpp filter.cpp fret.cpp noteinferencer.cpp)
+set(SRC guitarmidi.cpp  noteclassifier.cpp midioutput.cpp fretboard.cpp fretboardrepresentation.cpp guitarnote.cpp logging.cpp filterbank.cpp filter.cpp guitarstring.cpp noteinferencer.cpp)
 
 add_library(guitarmidi SHARED ${SRC})
 

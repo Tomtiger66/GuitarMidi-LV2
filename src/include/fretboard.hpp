@@ -24,7 +24,6 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include <fret.hpp>
 #include <noteinferencer.hpp>
 typedef enum
 {

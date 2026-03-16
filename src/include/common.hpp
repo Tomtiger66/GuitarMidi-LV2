@@ -1,6 +1,8 @@
 #pragma once 
 #include <logging.hpp>
-#define OUTPUT_DIM 129
+#define OUTPUT_DIM 44
+#define BUFFER_SIZE 256
+#define NOTE_OFFSET 40
 namespace GuitarMidi{
 
     struct AudioBuffer2D{

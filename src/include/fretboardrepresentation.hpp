@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <fret.hpp>
+#include <guitarstring.hpp>
 using namespace std;
 
 namespace GuitarMidi
@@ -8,14 +8,14 @@ namespace GuitarMidi
 
     class FretBoardRepresentation
     {
-        vector<Fret> m_frets;
+        vector<GuitarString> m_strings;
 
         public:
         FretBoardRepresentation();
 
         map<uint,FilterRepresentation> get_filterrepresentations(){
             map<uint,FilterRepresentation> res;
-            for (auto f: m_frets)
+            for (auto f: m_strings)
                 f.get_filterrepresentations(res);
 
             return res;

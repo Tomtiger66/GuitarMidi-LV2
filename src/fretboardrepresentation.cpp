@@ -2,17 +2,10 @@
 
 GuitarMidi::FretBoardRepresentation::FretBoardRepresentation()
 {
-    m_frets.push_back(Fret(0, 82, 11, 147, 196, 247, 329));
-    m_frets.push_back(Fret(1, 87, 117, 156, 208, 262, 349));
-    m_frets.push_back(Fret(2, 92, 123, 165, 220, 277, 370));
-    m_frets.push_back(Fret(3, 98, 131, 175, 233, 294, 392));
-    m_frets.push_back(Fret(4, 104, 139, 185, 247, 311, 415));
-    m_frets.push_back(Fret(5, 110, 147, 196, 262, 329, 440));
-    m_frets.push_back(Fret(6, 117, 156, 208, 277, 349, 466));
-    m_frets.push_back(Fret(7, 123, 165, 220, 294, 370, 494));
-    m_frets.push_back(Fret(8, 131, 175, 233, 311, 392, 523));
-    m_frets.push_back(Fret(9, 139, 185, 247, 329, 415, 554));
-    m_frets.push_back(Fret(10, 147, 196, 262, 349, 440, 587));
-    m_frets.push_back(Fret(11, 156, 208, 277, 370, 466, 622));
-    m_frets.push_back(Fret(12, 165, 220, 294, 392, 494, 659));
+m_strings.push_back(GuitarString({{0, 82}, {1, 87}, {2, 92}, {3, 98}, {4, 104}}));
+m_strings.push_back(GuitarString({{5, 110}, {6, 117}, {7, 123}, {8, 131}, {9, 139}}));
+m_strings.push_back(GuitarString({{10, 147}, {11, 156}, {12, 165}, {13, 175}, {14, 185}}));
+m_strings.push_back(GuitarString({{15, 196}, {16, 208}, {17, 220}, {18, 233}}));
+m_strings.push_back(GuitarString({{19, 247}, {20, 262}, {21, 277}, {22, 294}, {23, 311}}));
+m_strings.push_back(GuitarString({{24, 329}, {25, 349}, {26, 370}, {27, 392}, {28, 415}, {29, 440}, {30, 466}, {31, 494}, {32, 523}, {33, 554}, {34, 587}, {35, 622}, {36, 659}}));
 }

@@ -1,13 +1,15 @@
 #pragma once
 #include <DspFilters/Dsp.h>
 #include <config.hpp>
-#include <harmonicgroup.hpp>
+#include <guitarnote.hpp>
+#include <common.hpp>
 #define MAXORDER 10   // the real order is 2*MAXORDER
 #define FILTERORDER 2 // the real order is 2*MAXORDER
 #define NUM_HARMONICS 4
 #define NUM_STRINGS 6
 #define NUM_FRETS 12
-#define BUFFER_SIZE 256
+
+#define Q_FACTOR 6
 namespace GuitarMidi
 {
 
@@ -59,10 +61,10 @@ namespace GuitarMidi
         Dsp::SimpleFilter<Dsp::Elliptic::BandPass<MAXORDER>, 1> m_filter;
 #endif
 
-        void setFilterParameters(float q = 17.5, float passbandatten = 2, int order = FILTERORDER);
+        void setFilterParameters(float q = Q_FACTOR, float passbandatten = 2, int order = FILTERORDER);
 
     public:
-        Filter(FilterRepresentation filter_rep, float samplerate,  float q = 17.5, float passbandatten = 2);
+        Filter(FilterRepresentation filter_rep, float samplerate,  float q = Q_FACTOR, float passbandatten = 2);
         ~Filter();
         void initialize();
 
