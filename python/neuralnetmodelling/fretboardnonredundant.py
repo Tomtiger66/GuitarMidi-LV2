@@ -16,10 +16,13 @@ class Filter:
         #self.b, self.a = signal.ellip(N,0.5,40,[low, high], btype='band',fs=sampleRate)
         self.b, self.a =signal.butter(N, [low, high], btype='band',fs=sample_rate)
         self.zi=signal.lfilter_zi(self.b,self.a)
+        self.zi_initial=self.zi.copy()
         
     def process(self,input_audio,filterbank_out: np.array):
         out, self.zi = signal.lfilter(self.b, self.a, input_audio, zi=self.zi)
         filterbank_out[self.id] = np.abs(out)
+    def reset(self):
+        self.zi=self.zi_initial
 
 
 class GuitarNote:
@@ -39,6 +42,9 @@ class GuitarNote:
         for h in self.harmonics:
             #filterbank_out.append(h.process(input_audio))
             h.process(input_audio,filterbank_out)
+    def reset(self):
+        for h in self.harmonics:
+            h.reset()
             
   
     def get_num_filters(self):
@@ -57,6 +63,9 @@ class GuitarString:
         for fret in self.frets:
             #filterbank_out.append(h.process(input_audio))
             fret.process(input_audio,filterbank_out)
+    def reset(self):
+        for fret in self.frets:
+            fret.reset()
             
   
     def get_num_filters(self):
@@ -87,6 +96,9 @@ class FretBoard:
         for h in self.strings:
             # filterbank_out.append(h.process(input_audio,filterbank_out))    
             res=h.process(input_audio,filterbank_out)
+    def reset(self):
+        for s in self.strings:
+            s.reset()
        
     def get_num_filters(self):
         res=0

@@ -9,6 +9,7 @@ from fretboardnonredundant import FretBoard
 frame_size=256
 image_width = 256
 Q_FACTOR=6
+FRAME_LAG=3
 SAMPLERATE=48000
 fretboard=FretBoard(2,SAMPLERATE)
 image_height = fretboard.get_num_filters() 
