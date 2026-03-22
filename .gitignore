@@ -14,4 +14,4 @@ guitarmidi_epoch*_valLoss*.weights.h5
 python/neuralnetmodelling/data_slices/**
 python/neuralnetmodelling/*.tfrecord
 python/neuralnetmodelling/*.csv
-**.tfrecord
+**.tfrecord*
