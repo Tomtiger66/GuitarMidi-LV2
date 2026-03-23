@@ -8,7 +8,7 @@ TARGET_DIR="training_subset"
 
 mkdir -p $TARGET_DIR
 
-NUM_FILES_TO_COPY=8100
+NUM_FILES_TO_COPY=20000 #8100
 
 FILES=$(find ${SOURCE_DIR} -iname "*.tfrecord")
 
