@@ -2,99 +2,105 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 from common import OUTPUT_DIM_NOTES, image_height, image_width
 
-IMG_H, IMG_W = 312, 256
+IMG_H, IMG_W = image_height, image_width
 NUM_CLASSES = 89
 CHANNELS = 1
 
-
-def bottleneck_residual(x, filters, kernel_size=3, ratio=4):
+def bottleneck_residual(x, filters, kernel_size=3, ratio=4, name_prefix="res"):
     inner = max(filters // ratio, 16)
     shortcut = x
 
-    x = layers.Conv1D(inner, 1, padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU()(x)
+    x = layers.Conv1D(inner, 1, padding='same', name=f"{name_prefix}_squeeze")(x)
+    x = layers.BatchNormalization(name=f"{name_prefix}_bn1")(x)
+    x = layers.LeakyReLU(name=f"{name_prefix}_act1")(x)
 
-    x = layers.Conv1D(inner, kernel_size, padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU()(x)
+    x = layers.Conv1D(inner, kernel_size, padding='same', name=f"{name_prefix}_conv_k{kernel_size}")(x)
+    x = layers.BatchNormalization(name=f"{name_prefix}_bn2")(x)
+    x = layers.LeakyReLU(name=f"{name_prefix}_act2")(x)
 
-    x = layers.Conv1D(filters, 1, padding='same')(x)
-    x = layers.BatchNormalization()(x)
+    x = layers.Conv1D(filters, 1, padding='same', name=f"{name_prefix}_expand")(x)
+    x = layers.BatchNormalization(name=f"{name_prefix}_bn3")(x)
 
     if shortcut.shape[-1] != filters:
-        shortcut = layers.Conv1D(filters, 1, padding='same')(shortcut)
-        shortcut = layers.BatchNormalization()(shortcut)
+        shortcut = layers.Conv1D(filters, 1, padding='same', name=f"{name_prefix}_shortcut_proj")(shortcut)
+        shortcut = layers.BatchNormalization(name=f"{name_prefix}_shortcut_bn")(shortcut)
 
-    return layers.LeakyReLU()(layers.Add()([x, shortcut]))
+    return layers.LeakyReLU(name=f"{name_prefix}_out")(layers.Add(name=f"{name_prefix}_add")([x, shortcut]))
 
-
-def string_layer(x, start, end, max_x, training):
+def string_layer(x, start, end, max_x, training, string_idx=0):
     end = min(int(end), int(max_x))
     start = max(0, int(start))
-    print(f"  String slice [{start}:{end}]")
+    prefix = f"str{string_idx}"
+    print(f"  String {string_idx} slice [{start}:{end}]")
 
-    s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :])(x)
+    s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :], name=f"{prefix}_slice")(x)
 
-    s = layers.Conv1D(64, 1, padding='same', kernel_initializer='he_normal')(s)
-    s = layers.BatchNormalization()(s)
-    s = layers.LeakyReLU()(s)
+    s = layers.Conv1D(64, 1, padding='same', kernel_initializer='he_normal', name=f"{prefix}_proj")(s)
+    s = layers.BatchNormalization(name=f"{prefix}_proj_bn")(s)
+    s = layers.LeakyReLU(name=f"{prefix}_proj_act")(s)
 
-    s = bottleneck_residual(s, filters=64, kernel_size=3)
-    s = bottleneck_residual(s, filters=64, kernel_size=5)
-    s = layers.SpatialDropout1D(0.2)(s, training=training)
+    s = bottleneck_residual(s, filters=64, kernel_size=3, name_prefix=f"{prefix}_res_k3")
+    s = bottleneck_residual(s, filters=64, kernel_size=5, name_prefix=f"{prefix}_res_k5")
+    s = layers.SpatialDropout1D(0.2, name=f"{prefix}_drop")(s, training=training)
 
-    smax = layers.GlobalMaxPooling1D()(s)
-    savg = layers.GlobalAveragePooling1D()(s)
-    return layers.Concatenate()([smax, savg])  # (B, 128)
+    smax = layers.GlobalMaxPooling1D(name=f"{prefix}_gmax")(s)
+    savg = layers.GlobalAveragePooling1D(name=f"{prefix}_gavg")(s)
+    return layers.Concatenate(name=f"{prefix}_pool_cat")([smax, savg])
 
-
-def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1):
+def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm"):
     attn = layers.MultiHeadAttention(
-        num_heads=num_heads, key_dim=head_size, dropout=dropout
+        num_heads=num_heads, key_dim=head_size, dropout=dropout, name=f"{name_prefix}_mha"
     )(x, x)
-    x1 = layers.LayerNormalization(epsilon=1e-6)(layers.Add()([x, attn]))
+    x1 = layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln1")(
+        layers.Add(name=f"{name_prefix}_attn_add")([x, attn]))
 
-    ffn = layers.Dense(ff_dim, activation='relu')(x1)
-    ffn = layers.Dropout(dropout)(ffn)
-    ffn = layers.Dense(x.shape[-1])(ffn)
+    ffn = layers.Dense(ff_dim, activation='relu', name=f"{name_prefix}_ffn1")(x1)
+    ffn = layers.Dropout(dropout, name=f"{name_prefix}_ffn_drop")(ffn)
+    ffn = layers.Dense(x.shape[-1], name=f"{name_prefix}_ffn2")(ffn)
 
-    return layers.LayerNormalization(epsilon=1e-6)(layers.Add()([x1, ffn]))
-
+    return layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln2")(
+        layers.Add(name=f"{name_prefix}_ffn_add")([x1, ffn]))
 
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
                        output_dim=OUTPUT_DIM_NOTES, training=True):
+    print("Image height: ", image_height)
+    inputs = layers.Input(batch_shape=(batch_sz, *input_shape), name="input_spectrogram")
 
-    inputs = layers.Input(batch_shape=(batch_sz, *input_shape))
-
-    # --- Stage 1: Frequency compression (B, 312, 256) → (B, 312, 64) ---
-    x = layers.Reshape((image_height, 256, 1))(inputs)
+    # --- Stage 1: Frequency compression (B, 312, 256) → (B, 312, 512) ---
+    x = layers.Reshape((image_height, 256, 1), name="reshape_to_2d")(inputs)
     x = layers.Conv2D(8, (1, 16), strides=(1, 4), padding='same',
-                      kernel_initializer='he_normal')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU(0.2)(x)
-    x = layers.SpatialDropout2D(0.1)(x)
-    # (B, 312, 64, 8) → (B, 312, 512)
-    x = layers.Reshape((image_height, 512))(x)
+                      kernel_initializer='he_normal', name="freq_compress_conv2d")(x)
+    x = layers.BatchNormalization(name="freq_compress_bn")(x)
+    x = layers.LeakyReLU(0.2, name="freq_compress_act")(x)
+    x = layers.SpatialDropout2D(0.1, name="freq_compress_drop")(x)
+    x = layers.Reshape((image_height, 512), name="reshape_to_1d")(x)
 
-    # --- Stage 2: Conv1D backbone FIRST (establishes features) ---
-    x = layers.Conv1D(32, 7, padding='same', kernel_initializer='he_normal')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU()(x)
-    x = layers.SpatialDropout1D(0.2)(x)
+    # # --- Stage 2: Conv1D backbone ---
+    # x = layers.Conv1D(128, 1, padding='same', kernel_initializer='he_normal', name="backbone_squeeze")(x)
+    # x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
+    # x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
 
-    x = layers.Conv1D(64, 7, padding='same', kernel_initializer='he_normal')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU()(x)
-    x = layers.MaxPooling1D(2)(x)
-    x = layers.SpatialDropout1D(0.2)(x)
-    # x shape: (B, 156, 64)
+    # x = layers.Conv1D(32, 7, padding='same', kernel_initializer='he_normal', name="backbone_conv1")(x)
+    # x = layers.BatchNormalization(name="backbone_bn1")(x)
+    # x = layers.LeakyReLU(name="backbone_act1")(x)
+    # x = layers.SpatialDropout1D(0.2, name="backbone_drop1")(x)
 
-    # --- Stage 3: Transformer AFTER conv (attends over meaningful features) ---
-    x = transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1)
+    # x = layers.Conv1D(64, 7, padding='same', kernel_initializer='he_normal', name="backbone_conv2")(x)
+    # x = layers.BatchNormalization(name="backbone_bn2")(x)
+    # x = layers.LeakyReLU(name="backbone_act2")(x)
+    # x = layers.MaxPooling1D(2, name="backbone_pool")(x)
+    # x = layers.SpatialDropout1D(0.2, name="backbone_drop2")(x)
+    x = layers.Conv1D(64, 1, padding='same', kernel_initializer='he_normal', name="backbone_squeeze")(x)
+    x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
+    x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
+
+    x = layers.MaxPooling1D(2, name="backbone_pool")(x)
+    x = layers.SpatialDropout1D(0.2, name="backbone_drop")(x)
+    # --- Stage 3: Transformer ---
+    x = transformer_block(x, num_heads=6, head_size=64, ff_dim=256, dropout=0.1, name_prefix="tfm_block1")
 
     num_pool_layers = 1
-    max_x = image_height / (num_pool_layers + 1)  # 156
+    max_x = image_height / (num_pool_layers + 1)
     print(f"Before string split: {x.shape}, max_x={max_x}")
 
     # --- Stage 4: String-aware slicing ---
@@ -108,42 +114,32 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
         return s, e
 
     ranges = [slice_range(o) for o in offsets]
-    # Clamp last string end
     ranges[-1] = (ranges[-1][0], int(max_x) - 1)
 
     string_features = [
-        string_layer(x, s, e, max_x, training)
-        for s, e in ranges
+        string_layer(x, s, e, max_x, training, string_idx=i)
+        for i, (s, e) in enumerate(ranges)
     ]
-    # Each: (B, 128) → stacked: (B, 6, 128)
-
 
     # --- Stage 5: Chord reasoning ---
-    stacked = layers.Lambda(lambda t: tf.stack(t, axis=1))(string_features)
-    stacked_2d = layers.Reshape((6, 128, 1))(stacked)
+    stacked = layers.Lambda(lambda t: tf.stack(t, axis=1), name="stack_strings")(string_features)
+    stacked_2d = layers.Reshape((6, 128, 1), name="strings_to_2d")(stacked)
 
-    chord = layers.Conv2D(64, kernel_size=(3, 7), padding='same')(stacked_2d)
-    chord = layers.BatchNormalization()(chord)
-    chord = layers.LeakyReLU()(chord)
-    chord = layers.SpatialDropout2D(0.2)(chord)
+    chord = layers.Conv2D(64, kernel_size=(3, 7), padding='same', name="chord_conv1")(stacked_2d)
+    chord = layers.BatchNormalization(name="chord_bn1")(chord)
+    chord = layers.LeakyReLU(name="chord_act1")(chord)
+    chord = layers.SpatialDropout2D(0.2, name="chord_drop1")(chord)
 
+    # --- Stage 6: Classification head ---
+    chord = layers.Conv2D(64, (3, 3), padding='same', name="chord_conv2")(chord)
+    chord = layers.BatchNormalization(name="chord_bn2")(chord)
+    chord = layers.LeakyReLU(name="chord_act2")(chord)
 
-    # --- FIXED Stage 6: Classification head ---
-    chord = layers.Conv2D(32, (3, 3), padding='same')(chord)
-    chord = layers.BatchNormalization()(chord)
-    chord = layers.LeakyReLU()(chord)
-
-    chord_avg = layers.GlobalAveragePooling2D()(chord)  # (B, 32)
-    chord_max = layers.GlobalMaxPooling2D()(chord)      # (B, 32)
-    combined = layers.Concatenate()([chord_avg, chord_max])  # (B, 64)
-
-    # Add BN before Dense (you removed it)
-    x = layers.Dense(128, kernel_initializer='he_normal')(combined)
-    x = layers.BatchNormalization()(x)          # ← important, was missing
-    x = layers.LeakyReLU()(x)
-    x = layers.Dropout(0.3)(x)
+    chord_avg = layers.GlobalAveragePooling2D(name="head_gavg")(chord)
+    chord_max = layers.GlobalMaxPooling2D(name="head_gmax")(chord)
+    combined = layers.Concatenate(name="head_pool_cat")([chord_avg, chord_max])
 
     outputs = layers.Dense(output_dim, activation='sigmoid',
-                           dtype='float32')(x)  # ← keep dtype='float32' for mixed precision safety
-
-    return models.Model(inputs, outputs) 
+                           bias_initializer=tf.initializers.Constant(-1.0),
+                           dtype='float32', name="output_notes")(combined)
+    return models.Model(inputs, outputs, name="guitar_note_detector")
