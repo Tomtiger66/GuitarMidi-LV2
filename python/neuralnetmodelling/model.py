@@ -44,8 +44,9 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     s = layers.SpatialDropout1D(0.2, name=f"{prefix}_drop")(s, training=training)
 
     smax = layers.GlobalMaxPooling1D(name=f"{prefix}_gmax")(s)
-    savg = layers.GlobalAveragePooling1D(name=f"{prefix}_gavg")(s)
-    return layers.Concatenate(name=f"{prefix}_pool_cat")([smax, savg])
+    # savg = layers.GlobalAveragePooling1D(name=f"{prefix}_gavg")(s)
+    # return layers.Concatenate(name=f"{prefix}_pool_cat")([smax, savg])
+    return smax
 
 def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm"):
     attn = layers.MultiHeadAttention(
@@ -94,12 +95,12 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
     x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
     x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
 
-    x = layers.MaxPooling1D(2, name="backbone_pool")(x)
+    #x = layers.MaxPooling1D(2, name="backbone_pool")(x)
     x = layers.SpatialDropout1D(0.2, name="backbone_drop")(x)
     # --- Stage 3: Transformer ---
     x = transformer_block(x, num_heads=6, head_size=64, ff_dim=256, dropout=0.1, name_prefix="tfm_block1")
 
-    num_pool_layers = 1
+    num_pool_layers = 0
     max_x = image_height / (num_pool_layers + 1)
     print(f"Before string split: {x.shape}, max_x={max_x}")
 
