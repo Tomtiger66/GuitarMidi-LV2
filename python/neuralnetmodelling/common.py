@@ -250,3 +250,79 @@ def reshape_to_nn_output(outdata,collapse_time=True):
     print('Reshaped the output data to  ')
     print(reshaped_data.shape)
     return reshaped_data
+
+
+def count_concurrent_notes_distribution(dataset, max_polyphony=129, batch_size=256):
+    # 1. Ensure the dataset is batched for vectorized math
+    # If the input dataset is already batched, this line won't hurt.
+    batched_ds = dataset#.batch(batch_size,drop_remainder=True) if not hasattr(dataset, '_batch_size') else dataset
+
+    # State: Histogram of size max_polyphony
+    initial_state = tf.zeros((max_polyphony,), dtype=tf.int64)
+    
+    def reduce_fn(old_state, next_element):
+        _, labels_batch = next_element # Shape: (batch, OUTPUT_DIM_NOTES)
+        active_notes_only = labels_batch[..., :-1]
+        # 1. Count active notes for every sample in the batch at once
+        # Resulting shape: (batch_size,)
+        num_active_batch = tf.reduce_sum(tf.cast(active_notes_only, tf.int32), axis=-1)
+        before=num_active_batch
+        #print labels_batch and num_active_batch for debugging
+        # print("Labels batch (first 5 samples):", labels_batch[:5])
+        # print("Num active batch (first 5 samples):", num_active_batch[:5])
+
+        # # print shapes
+        # print("Labels batch shape:", labels_batch.shape)
+        # print("Num active batch shape:", num_active_batch.shape)
+        
+        # 2. Clip values to stay within histogram bounds
+        num_active_batch = tf.clip_by_value(num_active_batch, 0, max_polyphony - 1)
+
+        # tf.cond(
+        #     tf.reduce_any(
+        #         tf.equal(num_active_batch,1)
+        #     ),
+        #     lambda: tf.print("Before clipping", before," after: ", num_active_batch),
+        #     lambda: tf.print('')
+        # )
+
+        # 3. Use bincount to create a mini-histogram for the entire batch
+        # This is the secret to speed—no loops, no individual one-hots.
+        batch_hist = tf.math.bincount(
+            num_active_batch, 
+            minlength=max_polyphony, 
+            maxlength=max_polyphony, 
+            dtype=tf.int64
+        )
+        
+        return old_state + batch_hist
+
+    # Perform the reduction on the graph
+    hist = batched_ds.reduce(initial_state, reduce_fn)
+    return hist.numpy()
+
+def plot_histogram(hist,size=OUTPUT_DIM_NOTES):
+    plt.bar(range(size), hist)
+    plt.xlabel('MIDI Note Number')
+    plt.ylabel('Count')
+    plt.title('Histogram of MIDI Note Occurrences')
+    plt.xlim(0, size)  # Limit x-axis to the range of interest
+    plt.show()
+
+def filter_polyphony(dataset: tf.data.Dataset,num_notes: int,exact: bool):
+    def filter_func(label):
+        #tf.print("Label shape: ",tf.shape(label))
+        labels=tf.cast(label,tf.int32)
+        #tf.print("Label shape after cast: ",tf.shape(labels))
+        numactive=tf.reduce_sum(labels[40:78])
+        outlier=tf.reduce_sum(labels[0:40])+tf.reduce_sum(labels[78:])
+        #tf.print("numactive shape: ",tf.shape(numactive))
+        #tf.print("numactive: ",numactive)
+        if exact:
+            # if numactive==num_notes:
+            #     if numactive==1:
+            #         tf.print("numactive: ",numactive)
+            return (numactive==num_notes) &(outlier==tf.constant(0))
+        else:
+            return (numactive<=num_notes) &(outlier==tf.constant(0))
+    return dataset.filter(lambda a,l:filter_func(l))
