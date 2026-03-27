@@ -72,9 +72,11 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
                        output_dim=OUTPUT_DIM_NOTES, training=True):
     print("Image height: ", image_height)
     inputs = layers.Input(batch_shape=(batch_sz, *input_shape), name="input_spectrogram")
+    local_mean = layers.AveragePooling2D(pool_size=(5, 1), strides=(1, 1), padding='same', name="local_mean")(inputs)
+    x = layers.Subtract(name="local_contrast")([inputs, local_mean])
 
     # --- Stage 1: Frequency compression (B, 312, 256) → (B, 312, 512) ---
-    x = layers.Reshape((image_height, 256, 1), name="reshape_to_2d")(inputs)
+    x = layers.Reshape((image_height, 256, 1), name="reshape_to_2d")(x)
     x = layers.Conv2D(8, (1, 16), strides=(1, 4), padding='same',
                       kernel_initializer='he_normal', name="freq_compress_conv2d")(x)
     x = layers.BatchNormalization(name="freq_compress_bn")(x)
