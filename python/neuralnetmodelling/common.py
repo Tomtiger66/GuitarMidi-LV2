@@ -252,7 +252,7 @@ def reshape_to_nn_output(outdata,collapse_time=True):
     return reshaped_data
 
 
-def count_concurrent_notes_distribution(dataset, max_polyphony=129, batch_size=256):
+def count_concurrent_notes_distribution(dataset, max_polyphony=129, has_filtered_audio=True): # has_filtered_audio True means dataset only has tuples (input,output). false means it has (audio_path,startframe,output)
     # 1. Ensure the dataset is batched for vectorized math
     # If the input dataset is already batched, this line won't hurt.
     batched_ds = dataset#.batch(batch_size,drop_remainder=True) if not hasattr(dataset, '_batch_size') else dataset
@@ -261,7 +261,10 @@ def count_concurrent_notes_distribution(dataset, max_polyphony=129, batch_size=2
     initial_state = tf.zeros((max_polyphony,), dtype=tf.int64)
     
     def reduce_fn(old_state, next_element):
-        _, labels_batch = next_element # Shape: (batch, OUTPUT_DIM_NOTES)
+        if has_filtered_audio:
+            _, labels_batch = next_element # Shape: (batch, OUTPUT_DIM_NOTES)
+        else:
+            _,_, labels_batch = next_element 
         active_notes_only = labels_batch[..., :-1]
         # 1. Count active notes for every sample in the batch at once
         # Resulting shape: (batch_size,)
