@@ -55,19 +55,29 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     return s
 
 def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm"):
-    xnorm = layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln1")(x)
+    # --- Attention Block ---
+    # 1. Apply LayerNorm BEFORE attention (Off-ramp)
+    x_norm1 = layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln1")(x)
+    
+    # 2. Compute Attention
     attn = layers.MultiHeadAttention(
         num_heads=num_heads, key_dim=head_size, dropout=dropout, name=f"{name_prefix}_mha", kernel_regularizer=reg
-    )(xnorm, xnorm)
-    x1 = layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln2")(
-        layers.Add(name=f"{name_prefix}_attn_add")([x, attn]))
+    )(x_norm1, x_norm1)
+    
+    # 3. Add to original input WITHOUT normalizing the result (Clear highway!)
+    x1 = layers.Add(name=f"{name_prefix}_attn_add")([x, attn])
 
-    ffn = layers.Dense(ff_dim, activation='relu', name=f"{name_prefix}_ffn1")(x1)
+    # --- Feed Forward Block ---
+    # 1. Apply LayerNorm BEFORE FFN (Off-ramp)
+    x_norm2 = layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln2")(x1)
+    
+    # 2. Compute FFN
+    ffn = layers.Dense(ff_dim, activation='relu', name=f"{name_prefix}_ffn1")(x_norm2)
     ffn = layers.Dropout(dropout, name=f"{name_prefix}_ffn_drop")(ffn)
     ffn = layers.Dense(x.shape[-1], name=f"{name_prefix}_ffn2")(ffn)
 
-    return layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln2")(
-        layers.Add(name=f"{name_prefix}_ffn_add")([x1, ffn]))
+    # 3. Add to x1 WITHOUT normalizing the result (Clear highway!)
+    return layers.Add(name=f"{name_prefix}_ffn_add")([x1, ffn])
 
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
                        output_dim=OUTPUT_DIM_NOTES, training=True):
@@ -75,7 +85,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
     inputs = layers.Input(batch_shape=(batch_sz, *input_shape), name="input_spectrogram")
     local_mean = layers.AveragePooling2D(pool_size=(5, 1), strides=(1, 1), padding='same', name="local_mean")(inputs)
     x = layers.Subtract(name="local_contrast")([inputs, local_mean])
-    x=inputs
+    # x=inputs
     # --- Stage 1: Frequency compression (B, 312, 256) → (B, 312, 512) ---
     x = layers.Reshape((image_height, 256, 1), name="reshape_to_2d")(x)
     x = layers.Conv2D(8, (1, 16), strides=(1, 4), padding='same',
