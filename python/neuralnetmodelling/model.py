@@ -55,10 +55,11 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     return s
 
 def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm"):
+    xnorm = layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln1")(x)
     attn = layers.MultiHeadAttention(
         num_heads=num_heads, key_dim=head_size, dropout=dropout, name=f"{name_prefix}_mha", kernel_regularizer=reg
-    )(x, x)
-    x1 = layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln1")(
+    )(xnorm, xnorm)
+    x1 = layers.LayerNormalization(epsilon=1e-6, name=f"{name_prefix}_ln2")(
         layers.Add(name=f"{name_prefix}_attn_add")([x, attn]))
 
     ffn = layers.Dense(ff_dim, activation='relu', name=f"{name_prefix}_ffn1")(x1)
