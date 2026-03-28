@@ -7,7 +7,7 @@ from common import OUTPUT_DIM_NOTES, image_height, image_width
 IMG_H, IMG_W = image_height, image_width
 NUM_CLASSES = 89
 CHANNELS = 1
-reg = regularizers.l2(1e-4)
+reg = regularizers.l2(1e-6)
 def bottleneck_residual(x, filters, kernel_size=3, ratio=4, name_prefix="res"):
     inner = max(filters // ratio, 16)
     shortcut = x
@@ -33,7 +33,7 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     end = min(int(end), int(max_x))
     start = max(0, int(start))
     prefix = f"str{string_idx}"
-    reg = regularizers.l2(1e-3)
+    
 
     s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :], name=f"{prefix}_slice")(x)
 
@@ -95,29 +95,29 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
     x = layers.SpatialDropout2D(0.1, name="freq_compress_drop")(x)
     x = layers.Reshape((image_height, 512), name="reshape_to_1d")(x)
 
-    # # --- Stage 2: Conv1D backbone ---
-    # x = layers.Conv1D(128, 1, padding='same', kernel_initializer='he_normal', name="backbone_squeeze")(x)
-    # x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
-    # x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
-
-    # x = layers.Conv1D(32, 7, padding='same', kernel_initializer='he_normal', name="backbone_conv1")(x)
-    # x = layers.BatchNormalization(name="backbone_bn1")(x)
-    # x = layers.LeakyReLU(name="backbone_act1")(x)
-    # x = layers.SpatialDropout1D(0.2, name="backbone_drop1")(x)
-
-    # x = layers.Conv1D(64, 7, padding='same', kernel_initializer='he_normal', name="backbone_conv2")(x)
-    # x = layers.BatchNormalization(name="backbone_bn2")(x)
-    # x = layers.LeakyReLU(name="backbone_act2")(x)
-    # x = layers.MaxPooling1D(2, name="backbone_pool")(x)
-    # x = layers.SpatialDropout1D(0.2, name="backbone_drop2")(x)
-    x = layers.Conv1D(64, 1, padding='same', kernel_initializer='he_normal', kernel_regularizer=reg, name="backbone_squeeze")(x)
+    # --- Stage 2: Conv1D backbone ---
+    x = layers.Conv1D(32, 1, padding='same', kernel_initializer='he_normal', name="backbone_squeeze", kernel_regularizer=reg)(x)
     x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
     x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
 
-    #x = layers.MaxPooling1D(2, name="backbone_pool")(x)
-    x = layers.SpatialDropout1D(0.2, name="backbone_drop")(x)
-    # --- Stage 3: Transformer ---
-    x = transformer_block(x, num_heads=6, head_size=64, ff_dim=256, dropout=0.1, name_prefix="tfm_block1")
+    x = layers.Conv1D(32, 7, padding='same', kernel_initializer='he_normal', name="backbone_conv1", kernel_regularizer=reg)(x)
+    x = layers.BatchNormalization(name="backbone_bn1")(x)
+    x = layers.LeakyReLU(name="backbone_act1")(x)
+    x = layers.SpatialDropout1D(0.2, name="backbone_drop1")(x)
+
+    x = layers.Conv1D(64, 7, padding='same', kernel_initializer='he_normal', name="backbone_conv2", kernel_regularizer=reg)(x)
+    x = layers.BatchNormalization(name="backbone_bn2")(x)
+    x = layers.LeakyReLU(name="backbone_act2")(x)
+    # x = layers.MaxPooling1D(2, name="backbone_pool")(x)
+    x = layers.SpatialDropout1D(0.2, name="backbone_drop2")(x)
+    # x = layers.Conv1D(64, 1, padding='same', kernel_initializer='he_normal', kernel_regularizer=reg, name="backbone_squeeze")(x)
+    # x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
+    # x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
+
+    # #x = layers.MaxPooling1D(2, name="backbone_pool")(x)
+    # x = layers.SpatialDropout1D(0.2, name="backbone_drop")(x)
+    # # --- Stage 3: Transformer ---
+    # x = transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm_block1")
 
     num_pool_layers = 0
     max_x = image_height / (num_pool_layers + 1)
@@ -141,30 +141,39 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
         for i, (s, e) in enumerate(ranges)
     ]
 
-    # --- Stage 5: Chord reasoning ---
-    stacked = layers.Lambda(lambda t: tf.stack(t, axis=1), name="stack_strings")(string_features)
-    stacked_2d = layers.Reshape((6, 64, 1), name="strings_to_2d")(stacked)
 
-    chord = layers.Conv2D(64, kernel_size=(3, 7), padding='same', name="chord_conv1")(stacked_2d)
+
+    # --- Stage 5: Chord reasoning (Conv1D across strings) ---
+    stacked = layers.Lambda(lambda t: tf.stack(t, axis=1), name="stack_strings")(string_features)
+    # stacked shape: (B, 6, 64)
+
+    chord = layers.Conv1D(64, kernel_size=3, padding='same', name="chord_conv1", kernel_regularizer=reg)(stacked)
     chord = layers.BatchNormalization(name="chord_bn1")(chord)
-    chord = layers.LeakyReLU(name="chord_act1")(chord)
-    chord = layers.SpatialDropout2D(0.2, name="chord_drop1")(chord)
+    chord = layers.ReLU(name="chord_act1")(chord)
+    chord = layers.Dropout(0.2, name="chord_drop1")(chord)
 
     # --- Stage 6: Classification head ---
-    chord = layers.Conv2D(64, (3, 3), padding='same', name="chord_conv2", kernel_regularizer=reg)(chord)
+    chord = layers.Conv1D(64, kernel_size=3, padding='same', name="chord_conv2", kernel_regularizer=reg)(chord)
     chord = layers.BatchNormalization(name="chord_bn2")(chord)
-    chord = layers.LeakyReLU(name="chord_act2")(chord)
+    chord = layers.ReLU(name="chord_act2")(chord)
+    # chord shape: (B, 6, 64)
 
-    # --- Stage 6: Reduce channels per string, keep 6 strings ---
-    # Pool over the frequency/feature axis (axis=2), keep strings (axis=1)
-    chord_max = layers.Lambda(lambda t: tf.reduce_max(t, axis=2), name="reduce_freq_max")(chord)
-    chord_avg = layers.Lambda(lambda t: tf.reduce_mean(t, axis=2), name="reduce_freq_avg")(chord)
-    # Each: (B, 6, 64)
+    # --- Stage 7: Pool and classify ---
+    chord_max = layers.Lambda(lambda t: tf.reduce_max(t, axis=1, keepdims=True), name="reduce_str_max")(chord)
+    chord_avg = layers.Lambda(lambda t: tf.reduce_mean(t, axis=1, keepdims=True), name="reduce_str_avg")(chord)
+    # Each: (B, 1, 64)
 
-    per_string = layers.Concatenate(axis=-1, name="per_string_cat")([chord_max, chord_avg])
-    
+    context = layers.Add(name="string_context")([chord_max, chord_avg])
+    # (B, 1, 64)
+    context = layers.Lambda(lambda t: tf.repeat(t, 6, axis=1), name="broadcast_context")(context)
+    # (B, 6, 64)
+
+    per_string = layers.Concatenate(axis=-1, name="per_string_cat")([chord, context])
+    # (B, 6, 64) concat with broadcast (B, 6, 64) → (B, 6, 128)
+
     combined = layers.Flatten(name="string_combined")(per_string)
     outputs = layers.Dense(output_dim, activation='sigmoid',
-                           bias_initializer=tf.initializers.Constant(-1.0),
-                           dtype='float32', name="output_notes")(combined)
+                        bias_initializer=tf.initializers.Constant(-1.5),
+                        dtype='float32', name="output_notes")(combined)
     return models.Model(inputs, outputs, name="guitar_note_detector")
+
