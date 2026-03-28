@@ -43,10 +43,10 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
 
     # Single residual block
     shortcut = s
-    s = layers.Conv1D(64, 3, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv1")(s)
+    s = layers.Conv1D(64, 7, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv1")(s)
     s = layers.BatchNormalization(name=f"{prefix}_res1_bn1")(s)
     s = layers.LeakyReLU(name=f"{prefix}_res1_act1")(s)
-    s = layers.Conv1D(64, 3, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv2")(s)
+    s = layers.Conv1D(64, 7, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv2")(s)
     s = layers.BatchNormalization(name=f"{prefix}_res1_bn2")(s)
     s = layers.Add(name=f"{prefix}_res1_add")([s, shortcut])
     s = layers.LeakyReLU(name=f"{prefix}_res1_out")(s)
@@ -147,31 +147,31 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
     stacked = layers.Lambda(lambda t: tf.stack(t, axis=1), name="stack_strings")(string_features)
     # stacked shape: (B, 6, 64)
 
-    chord = layers.Conv1D(64, kernel_size=3, padding='same', name="chord_conv1", kernel_regularizer=reg)(stacked)
+    chord = layers.Conv1D(128, kernel_size=7, padding='same', name="chord_conv1", kernel_regularizer=reg)(stacked)
     chord = layers.BatchNormalization(name="chord_bn1")(chord)
     chord = layers.ReLU(name="chord_act1")(chord)
     chord = layers.Dropout(0.2, name="chord_drop1")(chord)
 
     # --- Stage 6: Classification head ---
-    chord = layers.Conv1D(64, kernel_size=3, padding='same', name="chord_conv2", kernel_regularizer=reg)(chord)
+    chord = layers.Conv1D(256, kernel_size=7, padding='same', name="chord_conv2", kernel_regularizer=reg)(chord)
     chord = layers.BatchNormalization(name="chord_bn2")(chord)
     chord = layers.ReLU(name="chord_act2")(chord)
     # chord shape: (B, 6, 64)
 
-    # --- Stage 7: Pool and classify ---
-    chord_max = layers.Lambda(lambda t: tf.reduce_max(t, axis=1, keepdims=True), name="reduce_str_max")(chord)
-    chord_avg = layers.Lambda(lambda t: tf.reduce_mean(t, axis=1, keepdims=True), name="reduce_str_avg")(chord)
-    # Each: (B, 1, 64)
+    # # --- Stage 7: Pool and classify ---
+    # chord_max = layers.Lambda(lambda t: tf.reduce_max(t, axis=1, keepdims=True), name="reduce_str_max")(chord)
+    # chord_avg = layers.Lambda(lambda t: tf.reduce_mean(t, axis=1, keepdims=True), name="reduce_str_avg")(chord)
+    # # Each: (B, 1, 64)
 
-    context = layers.Add(name="string_context")([chord_max, chord_avg])
-    # (B, 1, 64)
-    context = layers.Lambda(lambda t: tf.repeat(t, 6, axis=1), name="broadcast_context")(context)
+    # context = layers.Add(name="string_context")([chord_max, chord_avg])
+    # # (B, 1, 64)
+    # context = layers.Lambda(lambda t: tf.repeat(t, 6, axis=1), name="broadcast_context")(context)
     # (B, 6, 64)
 
-    per_string = layers.Concatenate(axis=-1, name="per_string_cat")([chord, context])
+    # per_string = layers.Concatenate(axis=-1, name="per_string_cat")([chord, context])
     # (B, 6, 64) concat with broadcast (B, 6, 64) → (B, 6, 128)
 
-    combined = layers.Flatten(name="string_combined")(per_string)
+    combined = layers.Flatten(name="string_combined")(chord)
     outputs = layers.Dense(output_dim, activation='sigmoid',
                         bias_initializer=tf.initializers.Constant(-1.5),
                         dtype='float32', name="output_notes")(combined)
