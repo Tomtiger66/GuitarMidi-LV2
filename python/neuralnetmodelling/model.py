@@ -51,7 +51,7 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     s = layers.Add(name=f"{prefix}_res1_add")([s, shortcut])
     s = layers.LeakyReLU(name=f"{prefix}_res1_out")(s)
 
-    s = layers.GlobalMaxPooling1D(name=f"{prefix}_gmax")(s)
+   
     return s
 
 def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm"):
@@ -78,6 +78,44 @@ def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, nam
 
     # 3. Add to x1 WITHOUT normalizing the result (Clear highway!)
     return layers.Add(name=f"{name_prefix}_ffn_add")([x1, ffn])
+
+def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="chord"):
+    # store the original string features for later as residuals
+    
+
+    max_len = max(s.shape[1] for s in string_features)
+    padded = []
+    for i, s in enumerate(string_features):
+        diff = max_len - s.shape[1]
+        if diff > 0:
+            s = layers.ZeroPadding1D((0, diff), name=f"{name_prefix}_pad_str{i}")(s)
+        padded.append(s)
+    string_residuals = padded.copy()
+    expanded = [layers.Reshape((1, max_len, 64), name=f"{name_prefix}_expand_str{i}")(s) for i, s in enumerate(padded)]
+    stacked = layers.Concatenate(axis=1, name=f"{name_prefix}_stack_strings")(expanded)  # (B, 6, max_len, 64)
+
+
+    chord=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv1")(stacked)
+    chord=layers.BatchNormalization(name=f"{name_prefix}_bn1")(chord)
+    chord=layers.LeakyReLU(name=f"{name_prefix}_act1")(chord)
+    chord=layers.SpatialDropout2D(0.2, name=f"{name_prefix}_drop1")(chord)
+    # Split the chord features back into per-string tensors
+    split_chords = [layers.Lambda(lambda t, i=i: t[:, i, :, :], name=f"{name_prefix}_slice_str{i}")(chord) for i in range(len(string_features))]
+    
+
+    # Per string global max pooling and dense layers
+    processed_strings = []
+    for i, s in enumerate(split_chords):
+        # Add residual connection from original string features
+        s = layers.Add(name=f"{name_prefix}_res_str{i}")([s, string_residuals[i]])
+
+        s = layers.GlobalMaxPooling1D(name=f"{name_prefix}_gmax_str{i}")(s)
+        s = layers.Dense(64, name=f"{name_prefix}_dense_str{i}", kernel_regularizer=reg)(s)
+        s = layers.BatchNormalization(name=f"{name_prefix}_bn_str{i}")(s)
+        s = layers.LeakyReLU(name=f"{name_prefix}_act_str{i}")(s)
+        processed_strings.append(s)
+    return processed_strings
+
 
 def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
                        output_dim=OUTPUT_DIM_NOTES, training=True):
@@ -144,34 +182,9 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
 
 
     # --- Stage 5: Chord reasoning (Conv1D across strings) ---
-    stacked = layers.Lambda(lambda t: tf.stack(t, axis=1), name="stack_strings")(string_features)
-    # stacked shape: (B, 6, 64)
+    processed_strings = chord_conv_block(string_features, filters=64, kernel_size=(3,4), name_prefix="chord_block")
 
-    chord = layers.Conv1D(128, kernel_size=7, padding='same', name="chord_conv1", kernel_regularizer=reg)(stacked)
-    chord = layers.BatchNormalization(name="chord_bn1")(chord)
-    chord = layers.ReLU(name="chord_act1")(chord)
-    chord = layers.Dropout(0.2, name="chord_drop1")(chord)
-
-    # --- Stage 6: Classification head ---
-    chord = layers.Conv1D(256, kernel_size=7, padding='same', name="chord_conv2", kernel_regularizer=reg)(chord)
-    chord = layers.BatchNormalization(name="chord_bn2")(chord)
-    chord = layers.ReLU(name="chord_act2")(chord)
-    # chord shape: (B, 6, 64)
-
-    # # --- Stage 7: Pool and classify ---
-    # chord_max = layers.Lambda(lambda t: tf.reduce_max(t, axis=1, keepdims=True), name="reduce_str_max")(chord)
-    # chord_avg = layers.Lambda(lambda t: tf.reduce_mean(t, axis=1, keepdims=True), name="reduce_str_avg")(chord)
-    # # Each: (B, 1, 64)
-
-    # context = layers.Add(name="string_context")([chord_max, chord_avg])
-    # # (B, 1, 64)
-    # context = layers.Lambda(lambda t: tf.repeat(t, 6, axis=1), name="broadcast_context")(context)
-    # (B, 6, 64)
-
-    # per_string = layers.Concatenate(axis=-1, name="per_string_cat")([chord, context])
-    # (B, 6, 64) concat with broadcast (B, 6, 64) → (B, 6, 128)
-
-    combined = layers.Flatten(name="string_combined")(chord)
+    combined = layers.Concatenate(name="string_combined")(processed_strings)
     outputs = layers.Dense(output_dim, activation='sigmoid',
                         bias_initializer=tf.initializers.Constant(-1.5),
                         dtype='float32', name="output_notes")(combined)
