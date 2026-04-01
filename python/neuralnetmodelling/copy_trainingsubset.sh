@@ -1,37 +1,42 @@
 #!/bin/bash
 
-# This script copies a limited number of random tfrecords from the source dir /data/training_subset/ on the slow spinning rust hdd
-# to the target dir ./training_subset on the fast nvme
+SOURCE_DIR="/data/training_subset/"
+TARGET_DIR="training_subset"
+USEDRECORDS_FILE="usedrecords.txt"
+mkdir -p "$TARGET_DIR"
 
-SOURCE_DIR="training_subset" #"/data/training_subset/"
-TARGET_DIR="training_subset_small"
+NUM_FILES_TO_COPY=20000 #8100
 
-mkdir -p $TARGET_DIR
+# Create usedrecords file if it doesn't exist
+touch "$USEDRECORDS_FILE"
 
-NUM_FILES_TO_COPY=2000 #8100
+# Create a temporary file with just the basenames to exclude (strip comments/blanks)
+TMP_EXCLUDE=$(mktemp)
+while IFS= read -r line; do
+    [[ -z "$line" || "$line" =~ ^# ]] && continue
+    basename "$line"
+done < "$USEDRECORDS_FILE" > "$TMP_EXCLUDE"
 
-FILES=$(find ${SOURCE_DIR} -iname "*.tfrecord")
-
-TMP=$(mktemp)
-
-for file in $FILES
-do
-    echo "$file" >> $TMP
-done
-
-SHUF_FILES=$(shuf $TMP)
-
+# Find all files, filter out excluded ones, shuffle, pick N
+SELECTED=$(find "$SOURCE_DIR" -type f | \
+    awk -F/ -v excludefile="$TMP_EXCLUDE" '
+        BEGIN { while ((getline line < excludefile) > 0) exclude[line]=1 }
+        !($NF in exclude)
+    ' | \
+    shuf | \
+    head -n "$NUM_FILES_TO_COPY")
+echo $SELECTED
 COUNT=0
+while IFS= read -r file; do
+    # check if file is not empty string
+    [[ -z "$file" ]] && continue
+    COUNT=$((COUNT+1))
+    echo "Copying file $COUNT/$NUM_FILES_TO_COPY: $file"
+    rsync -a --info=progress2 "$file" "$TARGET_DIR/"
+    # Append to used records
+    echo "$file" >> "$USEDRECORDS_FILE"
+done <<< "$SELECTED"
 
-for file in $SHUF_FILES 
-do
-    #rsync -a --info=progress2 $file $TARGET_DIR/
-    COUNT=$(($COUNT+1))
-    if [ $COUNT -gt $NUM_FILES_TO_COPY ]; then
-        echo "finished"
-        break
-    else
-        echo "Copying file $COUNT"
-        rsync -a --info=progress2 $file $TARGET_DIR/
-    fi
-done
+echo "Finished copying $COUNT files"
+rm -f "$TMP_EXCLUDE"
+
