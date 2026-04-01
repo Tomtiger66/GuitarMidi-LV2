@@ -7,7 +7,7 @@ from common import OUTPUT_DIM_NOTES, image_height, image_width
 IMG_H, IMG_W = image_height, image_width
 NUM_CLASSES = 89
 CHANNELS = 1
-reg = regularizers.l2(1e-6)
+reg = None#regularizers.l2(1e-6)
 def bottleneck_residual(x, filters, kernel_size=3, ratio=4, name_prefix="res"):
     inner = max(filters // ratio, 16)
     shortcut = x
@@ -95,7 +95,7 @@ def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="c
     stacked = layers.Concatenate(axis=1, name=f"{name_prefix}_stack_strings")(expanded)  # (B, 6, max_len, 64)
 
 
-    chord=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv1")(stacked)
+    chord=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv1",kernel_regularizer=reg)(stacked)
     chord=layers.BatchNormalization(name=f"{name_prefix}_bn1")(chord)
     chord=layers.LeakyReLU(name=f"{name_prefix}_act1")(chord)
     chord=layers.SpatialDropout2D(0.2, name=f"{name_prefix}_drop1")(chord)
