@@ -9,7 +9,7 @@ from typing import Iterator
 import numpy as np
 import tensorflow as tf
 import soundfile as sf
-from common import OUTPUT_DIM_NOTES, SAMPLERATE, INPUT_SHAPE, Q_FACTOR, FRAME_LAG
+from common import OUTPUT_DIM_NOTES, SAMPLERATE, INPUT_SHAPE, Q_FACTOR, FRAME_LAG,make_proto
 from fretboardnonredundant import FretBoard
 
 # Worker initializer
@@ -49,18 +49,7 @@ def _run_filterbank(audio_segment: np.ndarray, start: int, end:int) ->np.ndarray
     return np.clip(_worker_feature_map*127,-128,127).astype(np.int8)
 
 
-def _make_proto(feature_map: np.ndarray, label_bytes: bytes)->bytes:
-    feature={
-        "input": tf.train.Feature(
-            bytes_list=tf.train.BytesList(value=[feature_map.tobytes()])
-        ),
-        "output": tf.train.Feature(
-            bytes_list=tf.train.BytesList(value=[label_bytes])
-        )
-    }
-    return tf.train.Example(
-        features=tf.train.Features(feature=feature)
-    ).SerializeToString()
+
 
 
 def _fast_stretch(data: np.ndarray, factor: float) -> np.ndarray:
@@ -82,7 +71,7 @@ def process_sample(audio_frame_label_aug: tuple) -> list[bytes]:
     # Original audio
     segment=audio[start_frame*hop:end_frame*hop]
     filtered_orig=_run_filterbank(segment,start_frame,end_frame)
-    protos=[_make_proto(filtered_orig,label_bytes)]
+    protos=[make_proto(filtered_orig,label_bytes)]
     if augment:
         factor= np.random.uniform(0.9,1.1)
 
@@ -94,7 +83,7 @@ def process_sample(audio_frame_label_aug: tuple) -> list[bytes]:
         #trim back to expected length
         seg_aug=seg_aug[:((end_frame-start_frame)*hop)]
         filtered_aug=_run_filterbank(seg_aug,start_frame,end_frame)
-        protos.append(_make_proto(filtered_aug,label_bytes))
+        protos.append(make_proto(filtered_aug,label_bytes))
     return protos
 
 

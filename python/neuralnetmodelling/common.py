@@ -1,4 +1,5 @@
 import  os
+import pathlib
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -329,3 +330,52 @@ def filter_polyphony(dataset: tf.data.Dataset,num_notes: int,exact: bool):
         else:
             return (numactive<=num_notes) &(outlier==tf.constant(0))
     return dataset.filter(lambda a,l:filter_func(l))
+def make_proto(feature_map: np.ndarray, label_bytes: bytes)->bytes:
+    feature={
+        "input": tf.train.Feature(
+            bytes_list=tf.train.BytesList(value=[feature_map.tobytes()])
+        ),
+        "output": tf.train.Feature(
+            bytes_list=tf.train.BytesList(value=[label_bytes])
+        )
+    }
+    return tf.train.Example(
+        features=tf.train.Features(feature=feature)
+    ).SerializeToString()
+
+def write_prefiltered_tfrecord(
+    dataset: tf.data.Dataset,
+    output_prefix: str,
+    records_per_file: int = 1000,
+) -> None:
+
+    pathlib.Path(output_prefix).parent.mkdir(parents=True, exist_ok=True)
+
+    writer = None
+    file_index = 0
+    record_count = 0
+
+    try:
+        for input_tensor, output_tensor in dataset:
+            input_np = tf.reshape(input_tensor, [INPUT_SHAPE[0], INPUT_SHAPE[1]]).numpy()
+            input_np = np.clip(input_np * 127, -128, 127).astype(np.int8)
+            label_np = output_tensor.numpy().astype(np.int8)
+
+            proto = make_proto(input_np, label_np.tobytes())
+
+            if writer is None or record_count >= records_per_file:
+                if writer is not None:
+                    writer.close()
+                shard_path = f"{output_prefix}_{file_index:07d}.tfrecord"
+                writer = tf.io.TFRecordWriter(shard_path)
+                file_index += 1
+                record_count = 0
+
+            writer.write(proto)
+            record_count += 1
+    finally:
+        if writer is not None:
+            writer.close()
+
+    print(f"Wrote {file_index} shard(s) to {output_prefix}_*.tfrecord")
+
