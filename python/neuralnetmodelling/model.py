@@ -33,7 +33,6 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     end = min(int(end), int(max_x))
     start = max(0, int(start))
     prefix = f"str{string_idx}"
-    
 
     s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :], name=f"{prefix}_slice")(x)
 
@@ -41,18 +40,25 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     s = layers.BatchNormalization(name=f"{prefix}_proj_bn")(s)
     s = layers.LeakyReLU(name=f"{prefix}_proj_act")(s)
 
-    # Single residual block
+    # Collapse 4 harmonic bins → 1 vector per note
+    s = layers.Conv1D(64, 4, strides=4, padding='valid', 
+                      kernel_regularizer=reg, name=f"{prefix}_harmonic_collapse")(s)
+    s = layers.BatchNormalization(name=f"{prefix}_harmonic_bn")(s)
+    s = layers.LeakyReLU(name=f"{prefix}_harmonic_act")(s)
+    # Now shape is (batch, 13, 64) — one vector per note
+
+    # Inter-note residual block
     shortcut = s
-    s = layers.Conv1D(64, 7, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv1")(s)
+    s = layers.Conv1D(64, 3, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv1")(s)
     s = layers.BatchNormalization(name=f"{prefix}_res1_bn1")(s)
     s = layers.LeakyReLU(name=f"{prefix}_res1_act1")(s)
-    s = layers.Conv1D(64, 7, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv2")(s)
+    s = layers.Conv1D(64, 3, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv2")(s)
     s = layers.BatchNormalization(name=f"{prefix}_res1_bn2")(s)
     s = layers.Add(name=f"{prefix}_res1_add")([s, shortcut])
     s = layers.LeakyReLU(name=f"{prefix}_res1_out")(s)
 
-   
     return s
+
 
 def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm"):
     # --- Attention Block ---
