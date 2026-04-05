@@ -33,18 +33,31 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     end = min(int(end), int(max_x))
     start = max(0, int(start))
     prefix = f"str{string_idx}"
-
+    
     s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :], name=f"{prefix}_slice")(x)
+    # res = layers.Conv1D(64, 4, strides=4, padding='valid',
+    #                     kernel_regularizer=reg, name=f"{prefix}_res_proj")(s)
+    x = layers.Conv1D(32, 1, padding='same', kernel_initializer='he_normal', name=f"{prefix}_backbone_squeeze", kernel_regularizer=reg)(s)
+    x = layers.BatchNormalization(name=f"{prefix}_backbone_squeeze_bn")(x)
+    x = layers.LeakyReLU(name=f"{prefix}_backbone_squeeze_act")(x)
 
-    # s = layers.Conv1D(64, 1, padding='same', kernel_regularizer=reg, name=f"{prefix}_proj")(s)
-    # s = layers.BatchNormalization(name=f"{prefix}_proj_bn")(s)
-    # s = layers.LeakyReLU(name=f"{prefix}_proj_act")(s)
+    x = layers.Conv1D(32, 8, padding='same', kernel_initializer='he_normal', name=f"{prefix}_backbone_conv1", kernel_regularizer=reg)(x)
+    x = layers.BatchNormalization(name=f"{prefix}_backbone_bn1")(x)
+    x = layers.LeakyReLU(name=f"{prefix}_backbone_act1")(x)
+    x = layers.SpatialDropout1D(0.2, name=f"{prefix}_backbone_drop1")(x)
+
+    x = layers.Conv1D(64, 8, padding='same', kernel_initializer='he_normal', name=f"{prefix}_backbone_conv2", kernel_regularizer=reg)(x)
+    x = layers.BatchNormalization(name=f"{prefix}_backbone_bn2")(x)
+    s = layers.LeakyReLU(name=f"{prefix}_backbone_act2")(x)
+
+    
 
     # Collapse 4 harmonic bins → 1 vector per note
     s = layers.Conv1D(64, 4, strides=4, padding='valid', 
                       kernel_regularizer=reg, name=f"{prefix}_harmonic_collapse")(s)
     s = layers.BatchNormalization(name=f"{prefix}_harmonic_bn")(s)
     s = layers.LeakyReLU(name=f"{prefix}_harmonic_act")(s)
+    #s=layers.Add(name=f"{prefix}_res1_conv1")([s, res])
     # Now shape is (batch, 13, 64) — one vector per note
 
     # --- Strict "Hollow" Neighborhood Suppression ---
@@ -154,28 +167,28 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
     x = layers.Reshape((image_height, 512), name="reshape_to_1d")(x)
 
     # --- Stage 2: Conv1D backbone ---
-    x = layers.Conv1D(32, 1, padding='same', kernel_initializer='he_normal', name="backbone_squeeze", kernel_regularizer=reg)(x)
-    x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
-    x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
+    # x = layers.Conv1D(32, 1, padding='same', kernel_initializer='he_normal', name="backbone_squeeze", kernel_regularizer=reg)(x)
+    # x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
+    # x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
 
-    # x = layers.Conv1D(32, 7, padding='same', kernel_initializer='he_normal', name="backbone_conv1", kernel_regularizer=reg)(x)
+    # x = layers.Conv1D(32, 8, padding='same', kernel_initializer='he_normal', name="backbone_conv1", kernel_regularizer=reg)(x)
     # x = layers.BatchNormalization(name="backbone_bn1")(x)
     # x = layers.LeakyReLU(name="backbone_act1")(x)
     # x = layers.SpatialDropout1D(0.2, name="backbone_drop1")(x)
 
-    # x = layers.Conv1D(64, 7, padding='same', kernel_initializer='he_normal', name="backbone_conv2", kernel_regularizer=reg)(x)
+    # x = layers.Conv1D(64, 8, padding='same', kernel_initializer='he_normal', name="backbone_conv2", kernel_regularizer=reg)(x)
     # x = layers.BatchNormalization(name="backbone_bn2")(x)
     # x = layers.LeakyReLU(name="backbone_act2")(x)
-    # # x = layers.MaxPooling1D(2, name="backbone_pool")(x)
+    # x = layers.MaxPooling1D(2, name="backbone_pool")(x)
     # x = layers.SpatialDropout1D(0.2, name="backbone_drop2")(x)
     # x = layers.Conv1D(64, 1, padding='same', kernel_initializer='he_normal', kernel_regularizer=reg, name="backbone_squeeze")(x)
     # x = layers.BatchNormalization(name="backbone_squeeze_bn")(x)
     # x = layers.LeakyReLU(name="backbone_squeeze_act")(x)
 
-    # #x = layers.MaxPooling1D(2, name="backbone_pool")(x)
+    #x = layers.MaxPooling1D(2, name="backbone_pool")(x)
     # x = layers.SpatialDropout1D(0.2, name="backbone_drop")(x)
-    # # --- Stage 3: Transformer ---
-    # x = transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm_block1")
+    # --- Stage 3: Transformer ---
+    x = transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm_block1")
 
     num_pool_layers = 0
     max_x = image_height / (num_pool_layers + 1)
@@ -206,7 +219,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
 
     combined = layers.Concatenate(name="string_combined")(processed_strings)
     outputs = layers.Dense(output_dim, activation='sigmoid',
-                        bias_initializer=tf.initializers.Constant(-3),
+                        bias_initializer=tf.initializers.Constant(-2),
                         dtype='float32', name="output_notes")(combined)
     return models.Model(inputs, outputs, name="guitar_note_detector")
 
