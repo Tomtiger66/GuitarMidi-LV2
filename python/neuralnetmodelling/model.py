@@ -36,9 +36,9 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
 
     s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :], name=f"{prefix}_slice")(x)
 
-    s = layers.Conv1D(64, 1, padding='same', kernel_regularizer=reg, name=f"{prefix}_proj")(s)
-    s = layers.BatchNormalization(name=f"{prefix}_proj_bn")(s)
-    s = layers.LeakyReLU(name=f"{prefix}_proj_act")(s)
+    # s = layers.Conv1D(64, 1, padding='same', kernel_regularizer=reg, name=f"{prefix}_proj")(s)
+    # s = layers.BatchNormalization(name=f"{prefix}_proj_bn")(s)
+    # s = layers.LeakyReLU(name=f"{prefix}_proj_act")(s)
 
     # Collapse 4 harmonic bins → 1 vector per note
     s = layers.Conv1D(64, 4, strides=4, padding='valid', 
@@ -47,17 +47,31 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     s = layers.LeakyReLU(name=f"{prefix}_harmonic_act")(s)
     # Now shape is (batch, 13, 64) — one vector per note
 
-    # Inter-note residual block
-    shortcut = s
-    s = layers.Conv1D(64, 3, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv1")(s)
-    s = layers.BatchNormalization(name=f"{prefix}_res1_bn1")(s)
-    s = layers.LeakyReLU(name=f"{prefix}_res1_act1")(s)
-    s = layers.Conv1D(64, 3, padding='same', kernel_regularizer=reg, name=f"{prefix}_res1_conv2")(s)
-    s = layers.BatchNormalization(name=f"{prefix}_res1_bn2")(s)
-    s = layers.Add(name=f"{prefix}_res1_add")([s, shortcut])
-    s = layers.LeakyReLU(name=f"{prefix}_res1_out")(s)
+    # --- Strict "Hollow" Neighborhood Suppression ---
+    def hollow_suppression(y):
+        # Pad by 1 on the spatial dimension (frets) to handle the 0th and 12th frets safely
+        y_padded = tf.pad(y, [[0, 0], [1, 1], [0, 0]])
+        
+        # Shifted views to get strictly the neighbors
+        left_neighbors = y_padded[:, :-2, :]   # Fret - 1
+        right_neighbors = y_padded[:, 2:, :]   # Fret + 1
+        
+        # Average strictly the surrounding frets (leaving the center out entirely)
+        surround_avg = (left_neighbors + right_neighbors) / 2.0
+        
+        # Subtract the bleeding energy from the center note
+        return y - surround_avg
+
+    s = layers.Lambda(hollow_suppression, name=f"{prefix}_hollow_suppress")(s)
+    s = layers.LeakyReLU(name=f"{prefix}_hollow_act")(s)
+
+    # Optional: A 1x1 conv to mix the newly sharpened features
+    s = layers.Conv1D(64, 1, padding='same', kernel_regularizer=reg, name=f"{prefix}_post_suppress_conv")(s)
+    s = layers.BatchNormalization(name=f"{prefix}_post_suppress_bn")(s)
+    s = layers.LeakyReLU(name=f"{prefix}_post_suppress_act")(s)
 
     return s
+
 
 
 def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, name_prefix="tfm"):
@@ -116,7 +130,7 @@ def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="c
         s = layers.Add(name=f"{name_prefix}_res_str{i}")([s, string_residuals[i]])
 
         s = layers.GlobalMaxPooling1D(name=f"{name_prefix}_gmax_str{i}")(s)
-        s = layers.Dense(64, name=f"{name_prefix}_dense_str{i}", kernel_regularizer=reg)(s)
+        # s = layers.Dense(64, name=f"{name_prefix}_dense_str{i}", kernel_regularizer=reg)(s)
         s = layers.BatchNormalization(name=f"{name_prefix}_bn_str{i}")(s)
         s = layers.LeakyReLU(name=f"{name_prefix}_act_str{i}")(s)
         processed_strings.append(s)
