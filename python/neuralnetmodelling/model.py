@@ -206,7 +206,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
 
     combined = layers.Concatenate(name="string_combined")(processed_strings)
     outputs = layers.Dense(output_dim, activation='sigmoid',
-                        bias_initializer=tf.initializers.Constant(-1.5),
+                        bias_initializer=tf.initializers.Constant(-3),
                         dtype='float32', name="output_notes")(combined)
     return models.Model(inputs, outputs, name="guitar_note_detector")
 
