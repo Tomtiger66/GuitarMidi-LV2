@@ -73,7 +73,9 @@ def process_sample(audio_frame_label_aug: tuple) -> list[bytes]:
     filtered_orig=_run_filterbank(segment,start_frame,end_frame)
     protos=[make_proto(filtered_orig,label_bytes)]
     if augment:
-        factor= np.random.uniform(0.9,1.1)
+        pitchup=82.0/84.5 #pitch slightly higher than note E, but still lower than F, to avoid crossing note boundaries
+        pitchdown=87.0/84.5 # pitch lower than note F, but higher than E, to avoid crossing note boundaries
+        factor= np.random.uniform(pitchup,pitchdown)
 
         # get more audio incase pitch is shifted upwards, audio is squeezed
         end_aug=min(frame_nr+2,total_frames)
