@@ -325,7 +325,7 @@ def filter_polyphony(dataset: tf.data.Dataset,num_notes: int,exact: bool,has_fil
     def filter_func(label):
         #tf.print("Label shape: ",tf.shape(label))
         labels=tf.cast(label,tf.int32)
-        #tf.print("Label shape after cast: ",tf.shape(labels))
+        tf.print("Label shape after cast: ",tf.shape(labels))
         numactive=tf.reduce_sum(labels[40:78])
         outlier=tf.reduce_sum(labels[0:40])+tf.reduce_sum(labels[78:])
         #tf.print("numactive shape: ",tf.shape(numactive))
@@ -334,9 +334,9 @@ def filter_polyphony(dataset: tf.data.Dataset,num_notes: int,exact: bool,has_fil
             # if numactive==num_notes:
             #     if numactive==1:
             #         tf.print("numactive: ",numactive)
-            return (numactive==num_notes) &(outlier==tf.constant(0))
+            return (numactive==num_notes)# &(outlier==tf.constant(0))
         else:
-            return (numactive<=num_notes) &(outlier==tf.constant(0))
+            return (numactive<=num_notes)# &(outlier==tf.constant(0))
     if has_filtered_audio:
         return dataset.filter(lambda a,l:filter_func(l))
     else:
@@ -390,6 +390,7 @@ def write_prefiltered_tfrecord(
 
     print(f"Wrote {file_index} shard(s) to {output_prefix}_*.tfrecord")
 
+# This function counts the occurrences of each MIDI note in the dataset, assuming the dataset is batched and has a specific structure. It uses tf.data.Dataset.reduce to efficiently aggregate counts across the entire dataset without explicit Python loops, which is crucial for performance on large datasets.
 def count_midi_notes(dataset,outputsize=OUTPUT_DIM_NOTES,has_filtered_audio=False):
     # Since we are now batched, we sum across the batch dimension first
     initial_state = tf.zeros((outputsize,), dtype=tf.int32)
@@ -400,19 +401,20 @@ def count_midi_notes(dataset,outputsize=OUTPUT_DIM_NOTES,has_filtered_audio=Fals
             # # print the shape of labels_batch for debugging with tf.print
             # tf.print("Labels batch shape in reduce_fn:", tf.shape(labels_batch))
             # # Sum the batch of labels first, then add to the global state
-            # batch_sum = tf.reduce_sum(tf.cast(labels_batch, tf.int32), axis=0)
+            batch_sum = tf.reduce_sum(tf.cast(labels_batch, tf.int32), axis=0)
             # tf.print("Batch sum in reduce_fn:", batch_sum)
-            return old_state + tf.cast(labels_batch, tf.int32)
+            return old_state + batch_sum
     else:
         def reduce_fn(old_state, next_element):
             _,_, labels_batch = next_element
             # # Sum the batch of labels first, then add to the global state
             # tf.print("Labels batch shape in reduce_fn:", tf.shape(labels_batch))
-            # batch_sum = tf.reduce_sum(tf.cast(labels_batch, tf.int32), axis=0)
-            return old_state +  tf.cast(labels_batch, tf.int32)
+            batch_sum = tf.reduce_sum(tf.cast(labels_batch, tf.int32), axis=0)
+            return old_state +  batch_sum
 
     return dataset.reduce(initial_state, reduce_fn).numpy()
 
+# This function writes the MIDI note histogram to a CSV file. It calls count_midi_notes to get the histogram data, then uses Python's built-in csv module to write the note numbers and their corresponding counts to a CSV file. It also prints the histogram to the console for verification.
 def write_note_histogram(dataset,output_path,outputsize=OUTPUT_DIM_NOTES,has_filtered_audio=False):
     notes_histo = count_midi_notes(dataset, outputsize, has_filtered_audio)
     with open(output_path, mode='w', newline='') as csv_file:
