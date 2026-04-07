@@ -22,6 +22,19 @@ INPUT_SHAPE_AUDIO = (1,image_width, num_channels)
 OUTPUT_DIM_NOTES = num_classes # For notes output
 OUTPUT_DIM_ONSETS = 1 # For onsets output
 
+
+def parse_filtered_audio_record(example_proto):
+    parsed=tf.io.parse_single_example(example_proto, feature_description)
+    input_raw = tf.io.decode_raw(parsed["input"], tf.int8)
+    label_raw = tf.io.decode_raw(parsed["output"], tf.int8)
+    # print tf.print shape of input_raw and label_raw
+    # tf.print("input_raw shape:", tf.shape(input_raw))
+    # tf.print("label_raw shape:", tf.shape(label_raw))
+    input_tensor = tf.reshape(input_raw, INPUT_SHAPE)
+    input_tensor = tf.cast(input_tensor, tf.float32)
+    input_tensor=input_tensor/127
+    output_tensor = tf.cast(tf.reshape(label_raw, [OUTPUT_DIM_NOTES]), tf.float32)
+    return input_tensor,output_tensor
 def fast_gpu_map(input_tensor,output_tensor,training=True):
 
 
@@ -374,26 +387,36 @@ def write_prefiltered_tfrecord(
 
     print(f"Wrote {file_index} shard(s) to {output_prefix}_*.tfrecord")
 
-def count_midi_notes(dataset,has_filtered_audio=False):
+def count_midi_notes(dataset,outputsize=OUTPUT_DIM_NOTES,has_filtered_audio=False):
     # Since we are now batched, we sum across the batch dimension first
-    initial_state = tf.zeros((OUTPUT_DIM_NOTES,), dtype=tf.int32)
-    
-    def reduce_fn(old_state, next_element):
-        if has_filtered_audio:
+    initial_state = tf.zeros((outputsize,), dtype=tf.int32)
+    if has_filtered_audio:
+        def reduce_fn(old_state, next_element):
+            
             _, labels_batch = next_element # Shape: (batch, OUTPUT_DIM_NOTES)
-        else:
+            # # print the shape of labels_batch for debugging with tf.print
+            # tf.print("Labels batch shape in reduce_fn:", tf.shape(labels_batch))
+            # # Sum the batch of labels first, then add to the global state
+            # batch_sum = tf.reduce_sum(tf.cast(labels_batch, tf.int32), axis=0)
+            # tf.print("Batch sum in reduce_fn:", batch_sum)
+            return old_state + tf.cast(labels_batch, tf.int32)
+    else:
+        def reduce_fn(old_state, next_element):
             _,_, labels_batch = next_element
-        # Sum the batch of labels first, then add to the global state
-        batch_sum = tf.reduce_sum(tf.cast(labels_batch, tf.int32), axis=0)
-        return old_state + batch_sum
+            # # Sum the batch of labels first, then add to the global state
+            # tf.print("Labels batch shape in reduce_fn:", tf.shape(labels_batch))
+            # batch_sum = tf.reduce_sum(tf.cast(labels_batch, tf.int32), axis=0)
+            return old_state +  tf.cast(labels_batch, tf.int32)
 
     return dataset.reduce(initial_state, reduce_fn).numpy()
 
-def write_note_histogram(dataset,output_path,has_filtered_audio=False):
-    notes_histo = count_midi_notes(dataset, has_filtered_audio)
+def write_note_histogram(dataset,output_path,outputsize=OUTPUT_DIM_NOTES,has_filtered_audio=False):
+    notes_histo = count_midi_notes(dataset, outputsize, has_filtered_audio)
     with open(output_path, mode='w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(['MIDI Note', 'Count'])
+        print("Writing note histogram to CSV:")
         for note, count in enumerate(notes_histo):
+            print(f"Note {note}: {count}")
             writer.writerow([note, count])
     print(f"Note histogram written to {output_path}")
