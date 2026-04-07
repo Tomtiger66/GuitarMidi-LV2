@@ -321,7 +321,7 @@ def plot_histogram(hist,size=OUTPUT_DIM_NOTES):
     plt.xlim(0, size)  # Limit x-axis to the range of interest
     plt.show()
 
-def filter_polyphony(dataset: tf.data.Dataset,num_notes: int,exact: bool):
+def filter_polyphony(dataset: tf.data.Dataset,num_notes: int,exact: bool,has_filtered_audio=False)->tf.data.Dataset:
     def filter_func(label):
         #tf.print("Label shape: ",tf.shape(label))
         labels=tf.cast(label,tf.int32)
@@ -337,7 +337,10 @@ def filter_polyphony(dataset: tf.data.Dataset,num_notes: int,exact: bool):
             return (numactive==num_notes) &(outlier==tf.constant(0))
         else:
             return (numactive<=num_notes) &(outlier==tf.constant(0))
-    return dataset.filter(lambda a,l:filter_func(l))
+    if has_filtered_audio:
+        return dataset.filter(lambda a,l:filter_func(l))
+    else:
+        return dataset.filter(lambda a,fnr,l:filter_func(l))
 def make_proto(feature_map: np.ndarray, label_bytes: bytes)->bytes:
     feature={
         "input": tf.train.Feature(
