@@ -325,7 +325,7 @@ def filter_polyphony(dataset: tf.data.Dataset,num_notes: int,exact: bool,has_fil
     def filter_func(label):
         #tf.print("Label shape: ",tf.shape(label))
         labels=tf.cast(label,tf.int32)
-        tf.print("Label shape after cast: ",tf.shape(labels))
+        #tf.print("Label shape after cast: ",tf.shape(labels))
         numactive=tf.reduce_sum(labels[40:78])
         outlier=tf.reduce_sum(labels[0:40])+tf.reduce_sum(labels[78:])
         #tf.print("numactive shape: ",tf.shape(numactive))

@@ -8,6 +8,26 @@ IMG_H, IMG_W = image_height, image_width
 NUM_CLASSES = 89
 CHANNELS = 1
 reg = None#regularizers.l2(1e-6)
+
+
+# Diagram of the model in ASCII art. Each block should be drawn as a box. The six string layers should be drawn as parallel boxes after the transformer, and then combined into a single box for the chord reasoning, followed by the output layer.:
+# Input Spectrogram (148 butterworth filter outputs (37  notes, 4 harmonics per note) x 256 samples)
+#     |
+# Local Contrast Normalization
+#     |
+# Time Compression (1D Conv along time axis)
+#     |
+# Transformer Block acting over the frequency features (Multi-Head Self-attention + FFN)
+#     |
+# String-aware Slicing into 6 parallel paths
+#     |         |         |         |         |         |
+# String 1    String 2    String 3    String 4    String 5    String 6
+#     |         |         |         |         |         |
+# Chord Reasoning (Conv across strings) followed by hollow neighborhood suppression and Global Max Pooling per string
+#     |
+# Output Notes (Dense Layer)
+
+
 def bottleneck_residual(x, filters, kernel_size=3, ratio=4, name_prefix="res"):
     inner = max(filters // ratio, 16)
     shortcut = x
@@ -225,4 +245,5 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
                         bias_initializer=tf.initializers.Constant(-2),
                         dtype='float32', name="output_notes")(combined)
     return models.Model(inputs, outputs, name="guitar_note_detector")
+
 

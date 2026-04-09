@@ -1,11 +1,11 @@
 #!/bin/bash
 
-SOURCE_DIR="/data/training_subset/"
-TARGET_DIR="training_subset"
-USEDRECORDS_FILE="usedrecords.txt"
+SOURCE_DIR="/data2/training_subset_acoustic/"
+TARGET_DIR="training_subset_acoustic"
+USEDRECORDS_FILE="usedrecords-acoustic.txt"
 mkdir -p "$TARGET_DIR"
 
-NUM_FILES_TO_COPY=5690 #20000
+NUM_FILES_TO_COPY=2000 #5690 #20000
 
 # Create usedrecords file if it doesn't exist
 touch "$USEDRECORDS_FILE"
