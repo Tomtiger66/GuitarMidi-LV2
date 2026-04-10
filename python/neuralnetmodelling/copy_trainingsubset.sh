@@ -1,8 +1,9 @@
 #!/bin/bash
 
 SOURCE_DIR="/data2/training_subset_acoustic/"
-TARGET_DIR="training_subset_acoustic"
+TARGET_DIR="/data/test_subset/acoustic"
 USEDRECORDS_FILE="usedrecords-acoustic.txt"
+REMOVE_SOURCE_FILES=false # Set to true if you want to move instead of copy
 mkdir -p "$TARGET_DIR"
 
 NUM_FILES_TO_COPY=5000 #5690 #20000
@@ -35,7 +36,16 @@ echo "Selected $FILE_COUNT files to copy."
 
 if [ "$FILE_COUNT" -gt 0 ]; then
     echo "Starting bulk copy to $TARGET_DIR..."
-    
+    # Ask user for confirmation before proceeding when remove source files is enabled
+    if [ "$REMOVE_SOURCE_FILES" = true ]; then
+        read -p "This will MOVE files from $SOURCE_DIR to $TARGET_DIR. Are you sure? (y/n) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo "Aborting."
+            rm -f "$TMP_EXCLUDE" "$TMP_SELECTED"
+            exit 1
+        fi
+    fi
     # OPTION 1: xargs with cp (Extremely fast, utilizing multiple threads)
     # xargs -a "$TMP_SELECTED" -P 4 -I {} cp {} "$TARGET_DIR/"
     
@@ -43,7 +53,11 @@ if [ "$FILE_COUNT" -gt 0 ]; then
     # Note: --files-from preserves paths by default. We cd into SOURCE_DIR 
     # and strip the SOURCE_DIR prefix from the list to copy them flat.
     sed "s|^$SOURCE_DIR/*||" "$TMP_SELECTED" > "${TMP_SELECTED}_relative"
-    rsync -a --info=progress2 --files-from="${TMP_SELECTED}_relative" "$SOURCE_DIR" "$TARGET_DIR/"
+    if [ "$REMOVE_SOURCE_FILES" = true ]; then
+        rsync -a --remove-source-files --info=progress2 --files-from="${TMP_SELECTED}_relative" "$SOURCE_DIR" "$TARGET_DIR/"
+    else
+        rsync -a --info=progress2  --files-from="${TMP_SELECTED}_relative" "$SOURCE_DIR" "$TARGET_DIR/"
+    fi
     
     # Append all successfully copied files to used records in one operation
     cat "$TMP_SELECTED" >> "$USEDRECORDS_FILE"
