@@ -1,12 +1,12 @@
 #!/bin/bash
 
-SOURCE_DIR="/data2/training_subset_acoustic/"
-TARGET_DIR="training_subset_acoustic"
-USEDRECORDS_FILE="usedrecords-acoustic.txt"
+SOURCE_DIR="/data/training_subset_electric/"
+TARGET_DIR="training_subset/training_subset_electric"
+USEDRECORDS_FILE="usedrecords-electric.txt"
 REMOVE_SOURCE_FILES=false # Set to true if you want to move instead of copy
 mkdir -p "$TARGET_DIR"
 
-NUM_FILES_TO_COPY=15000 #5690 #20000
+NUM_FILES_TO_COPY=10000 #5690 #20000
 
 # Create usedrecords file if it doesn't exist
 touch "$USEDRECORDS_FILE"
