@@ -151,6 +151,9 @@ def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="c
     chord=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv1",kernel_regularizer=reg)(stacked)
     chord=layers.BatchNormalization(name=f"{name_prefix}_bn1")(chord)
     chord=layers.LeakyReLU(name=f"{name_prefix}_act1")(chord)
+    chord=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv2",kernel_regularizer=reg)(chord)
+    chord=layers.BatchNormalization(name=f"{name_prefix}_bn2")(chord)
+    chord=layers.LeakyReLU(name=f"{name_prefix}_act2")(chord)
     chord=layers.SpatialDropout2D(0.2, name=f"{name_prefix}_drop1")(chord)
     # Split the chord features back into per-string tensors
     split_chords = [layers.Lambda(lambda t, i=i: t[:, i, :, :], name=f"{name_prefix}_slice_str{i}")(chord) for i in range(len(string_features))]
