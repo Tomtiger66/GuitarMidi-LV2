@@ -4,7 +4,7 @@
 #include <guitarnote.hpp>
 #include <common.hpp>
 #define MAXORDER 10   // the real order is 2*MAXORDER
-#define FILTERORDER 2 // the real order is 2*MAXORDER
+#define FILTERORDER 4 // the real order is 2*MAXORDER
 #define NUM_HARMONICS 4
 #define NUM_STRINGS 6
 #define NUM_FRETS 12

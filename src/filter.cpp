@@ -54,6 +54,7 @@ namespace GuitarMidi
         memcpy(m_buffer, m_input, nsamples * sizeof(float));
 
         m_filter.process(nsamples, &m_buffer);
+        // m_filter.process(nsamples, &m_buffer);
         for (int b=0;b<m_bufferSize;b++)
             m_buffer[b]=fabs(m_buffer[b]);
 
