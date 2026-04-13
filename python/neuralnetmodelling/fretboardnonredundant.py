@@ -176,6 +176,6 @@ def get_butterworth_group_delay(
     # Group delay τ(ω) = -d(phase)/dω
     # At ω = w_c this simplifies to:
     #   τ(w_c) = Q / w_c
-    delay_samples = q / w_c
+    delay_samples = 2*q / w_c
 
     return int(delay_samples)
