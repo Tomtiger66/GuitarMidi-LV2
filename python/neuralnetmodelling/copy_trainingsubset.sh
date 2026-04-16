@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+
 # this script copies a random subset of files from the source directory to the target directory, while ensuring that files listed in usedrecords-electric.txt are excluded. 
 # It also has options to remove source files after copying and to randomly delete a percentage of files from the target directory before copying (use with caution!).
 # Usage: ./copy_trainingsubset_electric.sh [SOURCE_DIR] [TARGET_DIR] [USEDRECORDS_FILE] [REMOVE_SOURCE_FILES] [REMOVE_TARGET_FILES] [RETAIN_TARGET_FILES_PERCENTAGE] [NUM_FILES_TO_COPY]
@@ -18,6 +18,12 @@ REMOVE_TARGET_FILES=$5 # Set to true if you want to delete files from target aft
 RETAIN_TARGET_FILES_PERCENTAGE=$6 # Percentage of files to retain in target when REMOVE_TARGET_FILES is true (0-100)
 NUM_FILES_TO_COPY=$7 #5690 #20000
 
+
+# remove retain percentage from num files to copy if target files will be removed. calculate lower integer bound of numfiles = numfiles * (100 - retain percentage) / 100
+if [ "$REMOVE_TARGET_FILES" = true ] && [ "$RETAIN_TARGET_FILES_PERCENTAGE" -ge 0 ] && [ "$RETAIN_TARGET_FILES_PERCENTAGE" -lt 100 ]; then
+    NUM_FILES_TO_COPY=$(( NUM_FILES_TO_COPY * (100 - RETAIN_TARGET_FILES_PERCENTAGE) / 100 ))   
+    echo "Adjusted number of files to copy after accounting for target file removal: $NUM_FILES_TO_COPY"
+fi
 # first ensure target directory exists
 
 mkdir -p "$TARGET_DIR"
