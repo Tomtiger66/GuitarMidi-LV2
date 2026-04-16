@@ -78,7 +78,7 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     s = layers.BatchNormalization(name=f"{prefix}_harmonic_bn")(s)
 
     s = layers.LeakyReLU(name=f"{prefix}_harmonic_act")(s)
-    s=layers.SpatialDropout2D(0.3, name=f"{prefix}_drop2")(s)
+    s=layers.SpatialDropout1D(0.3, name=f"{prefix}_drop2")(s)
     #s=layers.Add(name=f"{prefix}_res1_conv1")([s, res])
     # Now shape is (batch, 13, 64) — one vector per note
 
@@ -104,7 +104,7 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     s = layers.Conv1D(64, 1, padding='same', kernel_regularizer=reg, name=f"{prefix}_post_suppress_conv")(s)
     s = layers.BatchNormalization(name=f"{prefix}_post_suppress_bn")(s)
     s = layers.LeakyReLU(name=f"{prefix}_post_suppress_act")(s)
-    s=layers.SpatialDropout2D(0.3, name=f"{prefix}_drop3")(s)
+    s=layers.SpatialDropout1D(0.3, name=f"{prefix}_drop3")(s)
 
     return s
 
