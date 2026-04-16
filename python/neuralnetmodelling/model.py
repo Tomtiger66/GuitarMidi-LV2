@@ -76,7 +76,9 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     s = layers.Conv1D(64, 4, strides=4, padding='valid', 
                       kernel_regularizer=reg, name=f"{prefix}_harmonic_collapse")(s)
     s = layers.BatchNormalization(name=f"{prefix}_harmonic_bn")(s)
+
     s = layers.LeakyReLU(name=f"{prefix}_harmonic_act")(s)
+    s=layers.SpatialDropout2D(0.3, name=f"{prefix}_drop2")(s)
     #s=layers.Add(name=f"{prefix}_res1_conv1")([s, res])
     # Now shape is (batch, 13, 64) — one vector per note
 
@@ -102,6 +104,7 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
     s = layers.Conv1D(64, 1, padding='same', kernel_regularizer=reg, name=f"{prefix}_post_suppress_conv")(s)
     s = layers.BatchNormalization(name=f"{prefix}_post_suppress_bn")(s)
     s = layers.LeakyReLU(name=f"{prefix}_post_suppress_act")(s)
+    s=layers.SpatialDropout2D(0.3, name=f"{prefix}_drop3")(s)
 
     return s
 
@@ -154,7 +157,7 @@ def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="c
     chord=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv2",kernel_regularizer=reg)(chord)
     chord=layers.BatchNormalization(name=f"{name_prefix}_bn2")(chord)
     chord=layers.LeakyReLU(name=f"{name_prefix}_act2")(chord)
-    chord=layers.SpatialDropout2D(0.2, name=f"{name_prefix}_drop1")(chord)
+    chord=layers.SpatialDropout2D(0.3, name=f"{name_prefix}_drop1")(chord)
     # Split the chord features back into per-string tensors
     split_chords = [layers.Lambda(lambda t, i=i: t[:, i, :, :], name=f"{name_prefix}_slice_str{i}")(chord) for i in range(len(string_features))]
     
@@ -242,7 +245,8 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
 
     combined = layers.Concatenate(name="string_combined")(processed_strings)
 
-
+    # dropout before final output layer
+    combined = layers.Dropout(0.4, name="final_dropout")(combined)
 
     outputs = layers.Dense(output_dim, activation= None if training else 'sigmoid',
                         bias_initializer=tf.initializers.Constant(-2),
