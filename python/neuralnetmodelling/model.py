@@ -77,6 +77,8 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
                       kernel_regularizer=reg, name=f"{prefix}_harmonic_collapse")(s)
     s = layers.BatchNormalization(name=f"{prefix}_harmonic_bn")(s)
     s = layers.LeakyReLU(name=f"{prefix}_harmonic_act")(s)
+    s = layers.SpatialDropout1D(0.1, name=f"{prefix}_harmonic_drop")(s)
+
     #s=layers.Add(name=f"{prefix}_res1_conv1")([s, res])
     # Now shape is (batch, 13, 64) — one vector per note
 
@@ -169,6 +171,7 @@ def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="c
         # s = layers.Dense(64, name=f"{name_prefix}_dense_str{i}", kernel_regularizer=reg)(s)
         s = layers.BatchNormalization(name=f"{name_prefix}_bn_str{i}")(s)
         s = layers.LeakyReLU(name=f"{name_prefix}_act_str{i}")(s)
+        s=layers.Dropout(0.2, name=f"{name_prefix}_drop_str{i}")(s)
         processed_strings.append(s)
     return processed_strings
 
