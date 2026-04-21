@@ -26,28 +26,74 @@ reg = None#regularizers.l2(1e-6)
 # Chord Reasoning (Conv across strings) followed by hollow neighborhood suppression and Global Max Pooling per string
 #     |
 # Output Notes (Dense Layer)
+import numpy as np
+import tensorflow as tf
+
+# Define your tuning and fret range
+# (string_idx, open_midi_note, num_frets)
+STRING_TUNING = [
+    (0, 40, 13),  # low E  - E2
+    (1, 45, 13),  # A      - A2
+    (2, 50, 13),  # D      - D3
+    (3, 55, 13),  # G      - G3
+    (4, 59, 13),  # B      - B3
+    (5, 64, 13),  # high e - E4
+]
 
 
-def bottleneck_residual(x, filters, kernel_size=3, ratio=4, name_prefix="res"):
-    inner = max(filters // ratio, 16)
-    shortcut = x
+# Build scatter indices: for each (string, fret) → output note index
+# Assuming your 37 notes span some MIDI range, e.g. MIDI 40-76
+MIDI_MIN = 40  # lowest note in your 37-note output space
 
-    x = layers.Conv1D(inner, 1, padding='same', name=f"{name_prefix}_squeeze")(x)
-    x = layers.BatchNormalization(name=f"{name_prefix}_bn1")(x)
-    x = layers.LeakyReLU(name=f"{name_prefix}_act1")(x)
+def build_scatter_map(string_tuning, midi_min, n_output=37):
+    """
+    Returns a (6, max_frets, n_output) boolean mask.
+    string_output[s, f] scatters to output note (open_midi[s] + f - midi_min).
+    """
+    scatter_indices = []
+    for string_idx, open_midi, num_frets in string_tuning:
+        for fret in range(num_frets):
+            note_idx = open_midi + fret - midi_min
+            scatter_indices.append((string_idx, fret, note_idx))
+    return scatter_indices
 
-    x = layers.Conv1D(inner, kernel_size, padding='same', name=f"{name_prefix}_conv_k{kernel_size}")(x)
-    x = layers.BatchNormalization(name=f"{name_prefix}_bn2")(x)
-    x = layers.LeakyReLU(name=f"{name_prefix}_act2")(x)
+scatter_indices = build_scatter_map(STRING_TUNING, MIDI_MIN)
 
-    x = layers.Conv1D(filters, 1, padding='same', name=f"{name_prefix}_expand")(x)
-    x = layers.BatchNormalization(name=f"{name_prefix}_bn3")(x)
+# Build a fixed (6*13, 37) sparse mask
+N_STRINGS = 6
+N_FRETS = 13
+N_NOTES = 37
 
-    if shortcut.shape[-1] != filters:
-        shortcut = layers.Conv1D(filters, 1, padding='same', name=f"{name_prefix}_shortcut_proj")(shortcut)
-        shortcut = layers.BatchNormalization(name=f"{name_prefix}_shortcut_bn")(shortcut)
+mask = np.zeros((N_STRINGS * N_FRETS, N_NOTES), dtype=np.float32)
+for s, f, n in scatter_indices:
+    if 0 <= n < N_NOTES:
+        mask[s * N_FRETS + f, n] = 1.0
 
-    return layers.LeakyReLU(name=f"{name_prefix}_out")(layers.Add(name=f"{name_prefix}_add")([x, shortcut]))
+mask_tensor = tf.constant(mask)  # (78, 37)
+
+
+class SparseGuitarOutput(tf.keras.layers.Layer):
+    def __init__(self, mask, **kwargs):
+        super().__init__(**kwargs)
+        self.mask = tf.constant(mask, dtype=tf.float32)  # (78, 37)
+
+    def call(self, x):
+        batch = tf.shape(x)[0]
+        x_flat = tf.reshape(x, (batch, N_STRINGS * N_FRETS))
+        x_exp = tf.expand_dims(x_flat, 2)
+        mask_exp = tf.expand_dims(tf.cast(self.mask, x.dtype), 0)
+
+        neg_inf = tf.cast(-1e4, x.dtype)  # -1e9 overflows float16
+        neg_inf_mask = (1.0 - mask_exp) * neg_inf
+        masked = x_exp + neg_inf_mask
+        return tf.reduce_max(masked, axis=1)
+
+
+
+    def get_config(self):
+        config = super().get_config()
+        return config
+
 
 def string_layer(x, start, end, max_x, training, string_idx=0):
     end = min(int(end), int(max_x))
@@ -138,7 +184,7 @@ def transformer_block(x, num_heads=2, head_size=32, ff_dim=128, dropout=0.1, nam
     # 3. Add to x1 WITHOUT normalizing the result (Clear highway!)
     return layers.Add(name=f"{name_prefix}_ffn_add")([x1, ffn])
 
-def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="chord"):
+def chord_conv_block(string_features, filters,output_dim,training, kernel_size=(3,4), name_prefix="chord"):
     # store the original string features for later as residuals
     
 
@@ -179,6 +225,9 @@ def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="c
         s = layers.LayerNormalization(name=f"{name_prefix}_ln_str{i}")(s) 
         s = layers.LeakyReLU(name=f"{name_prefix}_act_str{i}")(s)
         s=layers.Dropout(0.1, name=f"{name_prefix}_drop_str{i}")(s)
+        s=layers.Dense(output_dim, activation= None,
+                        bias_initializer=tf.initializers.Constant(-1),
+                        dtype='float32', name=f"{name_prefix}_output_str{i}")(s)
         processed_strings.append(s)
     return processed_strings
 
@@ -248,15 +297,19 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
 
 
     # --- Stage 5: Chord reasoning (Conv1D across strings) ---
-    processed_strings = chord_conv_block(string_features, filters=64, kernel_size=(3,4), name_prefix="chord_block")
+    processed_strings = chord_conv_block(string_features,output_dim=N_FRETS,training=training, filters=64, kernel_size=(3,4), name_prefix="chord_block")
 
     combined = layers.Concatenate(name="string_combined")(processed_strings)
 
-    combined = layers.Dropout(0.0, name="final_dropout")(combined)
+    # combined = layers.Dropout(0.0, name="final_dropout")(combined)
 
-    outputs = layers.Dense(output_dim, activation= None if training else 'sigmoid',
-                        bias_initializer=tf.initializers.Constant(-1),
-                        dtype='float32', name="output_notes")(combined)
+    # outputs = layers.Dense(output_dim, activation= None if training else 'sigmoid',
+    #                     bias_initializer=tf.initializers.Constant(-1),
+    #                     dtype='float32', name="output_notes")(combined)
+    string_outputs = tf.keras.layers.Reshape((N_STRINGS, N_FRETS))(combined)
+    outputs = SparseGuitarOutput(mask)(string_outputs)
+  
+    outputs = layers.Activation('linear' if training else 'sigmoid', name="output_sigmoid")(outputs)
     return models.Model(inputs, outputs, name="guitar_note_detector")
 
 
