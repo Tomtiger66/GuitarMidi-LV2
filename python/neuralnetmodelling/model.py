@@ -25,6 +25,8 @@ reg = None#regularizers.l2(1e-6)
 #     |         |         |         |         |         |
 # Chord Reasoning (Conv across strings) followed by hollow neighborhood suppression and Global Max Pooling per string
 #     |
+# String-specific Dense layers to produce 6x13 outputs (one per string/fret)
+# String/fret outputs are then scattered to the final 37-note output space using a fixed sparse mapping based on the guitar tuning and fret range.
 # Output Notes (Dense Layer)
 import numpy as np
 import tensorflow as tf
@@ -226,7 +228,7 @@ def chord_conv_block(string_features, filters,output_dim,training, kernel_size=(
         s = layers.LeakyReLU(name=f"{name_prefix}_act_str{i}")(s)
         s=layers.Dropout(0.1, name=f"{name_prefix}_drop_str{i}")(s)
         s=layers.Dense(output_dim, activation= None,
-                        bias_initializer=tf.initializers.Constant(-1),
+                        bias_initializer=tf.initializers.Constant(-4),
                         dtype='float32', name=f"{name_prefix}_output_str{i}")(s)
         processed_strings.append(s)
     return processed_strings
@@ -308,7 +310,8 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
     #                     dtype='float32', name="output_notes")(combined)
     string_outputs = tf.keras.layers.Reshape((N_STRINGS, N_FRETS))(combined)
     outputs = SparseGuitarOutput(mask)(string_outputs)
-  
+    print(combined.dtype, string_outputs.dtype)
+
     outputs = layers.Activation('linear' if training else 'sigmoid', name="output_sigmoid")(outputs)
     return models.Model(inputs, outputs, name="guitar_note_detector")
 
