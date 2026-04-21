@@ -77,7 +77,11 @@ def string_layer(x, start, end, max_x, training, string_idx=0):
                       kernel_regularizer=reg, name=f"{prefix}_harmonic_collapse")(s)
     s = layers.BatchNormalization(name=f"{prefix}_harmonic_bn")(s)
     s = layers.LeakyReLU(name=f"{prefix}_harmonic_act")(s)
-    s = layers.SpatialDropout1D(0.1, name=f"{prefix}_harmonic_drop")(s)
+
+    if string_idx==5:
+        s = layers.SpatialDropout1D(0.2, name=f"{prefix}_harmonic_drop")(s)
+    else:
+        s = layers.SpatialDropout1D(0.1, name=f"{prefix}_harmonic_drop")(s)
 
     #s=layers.Add(name=f"{prefix}_res1_conv1")([s, res])
     # Now shape is (batch, 13, 64) — one vector per note
@@ -150,12 +154,15 @@ def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="c
     stacked = layers.Concatenate(axis=1, name=f"{name_prefix}_stack_strings")(expanded)  # (B, 6, max_len, 64)
 
 
-    chord=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv1",kernel_regularizer=reg)(stacked)
-    chord=layers.BatchNormalization(name=f"{name_prefix}_bn1")(chord)
-    chord = layers.ELU(name=f"{name_prefix}_act1")(chord)
-    chord=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv2",kernel_regularizer=reg)(chord)
-    chord=layers.BatchNormalization(name=f"{name_prefix}_bn2")(chord)
-    chord=layers.LeakyReLU(name=f"{name_prefix}_act2")(chord)
+    c1=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv1",kernel_regularizer=reg)(stacked)
+    c1=layers.BatchNormalization(name=f"{name_prefix}_bn1")(c1)
+    c1 = layers.ELU(name=f"{name_prefix}_act1")(c1)
+
+
+    c2=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv2",kernel_regularizer=reg)(c1)
+    c2=layers.BatchNormalization(name=f"{name_prefix}_bn2")(c2)
+    c2=layers.LeakyReLU(name=f"{name_prefix}_act2")(c2)
+    chord=layers.Add(name=f"{name_prefix}_res_c1_c2")([c2, c1])
     chord=layers.SpatialDropout2D(0.2, name=f"{name_prefix}_drop1")(chord)
     # Split the chord features back into per-string tensors
     split_chords = [layers.Lambda(lambda t, i=i: t[:, i, :, :], name=f"{name_prefix}_slice_str{i}")(chord) for i in range(len(string_features))]
@@ -165,13 +172,13 @@ def chord_conv_block(string_features, filters, kernel_size=(3,4), name_prefix="c
     processed_strings = []
     for i, s in enumerate(split_chords):
         # Add residual connection from original string features
-        s = layers.Add(name=f"{name_prefix}_res_str{i}")([s, string_residuals[i]])
+        #s = layers.Add(name=f"{name_prefix}_res_str{i}")([s, string_residuals[i]])
 
         s = layers.GlobalMaxPooling1D(name=f"{name_prefix}_gmax_str{i}")(s)
         # s = layers.Dense(64, name=f"{name_prefix}_dense_str{i}", kernel_regularizer=reg)(s)
-        s = layers.BatchNormalization(name=f"{name_prefix}_bn_str{i}")(s)
+        s = layers.LayerNormalization(name=f"{name_prefix}_ln_str{i}")(s) 
         s = layers.LeakyReLU(name=f"{name_prefix}_act_str{i}")(s)
-        s=layers.Dropout(0.2, name=f"{name_prefix}_drop_str{i}")(s)
+        s=layers.Dropout(0.1, name=f"{name_prefix}_drop_str{i}")(s)
         processed_strings.append(s)
     return processed_strings
 
@@ -245,10 +252,10 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
 
     combined = layers.Concatenate(name="string_combined")(processed_strings)
 
-    combined = layers.Dropout(0.2, name="final_dropout")(combined)
+    combined = layers.Dropout(0.0, name="final_dropout")(combined)
 
     outputs = layers.Dense(output_dim, activation= None if training else 'sigmoid',
-                        bias_initializer=tf.initializers.Constant(-2),
+                        bias_initializer=tf.initializers.Constant(-1),
                         dtype='float32', name="output_notes")(combined)
     return models.Model(inputs, outputs, name="guitar_note_detector")
 

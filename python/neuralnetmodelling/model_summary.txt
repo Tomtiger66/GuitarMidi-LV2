@@ -453,7 +453,10 @@ Model: "guitar_note_detector"
 │ chord_block_act2    │ (256, 6, 13, 64)  │          0 │ chord_block_bn2[… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_drop1   │ (256, 6, 13, 64)  │          0 │ chord_block_act2… │
+│ chord_block_res_c1… │ (256, 6, 13, 64)  │          0 │ chord_block_act2… │
+│ (Add)               │                   │            │ chord_block_act1… │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ chord_block_drop1   │ (256, 6, 13, 64)  │          0 │ chord_block_res_… │
 │ (SpatialDropout2D)  │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ chord_block_slice_… │ (256, 13, 64)     │          0 │ chord_block_drop… │
@@ -474,76 +477,58 @@ Model: "guitar_note_detector"
 │ chord_block_slice_… │ (256, 13, 64)     │          0 │ chord_block_drop… │
 │ (Lambda)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_res_st… │ (256, 13, 64)     │          0 │ chord_block_slic… │
-│ (Add)               │                   │            │ str0_post_suppre… │
-├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_res_st… │ (256, 13, 64)     │          0 │ chord_block_slic… │
-│ (Add)               │                   │            │ str1_post_suppre… │
-├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_res_st… │ (256, 13, 64)     │          0 │ chord_block_slic… │
-│ (Add)               │                   │            │ str2_post_suppre… │
-├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_res_st… │ (256, 13, 64)     │          0 │ chord_block_slic… │
-│ (Add)               │                   │            │ str3_post_suppre… │
-├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_res_st… │ (256, 13, 64)     │          0 │ chord_block_slic… │
-│ (Add)               │                   │            │ str4_post_suppre… │
-├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_res_st… │ (256, 13, 64)     │          0 │ chord_block_slic… │
-│ (Add)               │                   │            │ chord_block_pad_… │
-├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_res_… │
+│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_slic… │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_res_… │
+│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_slic… │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_res_… │
+│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_slic… │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_res_… │
+│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_slic… │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_res_… │
+│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_slic… │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_res_… │
+│ chord_block_gmax_s… │ (256, 64)         │          0 │ chord_block_slic… │
 │ (GlobalMaxPooling1… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_bn_str0 │ (256, 64)         │        256 │ chord_block_gmax… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ chord_block_ln_str0 │ (256, 64)         │        128 │ chord_block_gmax… │
+│ (LayerNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_bn_str1 │ (256, 64)         │        256 │ chord_block_gmax… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ chord_block_ln_str1 │ (256, 64)         │        128 │ chord_block_gmax… │
+│ (LayerNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_bn_str2 │ (256, 64)         │        256 │ chord_block_gmax… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ chord_block_ln_str2 │ (256, 64)         │        128 │ chord_block_gmax… │
+│ (LayerNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_bn_str3 │ (256, 64)         │        256 │ chord_block_gmax… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ chord_block_ln_str3 │ (256, 64)         │        128 │ chord_block_gmax… │
+│ (LayerNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_bn_str4 │ (256, 64)         │        256 │ chord_block_gmax… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ chord_block_ln_str4 │ (256, 64)         │        128 │ chord_block_gmax… │
+│ (LayerNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_bn_str5 │ (256, 64)         │        256 │ chord_block_gmax… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ chord_block_ln_str5 │ (256, 64)         │        128 │ chord_block_gmax… │
+│ (LayerNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_bn_s… │
+│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_ln_s… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_bn_s… │
+│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_ln_s… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_bn_s… │
+│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_ln_s… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_bn_s… │
+│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_ln_s… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_bn_s… │
+│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_ln_s… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_bn_s… │
+│ chord_block_act_st… │ (256, 64)         │          0 │ chord_block_ln_s… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ chord_block_drop_s… │ (256, 64)         │          0 │ chord_block_act_… │
@@ -577,6 +562,6 @@ Model: "guitar_note_detector"
 │ output_notes        │ (256, 37)         │     14,245 │ final_dropout[0]… │
 │ (Dense)             │                   │            │                   │
 └─────────────────────┴───────────────────┴────────────┴───────────────────┘
- Total params: 756,749 (2.89 MB)
+ Total params: 755,981 (2.88 MB)
  Trainable params: 752,637 (2.87 MB)
- Non-trainable params: 4,112 (16.06 KB)
+ Non-trainable params: 3,344 (13.06 KB)
