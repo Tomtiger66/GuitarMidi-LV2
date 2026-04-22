@@ -8,7 +8,7 @@ IMG_H, IMG_W = image_height, image_width
 NUM_CLASSES = 89
 CHANNELS = 1
 reg = None#regularizers.l2(1e-6)
-reg2d = regularizers.l2(1e-3)
+reg2d = None#regularizers.l2(1e-6)
 
 # Diagram of the model in ASCII art. Each block should be drawn as a box. The six string layers should be drawn as parallel boxes after the transformer, and then combined into a single box for the chord reasoning, followed by the output layer.:
 # Input Spectrogram (148 butterworth filter outputs (37  notes, 4 harmonics per note) x 256 samples)
