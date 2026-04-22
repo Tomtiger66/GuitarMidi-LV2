@@ -583,5 +583,5 @@ Model: "guitar_note_detector"
 │ (Activation)        │                   │            │                   │
 └─────────────────────┴───────────────────┴────────────┴───────────────────┘
  Total params: 746,806 (2.85 MB)
- Trainable params: 5,070 (19.80 KB)
- Non-trainable params: 741,736 (2.83 MB)
+ Trainable params: 743,462 (2.84 MB)
+ Non-trainable params: 3,344 (13.06 KB)

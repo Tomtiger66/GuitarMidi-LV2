@@ -8,7 +8,7 @@ IMG_H, IMG_W = image_height, image_width
 NUM_CLASSES = 89
 CHANNELS = 1
 reg = None#regularizers.l2(1e-6)
-
+reg2d = regularizers.l2(1e-3)
 
 # Diagram of the model in ASCII art. Each block should be drawn as a box. The six string layers should be drawn as parallel boxes after the transformer, and then combined into a single box for the chord reasoning, followed by the output layer.:
 # Input Spectrogram (148 butterworth filter outputs (37  notes, 4 harmonics per note) x 256 samples)
@@ -202,12 +202,12 @@ def chord_conv_block(string_features, filters,output_dim,training, kernel_size=(
     stacked = layers.Concatenate(axis=1, name=f"{name_prefix}_stack_strings")(expanded)  # (B, 6, max_len, 64)
 
 
-    c1=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv1",kernel_regularizer=reg)(stacked)
+    c1=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv1",kernel_regularizer=reg2d)(stacked)
     c1=layers.BatchNormalization(name=f"{name_prefix}_bn1")(c1)
     c1 = layers.ELU(name=f"{name_prefix}_act1")(c1)
 
 
-    c2=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv2",kernel_regularizer=reg)(c1)
+    c2=layers.Conv2D(filters, kernel_size, padding='same', name=f"{name_prefix}_conv2",kernel_regularizer=reg2d)(c1)
     c2=layers.BatchNormalization(name=f"{name_prefix}_bn2")(c2)
     c2=layers.LeakyReLU(name=f"{name_prefix}_act2")(c2)
     chord=layers.Add(name=f"{name_prefix}_res_c1_c2")([c2, c1])
