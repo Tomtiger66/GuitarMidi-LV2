@@ -221,15 +221,27 @@ def chord_conv_block(string_features, filters,output_dim,training, kernel_size=(
     for i, s in enumerate(split_chords):
         # Add residual connection from original string features
         #s = layers.Add(name=f"{name_prefix}_res_str{i}")([s, string_residuals[i]])
-
-        s = layers.GlobalMaxPooling1D(name=f"{name_prefix}_gmax_str{i}")(s)
-        # s = layers.Dense(64, name=f"{name_prefix}_dense_str{i}", kernel_regularizer=reg)(s)
         s = layers.LayerNormalization(name=f"{name_prefix}_ln_str{i}")(s) 
         s = layers.LeakyReLU(name=f"{name_prefix}_act_str{i}")(s)
-        s=layers.Dropout(0.1, name=f"{name_prefix}_drop_str{i}")(s)
-        s=layers.Dense(output_dim, activation= None,
-                        bias_initializer=tf.initializers.Constant(-4),
-                        dtype='float32', name=f"{name_prefix}_output_str{i}")(s)
+        s=layers.Dropout(0.1, name=f"{name_prefix}_drop_str{i}")(s)   
+        s=layers.Dense(1,bias_initializer=tf.initializers.Constant(-4),name=f"{name_prefix}_fretlogits_str{i}", kernel_regularizer=reg)(s)   
+        s=layers.Flatten(name=f"{name_prefix}_flatten_str{i}")(s)
+        def append_silence(x):
+            silence_logit=tf.zeros_like(x[:, :1])  # (B, 1)
+            return tf.concat([x, silence_logit], axis=1)  # (B, 14)
+        s = layers.Lambda(append_silence, name=f"{name_prefix}_append_silence_str{i}")(s)
+        s=layers.Softmax(name=f"{name_prefix}_softmax_str{i}")(s)
+        def strip_silence(x):
+            return x[:,:-1]
+        s = layers.Lambda(strip_silence, name=f"{name_prefix}_strip_silence_str{i}")(s)
+        # s = layers.GlobalMaxPooling1D(name=f"{name_prefix}_gmax_str{i}")(s)
+        # # s = layers.Dense(64, name=f"{name_prefix}_dense_str{i}", kernel_regularizer=reg)(s)
+        # s = layers.LayerNormalization(name=f"{name_prefix}_ln_str{i}")(s) 
+        # s = layers.LeakyReLU(name=f"{name_prefix}_act_str{i}")(s)
+        # s=layers.Dropout(0.1, name=f"{name_prefix}_drop_str{i}")(s)
+        # s=layers.Dense(output_dim, activation= None,
+        #                 bias_initializer=tf.initializers.Constant(-4),
+        #                 dtype='float32', name=f"{name_prefix}_output_str{i}")(s)
         processed_strings.append(s)
     return processed_strings
 
@@ -310,9 +322,7 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
     #                     dtype='float32', name="output_notes")(combined)
     string_outputs = tf.keras.layers.Reshape((N_STRINGS, N_FRETS))(combined)
     outputs = SparseGuitarOutput(mask)(string_outputs)
-    print(combined.dtype, string_outputs.dtype)
 
-    outputs = layers.Activation('linear' if training else 'sigmoid', name="output_sigmoid")(outputs)
     return models.Model(inputs, outputs, name="guitar_note_detector")
 
 
