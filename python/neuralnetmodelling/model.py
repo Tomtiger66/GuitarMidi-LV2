@@ -100,6 +100,7 @@ class SparseGuitarOutput(tf.keras.layers.Layer):
 def string_layer(x, start, end, max_x, training, string_idx=0):
     end = min(int(end), int(max_x))
     start = max(0, int(start))
+    print(f"String {string_idx}: slicing from {start} to {end} (max_x={max_x})")
     prefix = f"str{string_idx}"
     
     s = layers.Lambda(lambda y, st=start, en=end: y[:, st:en, :], name=f"{prefix}_slice")(x)
@@ -301,12 +302,13 @@ def build_1d_cnn_model(batch_sz=64, input_shape=(image_height, image_width),
         return s, e
 
     ranges = [slice_range(o) for o in offsets]
-    ranges[-1] = (ranges[-1][0], int(max_x) - 1)
-
+    ranges[-1] = (ranges[-1][0], int(max_x))
+    print("String slice ranges (in time steps): ", ranges)
     string_features = [
         string_layer(x, s, e, max_x, training, string_idx=i)
         for i, (s, e) in enumerate(ranges)
     ]
+    print("After string split: ", [s.shape for s in string_features])
 
 
 

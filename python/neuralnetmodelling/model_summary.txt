@@ -53,8 +53,6 @@ Model: "guitar_note_detector"
 │ tfm_block1_ffn_add  │ (256, 148, 512)   │          0 │ tfm_block1_attn_… │
 │ (Add)               │                   │            │ tfm_block1_ffn2[… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_slice (Lambda) │ (256, 51, 512)    │          0 │ tfm_block1_ffn_a… │
-├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_slice (Lambda) │ (256, 52, 512)    │          0 │ tfm_block1_ffn_a… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str1_slice (Lambda) │ (256, 52, 512)    │          0 │ tfm_block1_ffn_a… │
@@ -65,8 +63,7 @@ Model: "guitar_note_detector"
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str4_slice (Lambda) │ (256, 52, 512)    │          0 │ tfm_block1_ffn_a… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_sque… │ (256, 51, 32)     │     16,416 │ str5_slice[0][0]  │
-│ (Conv1D)            │                   │            │                   │
+│ str5_slice (Lambda) │ (256, 52, 512)    │          0 │ tfm_block1_ffn_a… │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_sque… │ (256, 52, 32)     │     16,416 │ str0_slice[0][0]  │
 │ (Conv1D)            │                   │            │                   │
@@ -83,8 +80,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_sque… │ (256, 52, 32)     │     16,416 │ str4_slice[0][0]  │
 │ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_sque… │ (256, 51, 32)     │        128 │ str5_backbone_sq… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ str5_backbone_sque… │ (256, 52, 32)     │     16,416 │ str5_slice[0][0]  │
+│ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_sque… │ (256, 52, 32)     │        128 │ str0_backbone_sq… │
 │ (BatchNormalizatio… │                   │            │                   │
@@ -101,8 +98,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_sque… │ (256, 52, 32)     │        128 │ str4_backbone_sq… │
 │ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_sque… │ (256, 51, 32)     │          0 │ str5_backbone_sq… │
-│ (LeakyReLU)         │                   │            │                   │
+│ str5_backbone_sque… │ (256, 52, 32)     │        128 │ str5_backbone_sq… │
+│ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_sque… │ (256, 52, 32)     │          0 │ str0_backbone_sq… │
 │ (LeakyReLU)         │                   │            │                   │
@@ -119,8 +116,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_sque… │ (256, 52, 32)     │          0 │ str4_backbone_sq… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_conv1 │ (256, 51, 32)     │      8,224 │ str5_backbone_sq… │
-│ (Conv1D)            │                   │            │                   │
+│ str5_backbone_sque… │ (256, 52, 32)     │          0 │ str5_backbone_sq… │
+│ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_conv1 │ (256, 52, 32)     │      8,224 │ str0_backbone_sq… │
 │ (Conv1D)            │                   │            │                   │
@@ -137,8 +134,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_conv1 │ (256, 52, 32)     │      8,224 │ str4_backbone_sq… │
 │ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_bn1   │ (256, 51, 32)     │        128 │ str5_backbone_co… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ str5_backbone_conv1 │ (256, 52, 32)     │      8,224 │ str5_backbone_sq… │
+│ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_bn1   │ (256, 52, 32)     │        128 │ str0_backbone_co… │
 │ (BatchNormalizatio… │                   │            │                   │
@@ -155,8 +152,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_bn1   │ (256, 52, 32)     │        128 │ str4_backbone_co… │
 │ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_act1  │ (256, 51, 32)     │          0 │ str5_backbone_bn… │
-│ (LeakyReLU)         │                   │            │                   │
+│ str5_backbone_bn1   │ (256, 52, 32)     │        128 │ str5_backbone_co… │
+│ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_act1  │ (256, 52, 32)     │          0 │ str0_backbone_bn… │
 │ (LeakyReLU)         │                   │            │                   │
@@ -173,8 +170,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_act1  │ (256, 52, 32)     │          0 │ str4_backbone_bn… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_drop1 │ (256, 51, 32)     │          0 │ str5_backbone_ac… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ str5_backbone_act1  │ (256, 52, 32)     │          0 │ str5_backbone_bn… │
+│ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_drop1 │ (256, 52, 32)     │          0 │ str0_backbone_ac… │
 │ (SpatialDropout1D)  │                   │            │                   │
@@ -191,8 +188,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_drop1 │ (256, 52, 32)     │          0 │ str4_backbone_ac… │
 │ (SpatialDropout1D)  │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_conv2 │ (256, 51, 64)     │     16,448 │ str5_backbone_dr… │
-│ (Conv1D)            │                   │            │                   │
+│ str5_backbone_drop1 │ (256, 52, 32)     │          0 │ str5_backbone_ac… │
+│ (SpatialDropout1D)  │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_conv2 │ (256, 52, 64)     │     16,448 │ str0_backbone_dr… │
 │ (Conv1D)            │                   │            │                   │
@@ -209,8 +206,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_conv2 │ (256, 52, 64)     │     16,448 │ str4_backbone_dr… │
 │ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_bn2   │ (256, 51, 64)     │        256 │ str5_backbone_co… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ str5_backbone_conv2 │ (256, 52, 64)     │     16,448 │ str5_backbone_dr… │
+│ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_bn2   │ (256, 52, 64)     │        256 │ str0_backbone_co… │
 │ (BatchNormalizatio… │                   │            │                   │
@@ -227,8 +224,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_bn2   │ (256, 52, 64)     │        256 │ str4_backbone_co… │
 │ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_backbone_act2  │ (256, 51, 64)     │          0 │ str5_backbone_bn… │
-│ (LeakyReLU)         │                   │            │                   │
+│ str5_backbone_bn2   │ (256, 52, 64)     │        256 │ str5_backbone_co… │
+│ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_backbone_act2  │ (256, 52, 64)     │          0 │ str0_backbone_bn… │
 │ (LeakyReLU)         │                   │            │                   │
@@ -245,8 +242,8 @@ Model: "guitar_note_detector"
 │ str4_backbone_act2  │ (256, 52, 64)     │          0 │ str4_backbone_bn… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_harmonic_coll… │ (256, 12, 64)     │     16,448 │ str5_backbone_ac… │
-│ (Conv1D)            │                   │            │                   │
+│ str5_backbone_act2  │ (256, 52, 64)     │          0 │ str5_backbone_bn… │
+│ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_harmonic_coll… │ (256, 13, 64)     │     16,448 │ str0_backbone_ac… │
 │ (Conv1D)            │                   │            │                   │
@@ -263,8 +260,8 @@ Model: "guitar_note_detector"
 │ str4_harmonic_coll… │ (256, 13, 64)     │     16,448 │ str4_backbone_ac… │
 │ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_harmonic_bn    │ (256, 12, 64)     │        256 │ str5_harmonic_co… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ str5_harmonic_coll… │ (256, 13, 64)     │     16,448 │ str5_backbone_ac… │
+│ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_harmonic_bn    │ (256, 13, 64)     │        256 │ str0_harmonic_co… │
 │ (BatchNormalizatio… │                   │            │                   │
@@ -281,8 +278,8 @@ Model: "guitar_note_detector"
 │ str4_harmonic_bn    │ (256, 13, 64)     │        256 │ str4_harmonic_co… │
 │ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_harmonic_act   │ (256, 12, 64)     │          0 │ str5_harmonic_bn… │
-│ (LeakyReLU)         │                   │            │                   │
+│ str5_harmonic_bn    │ (256, 13, 64)     │        256 │ str5_harmonic_co… │
+│ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_harmonic_act   │ (256, 13, 64)     │          0 │ str0_harmonic_bn… │
 │ (LeakyReLU)         │                   │            │                   │
@@ -299,8 +296,8 @@ Model: "guitar_note_detector"
 │ str4_harmonic_act   │ (256, 13, 64)     │          0 │ str4_harmonic_bn… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_harmonic_drop  │ (256, 12, 64)     │          0 │ str5_harmonic_ac… │
-│ (SpatialDropout1D)  │                   │            │                   │
+│ str5_harmonic_act   │ (256, 13, 64)     │          0 │ str5_harmonic_bn… │
+│ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_harmonic_drop  │ (256, 13, 64)     │          0 │ str0_harmonic_ac… │
 │ (SpatialDropout1D)  │                   │            │                   │
@@ -317,8 +314,8 @@ Model: "guitar_note_detector"
 │ str4_harmonic_drop  │ (256, 13, 64)     │          0 │ str4_harmonic_ac… │
 │ (SpatialDropout1D)  │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_hollow_suppre… │ (256, 12, 64)     │          0 │ str5_harmonic_dr… │
-│ (Lambda)            │                   │            │                   │
+│ str5_harmonic_drop  │ (256, 13, 64)     │          0 │ str5_harmonic_ac… │
+│ (SpatialDropout1D)  │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_hollow_suppre… │ (256, 13, 64)     │          0 │ str0_harmonic_dr… │
 │ (Lambda)            │                   │            │                   │
@@ -335,8 +332,8 @@ Model: "guitar_note_detector"
 │ str4_hollow_suppre… │ (256, 13, 64)     │          0 │ str4_harmonic_dr… │
 │ (Lambda)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_hollow_act     │ (256, 12, 64)     │          0 │ str5_hollow_supp… │
-│ (LeakyReLU)         │                   │            │                   │
+│ str5_hollow_suppre… │ (256, 13, 64)     │          0 │ str5_harmonic_dr… │
+│ (Lambda)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_hollow_act     │ (256, 13, 64)     │          0 │ str0_hollow_supp… │
 │ (LeakyReLU)         │                   │            │                   │
@@ -353,8 +350,8 @@ Model: "guitar_note_detector"
 │ str4_hollow_act     │ (256, 13, 64)     │          0 │ str4_hollow_supp… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_post_suppress… │ (256, 12, 64)     │      4,160 │ str5_hollow_act[… │
-│ (Conv1D)            │                   │            │                   │
+│ str5_hollow_act     │ (256, 13, 64)     │          0 │ str5_hollow_supp… │
+│ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_post_suppress… │ (256, 13, 64)     │      4,160 │ str0_hollow_act[… │
 │ (Conv1D)            │                   │            │                   │
@@ -371,8 +368,8 @@ Model: "guitar_note_detector"
 │ str4_post_suppress… │ (256, 13, 64)     │      4,160 │ str4_hollow_act[… │
 │ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_post_suppress… │ (256, 12, 64)     │        256 │ str5_post_suppre… │
-│ (BatchNormalizatio… │                   │            │                   │
+│ str5_post_suppress… │ (256, 13, 64)     │      4,160 │ str5_hollow_act[… │
+│ (Conv1D)            │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_post_suppress… │ (256, 13, 64)     │        256 │ str0_post_suppre… │
 │ (BatchNormalizatio… │                   │            │                   │
@@ -389,8 +386,8 @@ Model: "guitar_note_detector"
 │ str4_post_suppress… │ (256, 13, 64)     │        256 │ str4_post_suppre… │
 │ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ str5_post_suppress… │ (256, 12, 64)     │          0 │ str5_post_suppre… │
-│ (LeakyReLU)         │                   │            │                   │
+│ str5_post_suppress… │ (256, 13, 64)     │        256 │ str5_post_suppre… │
+│ (BatchNormalizatio… │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ str0_post_suppress… │ (256, 13, 64)     │          0 │ str0_post_suppre… │
 │ (LeakyReLU)         │                   │            │                   │
@@ -407,8 +404,8 @@ Model: "guitar_note_detector"
 │ str4_post_suppress… │ (256, 13, 64)     │          0 │ str4_post_suppre… │
 │ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_pad_st… │ (256, 13, 64)     │          0 │ str5_post_suppre… │
-│ (ZeroPadding1D)     │                   │            │                   │
+│ str5_post_suppress… │ (256, 13, 64)     │          0 │ str5_post_suppre… │
+│ (LeakyReLU)         │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ chord_block_expand… │ (256, 1, 13, 64)  │          0 │ str0_post_suppre… │
 │ (Reshape)           │                   │            │                   │
@@ -425,7 +422,7 @@ Model: "guitar_note_detector"
 │ chord_block_expand… │ (256, 1, 13, 64)  │          0 │ str4_post_suppre… │
 │ (Reshape)           │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
-│ chord_block_expand… │ (256, 1, 13, 64)  │          0 │ chord_block_pad_… │
+│ chord_block_expand… │ (256, 1, 13, 64)  │          0 │ str5_post_suppre… │
 │ (Reshape)           │                   │            │                   │
 ├─────────────────────┼───────────────────┼────────────┼───────────────────┤
 │ chord_block_stack_… │ (256, 6, 13, 64)  │          0 │ chord_block_expa… │
