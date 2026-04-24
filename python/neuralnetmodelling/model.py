@@ -86,6 +86,7 @@ class SparseGuitarOutput(tf.keras.layers.Layer):
         mask_exp = tf.expand_dims(tf.cast(self.mask, x.dtype), 0)
         xmasked = x_exp * mask_exp
         # negative and operation of probilities to get the most prominent string/fret combination per note, without loss of the other combinations that contribute to the same note
+        # its the equivalent of the logical OR operation for probabilities: P(A or B) = 1 - (1 - P(A)) * (1 - P(B))
         negprod=tf.reduce_prod(1.0 - xmasked, axis=1)
 
         return 1.0 - negprod
