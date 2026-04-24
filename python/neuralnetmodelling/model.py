@@ -80,16 +80,35 @@ class SparseGuitarOutput(tf.keras.layers.Layer):
         self.mask = tf.constant(mask, dtype=tf.float32)  # (78, 37)
 
     def call(self, x):
+        # batch = tf.shape(x)[0]
+        # x_flat = tf.reshape(x, (batch, N_STRINGS * N_FRETS))
+        # x_exp = tf.expand_dims(x_flat, 2)
+        # mask_exp = tf.expand_dims(tf.cast(self.mask, x.dtype), 0)
+
+        # neg_inf = tf.cast(-1e4, x.dtype)  # -1e9 overflows float16
+        # neg_inf_mask = (1.0 - mask_exp) * neg_inf
+        # masked = x_exp + neg_inf_mask
+        # return tf.reduce_max(masked, axis=1)
         batch = tf.shape(x)[0]
         x_flat = tf.reshape(x, (batch, N_STRINGS * N_FRETS))
         x_exp = tf.expand_dims(x_flat, 2)
         mask_exp = tf.expand_dims(tf.cast(self.mask, x.dtype), 0)
 
-        neg_inf = tf.cast(-1e4, x.dtype)  # -1e9 overflows float16
-        neg_inf_mask = (1.0 - mask_exp) * neg_inf
-        masked = x_exp + neg_inf_mask
-        return tf.reduce_max(masked, axis=1)
-
+        # 1. Zero-out the invalid string/fret combinations (since x is probabilities 0 to 1)
+        # We don't use -inf here because we are doing probability math, not max/logits.
+        masked_probs = x_exp * mask_exp 
+        
+        # 2. Probabilistic OR (Noisy-OR): 1 - product(1 - p)
+        # This acts as a differentiable "Soft Max" for probabilities.
+        # It routes gradients to ALL candidate strings, completely fixing your plateau.
+        inverse_probs = 1.0 - masked_probs
+        
+        # Multiply across the strings/frets axis (axis=1)
+        # Add a tiny epsilon to prevent log/gradient instability if values hit exactly 0
+        epsilon = tf.keras.backend.epsilon()
+        combined_inverse_probs = tf.reduce_prod(inverse_probs + epsilon, axis=1)
+        
+        return 1.0 - combined_inverse_probs
 
 
     def get_config(self):
