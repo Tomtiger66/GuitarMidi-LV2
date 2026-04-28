@@ -52,7 +52,7 @@ def fast_gpu_map(input_tensor,output_tensor,training=True):
     # Check current states
     silence_label_is_up = tf.greater(output_tensor[SILENCE_IDX], 0.5)
     max_en=tf.reduce_max(tf.abs(input_tensor)) 
-    energy_is_low = max_en< 0.01
+    #energy_is_low = max_en< 0.01
     # if ~energy_is_low:
     #     input_tensor/=max_en
     # 3. The "Vice Versa" Logic
@@ -60,7 +60,7 @@ def fast_gpu_map(input_tensor,output_tensor,training=True):
     # - Energy is low OR 
     # - The silence label was already up OR 
     # - No notes are active
-    should_force_silence = energy_is_low | silence_label_is_up | (~any_notes_active)
+    should_force_silence = silence_label_is_up | (~any_notes_active)
 
     # Apply transformations
     output_tensor = tf.where(should_force_silence, silence_vector, output_tensor)

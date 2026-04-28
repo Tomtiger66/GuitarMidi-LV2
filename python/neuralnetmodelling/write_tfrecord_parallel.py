@@ -46,7 +46,7 @@ def _run_filterbank(audio_segment: np.ndarray, start: int, end:int) ->np.ndarray
         if len(chunk)<hop:
             chunk=np.pad(chunk,(0,hop-len(chunk)))
         _worker_fretboard.process(chunk,_worker_feature_map)
-    return np.clip(_worker_feature_map*127,-128,127).astype(np.int8)
+    return np.clip(_worker_feature_map*127,-128,127).astype(np.int8)# consider using uint8 since the filterbank output is non-negative, but int8 allows for easier handling of negative values if needed in the future
 
 
 
