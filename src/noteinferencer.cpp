@@ -87,12 +87,43 @@ namespace GuitarMidi
         msg.str("");
         msg<<"Output data:";
         for(int i=0;i<min(output_size,OUTPUT_DIM);i++){
-            if(output_data[i]>0.8){
-                msg<<" "<<i<<"("<<output_data[i]<<")";
+            smoothed_output[i]=*m_smoothing*smoothed_output[i]+(1-*m_smoothing)*output_data[i]; // simple low pass filter to smooth the output and reduce jitter
+            if(smoothed_output[i]>*m_onset_threshold){
+                
                 
 
                 if(!m_note_on[i]&&i!=(OUTPUT_DIM-1)){ // avoid sending note on for the extra output used for silence detection
-                    
+                    // check if all harmonics of the note are active before sending note on message
+                    // float note_energy=0;
+                    // for(int h=1;h<=NUM_HARMONICS;h++){
+                    //     int harmonic_index=i*NUM_HARMONICS+h-1;
+                    //     if(harmonic_index<NUM_HARMONICS*NUM_NOTES){
+                    //         float harmonicenergy=0;
+                    //         for(int w=0;w<BUFFER_SIZE;w++){
+                    //             harmonicenergy=max(harmonicenergy,input_buffer[harmonic_index*BUFFER_SIZE+w]);
+                    //         }
+                    //         note_energy=max(note_energy,harmonicenergy);
+                            
+                    //     }
+                    // }
+                    // note_energy*=output_data[i]; // weight the note energy by the confidence of the fundamental note
+                    // // note dependent threshold. the threshold is a piecewise linear function of the note index devised from the visualize_data.ipynb
+                    // // which shows that between note index 30 and 15 the training datas amplitudes are linear following amplitude=-0.005*noteindex*0.15
+                    // float threshold=0;
+                    // float m=-0.005;
+                    // float b=0.15;
+                    // if(i<15){
+                    //     threshold=m*15+b;
+                    // }
+                    // else if(i<30){
+                    //     threshold=m*i+b;
+                    // }
+
+                    // if(note_energy<threshold){
+                    //     lv2_log_note(&g_logger, "Note %d detected but energy %f is below threshold %f, not sending MIDI message\n", i, note_energy, threshold);
+                    //     continue;
+                    // }
+                    // msg<<" "<<i<<"("<<output_data[i]<<")"<<" energy:"<<note_energy;
                     uint8_t midinote[3]={0x90,i+NOTE_OFFSET,0x7f};
                     lv2_log_note(&g_logger, "Notes: %s\n", msg.str().c_str());
                     m_midioutput.sendMidiMessage(midinote,m_frames);
@@ -101,7 +132,7 @@ namespace GuitarMidi
             }
             else{
                // lv2_log_note(&g_logger, "Note %d OFF with confidence %f\n", i, output_data[i]);
-                if(m_note_on[i]&&output_data[i]<0.1&&i!=(OUTPUT_DIM-1)){
+                if(m_note_on[i]&&smoothed_output[i]<*m_offset_threshold&&i!=(OUTPUT_DIM-1)){
                    uint8_t midinote[3]={0x90,i+NOTE_OFFSET,0x00};
                     m_midioutput.sendMidiMessage(midinote,m_frames);
                     m_note_on[i]=false; 

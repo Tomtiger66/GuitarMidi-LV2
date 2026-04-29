@@ -86,6 +86,18 @@ connect_port(LV2_Handle instance,
 	case FRETBOARD_POLYPHONIC_TOGGLE:
 		fretboard->setPolyPhonicSwitch((float *)data);
 		break;
+
+	case FRETBOARD_SMOOTHING:
+		fretboard->setSmoothing((float *)data);
+		break;
+	case FRETBOARD_ONSET_THRESHOLD:
+		fretboard->setOnsetThreshold((float *)data);
+		break;
+	case FRETBOARD_OFFSET_THRESHOLD:
+		fretboard->setOffsetThreshold((float *)data);
+		break;
+	default:
+		break;
 	}
 }
 

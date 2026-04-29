@@ -3,6 +3,8 @@
 #define OUTPUT_DIM 37
 #define BUFFER_SIZE 256
 #define NOTE_OFFSET 40
+#define NUM_HARMONICS 4
+#define NUM_NOTES 37
 namespace GuitarMidi{
 
     struct AudioBuffer2D{

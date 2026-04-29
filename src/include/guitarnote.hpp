@@ -3,9 +3,9 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <common.hpp>
 using namespace std;
-#define NUM_HARMONICS 4
-#define NUM_STRINGS 6
+
 namespace GuitarMidi
 {
     struct FilterRepresentation{

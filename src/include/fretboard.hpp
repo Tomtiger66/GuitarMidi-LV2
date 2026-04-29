@@ -30,7 +30,10 @@ typedef enum
     FRETBOARD_INPUT = 0,
     FRETBOARD_OUTPUT = 1,
     FRETBOARD_MIDIOUTPUT=2,
-    FRETBOARD_POLYPHONIC_TOGGLE=3
+    FRETBOARD_POLYPHONIC_TOGGLE=3,
+    FRETBOARD_SMOOTHING=4,
+    FRETBOARD_ONSET_THRESHOLD=5,
+    FRETBOARD_OFFSET_THRESHOLD=6
 } PortIndex;
 using namespace std;
 using namespace GuitarMidi;
@@ -88,6 +91,18 @@ public:
     void setPolyPhonicSwitch(float* polyphonic){
         m_polyphonic_detection=polyphonic;
 
+    }
+
+    void setSmoothing(float* smoothing){
+        m_noteinferencer.setSmoothing(smoothing);
+    }
+
+    void setOnsetThreshold(float* threshold){
+        m_noteinferencer.setOnsetThreshold(threshold);
+    }
+
+    void setOffsetThreshold(float* threshold){
+        m_noteinferencer.setOffsetThreshold(threshold);
     }
 
     /**

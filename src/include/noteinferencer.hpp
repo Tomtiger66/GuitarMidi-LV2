@@ -20,6 +20,10 @@ namespace GuitarMidi{
         unique_ptr<Interpreter> m_interpreter;
         GuitarMidi::MidiOutput m_midioutput;
         AudioBuffer2D m_audiobuffer;
+        float* m_onset_threshold;
+        float* m_offset_threshold;
+        float* m_smoothing;
+        float smoothed_output[OUTPUT_DIM]={0};
         // std::unique_ptr<tflite::FlatBufferModel> model;
         int64_t m_frames;
         bool m_note_on[OUTPUT_DIM]={false};
@@ -30,6 +34,18 @@ namespace GuitarMidi{
         void setMidiOutput(LV2_Atom_Sequence *output);
 
         void setAudioInputBuffer(AudioBuffer2D input);
+
+        void setOnsetThreshold(float* threshold){
+            m_onset_threshold=threshold;
+        }
+
+        void setOffsetThreshold(float* threshold){
+            m_offset_threshold=threshold;
+        }
+
+        void setSmoothing(float* smoothing){
+            m_smoothing=smoothing;
+        }
 
         void process(int nsamples);
 
