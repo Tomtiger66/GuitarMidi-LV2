@@ -75,20 +75,19 @@ connect_port(LV2_Handle instance,
 		// notecl->input = (const float *)data;
 		fretboard->setAudioInput((const float *)data);
 		break;
-	case FRETBOARD_OUTPUT:
-		fretboard->setAudioOutput((float *)data);
-		break;
+
 	case FRETBOARD_MIDIOUTPUT:
 		//printf("Connecting MIDI OUTPUT PORT\n");
 		lv2_log_note(&g_logger, "Connecting MIDI OUTPUT PORT\n");
 		fretboard->setMidiOutput((LV2_Atom_Sequence *)data);
 		break;
-	case FRETBOARD_POLYPHONIC_TOGGLE:
-		fretboard->setPolyPhonicSwitch((float *)data);
-		break;
+
 
 	case FRETBOARD_SMOOTHING:
 		fretboard->setSmoothing((float *)data);
+		break;
+	case FRETBOARD_SMOOTHING_OFFSET:
+		fretboard->setSmoothingOffset((float *)data);
 		break;
 	case FRETBOARD_ONSET_THRESHOLD:
 		fretboard->setOnsetThreshold((float *)data);

@@ -28,12 +28,11 @@
 typedef enum
 {
     FRETBOARD_INPUT = 0,
-    FRETBOARD_OUTPUT = 1,
-    FRETBOARD_MIDIOUTPUT=2,
-    FRETBOARD_POLYPHONIC_TOGGLE=3,
-    FRETBOARD_SMOOTHING=4,
-    FRETBOARD_ONSET_THRESHOLD=5,
-    FRETBOARD_OFFSET_THRESHOLD=6
+    FRETBOARD_MIDIOUTPUT=1,
+    FRETBOARD_SMOOTHING=2,
+    FRETBOARD_SMOOTHING_OFFSET=3,
+    FRETBOARD_ONSET_THRESHOLD=4,
+    FRETBOARD_OFFSET_THRESHOLD=5
 } PortIndex;
 using namespace std;
 using namespace GuitarMidi;
@@ -45,7 +44,7 @@ using namespace GuitarMidi;
 class FretBoard
 {
 private:
-     float*  m_polyphonic_detection;
+   
 
     GuitarMidi::FretBoardRepresentation m_fretboard_rep;
 
@@ -73,12 +72,7 @@ public:
 
 
 
-    /**
-     * @brief Set the Audio Output buffer. This buffer is only used as an internal buffer until I know how to query lv2 for the framebuffersize
-     * 
-     * @param output 
-     */
-    void setAudioOutput(float *output);
+
 
     /**
      * @brief Set the Midi Output buffer
@@ -88,10 +82,6 @@ public:
     void setMidiOutput(LV2_Atom_Sequence *output);
 
 
-    void setPolyPhonicSwitch(float* polyphonic){
-        m_polyphonic_detection=polyphonic;
-
-    }
 
     void setSmoothing(float* smoothing){
         m_noteinferencer.setSmoothing(smoothing);
@@ -103,6 +93,10 @@ public:
 
     void setOffsetThreshold(float* threshold){
         m_noteinferencer.setOffsetThreshold(threshold);
+    }
+
+    void setSmoothingOffset(float* smoothing_offset){
+        m_noteinferencer.setSmoothingOffset(smoothing_offset);
     }
 
     /**

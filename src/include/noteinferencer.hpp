@@ -23,7 +23,9 @@ namespace GuitarMidi{
         float* m_onset_threshold;
         float* m_offset_threshold;
         float* m_smoothing;
-        float smoothed_output[OUTPUT_DIM]={0};
+        float* m_smoothing_offset;
+        float smoothed_onsetoutput[OUTPUT_DIM]={0};
+        float smoothed_offsetoutput[OUTPUT_DIM]={0};
         // std::unique_ptr<tflite::FlatBufferModel> model;
         int64_t m_frames;
         bool m_note_on[OUTPUT_DIM]={false};
@@ -45,6 +47,10 @@ namespace GuitarMidi{
 
         void setSmoothing(float* smoothing){
             m_smoothing=smoothing;
+        }
+
+        void setSmoothingOffset(float* smoothing_offset){
+            m_smoothing_offset=smoothing_offset;
         }
 
         void process(int nsamples);

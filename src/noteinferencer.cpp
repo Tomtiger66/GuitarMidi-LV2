@@ -87,8 +87,9 @@ namespace GuitarMidi
         msg.str("");
         msg<<"Output data:";
         for(int i=0;i<min(output_size,OUTPUT_DIM);i++){
-            smoothed_output[i]=*m_smoothing*smoothed_output[i]+(1-*m_smoothing)*output_data[i]; // simple low pass filter to smooth the output and reduce jitter
-            if(smoothed_output[i]>*m_onset_threshold){
+            smoothed_onsetoutput[i]=*m_smoothing*smoothed_onsetoutput[i]+(1-*m_smoothing)*output_data[i]; // simple low pass filter to smooth the output and reduce jitter
+            smoothed_offsetoutput[i]=*m_smoothing_offset*smoothed_offsetoutput[i]+(1-*m_smoothing_offset)*output_data[i];
+            if(smoothed_onsetoutput[i]>*m_onset_threshold){
                 
                 
 
@@ -132,7 +133,7 @@ namespace GuitarMidi
             }
             else{
                // lv2_log_note(&g_logger, "Note %d OFF with confidence %f\n", i, output_data[i]);
-                if(m_note_on[i]&&smoothed_output[i]<*m_offset_threshold&&i!=(OUTPUT_DIM-1)){
+                if(m_note_on[i]&&smoothed_offsetoutput[i]<*m_offset_threshold&&i!=(OUTPUT_DIM-1)){
                    uint8_t midinote[3]={0x90,i+NOTE_OFFSET,0x00};
                     m_midioutput.sendMidiMessage(midinote,m_frames);
                     m_note_on[i]=false; 

@@ -41,10 +41,7 @@ void FretBoard::setAudioInput(const float *input)
     m_filterbank.setInput(input);
 }
 
-void FretBoard::setAudioOutput(float *output)
-{
 
-}
 
 void FretBoard::setMidiOutput(LV2_Atom_Sequence *output)
 {
