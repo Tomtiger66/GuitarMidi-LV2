@@ -87,6 +87,21 @@ namespace GuitarMidi
         msg.str("");
         msg<<"Output data:";
         for(int i=0;i<min(output_size,OUTPUT_DIM);i++){
+            // check if all harmonics of the note are active before sending note on message
+            float note_energy = 0;
+            int h = 1;//for (int h = 1; h <= NUM_HARMONICS; h++)
+            {
+                int harmonic_index = i * NUM_HARMONICS + h - 1;
+                if (harmonic_index < NUM_HARMONICS * NUM_NOTES)
+                {
+                    float harmonicenergy = 0;
+                    for (int w = 0; w < BUFFER_SIZE; w++)
+                    {
+                        harmonicenergy +=input_buffer[harmonic_index * BUFFER_SIZE + w];
+                    }
+                    note_energy +=harmonicenergy;
+                }
+            }
             smoothed_onsetoutput[i]=*m_smoothing*smoothed_onsetoutput[i]+(1-*m_smoothing)*output_data[i]; // simple low pass filter to smooth the output and reduce jitter
             smoothed_offsetoutput[i]=*m_smoothing_offset*smoothed_offsetoutput[i]+(1-*m_smoothing_offset)*output_data[i];
             if(smoothed_onsetoutput[i]>*m_onset_threshold){
@@ -124,7 +139,7 @@ namespace GuitarMidi
                     //     lv2_log_note(&g_logger, "Note %d detected but energy %f is below threshold %f, not sending MIDI message\n", i, note_energy, threshold);
                     //     continue;
                     // }
-                    // msg<<" "<<i<<"("<<output_data[i]<<")"<<" energy:"<<note_energy;
+                    msg<<" "<<i<<"("<<output_data[i]<<")"<<" energy:"<<note_energy;
                     uint8_t midinote[3]={0x90,i+NOTE_OFFSET,0x7f};
                     lv2_log_note(&g_logger, "Notes: %s\n", msg.str().c_str());
                     m_midioutput.sendMidiMessage(midinote,m_frames);
