@@ -1,6 +1,6 @@
 #pragma once 
 #include <logging.hpp>
-#define OUTPUT_DIM 37
+
 #define BUFFER_SIZE 256
 #define NOTE_OFFSET 40
 #define NUM_HARMONICS 4

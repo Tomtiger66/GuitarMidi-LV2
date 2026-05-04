@@ -12,23 +12,24 @@
 #include "tensorflow/lite/model_builder.h"
 #include "tensorflow/lite/optional_debug_tools.h"
 #include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
+#include <modelinferencer.hpp>
 using namespace std;
 using namespace tflite;
 namespace GuitarMidi{
     class NoteInferencer{
-        unique_ptr<FlatBufferModel> m_model;
-        unique_ptr<Interpreter> m_interpreter;
+       ModelInferencer m_model;
+       
         GuitarMidi::MidiOutput m_midioutput;
         AudioBuffer2D m_audiobuffer;
         float* m_onset_threshold;
         float* m_offset_threshold;
         float* m_smoothing;
         float* m_smoothing_offset;
-        float smoothed_onsetoutput[OUTPUT_DIM]={0};
-        float smoothed_offsetoutput[OUTPUT_DIM]={0};
+        float smoothed_onsetoutput[NUM_NOTES]={0};
+        float smoothed_offsetoutput[NUM_NOTES]={0};
         // std::unique_ptr<tflite::FlatBufferModel> model;
         int64_t m_frames;
-        bool m_note_on[OUTPUT_DIM]={false};
+        bool m_note_on[NUM_NOTES]={false};
         public:
         NoteInferencer(LV2_URID_Map *map);
 
