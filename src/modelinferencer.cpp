@@ -11,15 +11,15 @@
 void GuitarMidi::ModelInferencer::inferencing_loop()
 {
     while (!stop_thread) {
-        std::unique_lock<std::mutex> lock(buffer_mutex);
-        buffer_cv.wait(lock, [this] { return stop_thread || audio_input_buffer.has_new_data(); });
+        // std::unique_lock<std::mutex> lock(buffer_mutex);
+        // buffer_cv.wait(lock, [this] { return stop_thread || audio_input_buffer.has_new_data(); });
         if (stop_thread) break;
 
         // Get the latest audio input data from the ring buffer
         float* audio_input_data = audio_input_buffer.get_latest_data();
       
 
-    if (audio_input_data) {
+    if (audio_input_data&& m_interpreter) {
             float* input_buffer=m_interpreter->typed_input_tensor<float>(0);
             memcpy(input_buffer,audio_input_data,NUM_NOTES*NUM_HARMONICS*BUFFER_SIZE*sizeof(float));
             TFLITE_MINIMAL_CHECK(m_interpreter->Invoke() == kTfLiteOk);
@@ -30,7 +30,7 @@ void GuitarMidi::ModelInferencer::inferencing_loop()
             TfLiteIntArray* output_dims = output->dims;
     
                 // Add the model output to the model output ring buffer
-                model_output_buffer.add_data(output_data, 1); // Assuming 1 frame of output
+                model_output_buffer.add_data(output_data); // Assuming 1 frame of output
             }
 
 
@@ -66,10 +66,11 @@ void GuitarMidi::ModelInferencer::initialize()
         tflite::LoggerOptions::SetMinimumLogSeverity(tflite::TFLITE_LOG_ERROR);
 }
 
-GuitarMidi::ModelInferencer::ModelInferencer():audio_input_buffer(RING_BUFFER_SIZE, NUM_NOTES*NUM_HARMONICS*BUFFER_SIZE), model_output_buffer(RING_BUFFER_SIZE, NUM_NOTES)
+GuitarMidi::ModelInferencer::ModelInferencer()
 {
 
     stop_thread = false;
+    m_interpreter=nullptr;
     inferencing_thread = std::thread(&ModelInferencer::inferencing_loop, this);
 }
 
@@ -79,7 +80,7 @@ GuitarMidi::ModelInferencer::~ModelInferencer()
         std::lock_guard<std::mutex> lock(buffer_mutex);
         stop_thread = true;
     }
-    buffer_cv.notify_all();
+    // buffer_cv.notify_all();
     if (inferencing_thread.joinable()) {
         inferencing_thread.join();
     }
@@ -87,74 +88,17 @@ GuitarMidi::ModelInferencer::~ModelInferencer()
 
 void GuitarMidi::ModelInferencer::add_audio_input(const float *input, int num_frames)
 {
-    std::lock_guard<std::mutex> lock(buffer_mutex);
-    audio_input_buffer.add_data(input, num_frames);
-    buffer_cv.notify_all();
+    
+    audio_input_buffer.add_data(input);
+
 }
 
 bool GuitarMidi::ModelInferencer::get_model_output(float *output, int num_frames)
 {
-    std::lock_guard<std::mutex> lock(buffer_mutex);
+    
     if (model_output_buffer.has_new_data()) {
-        model_output_buffer.get_latest_data(output, num_frames);
+        model_output_buffer.get_latest_data(output);
         return true;
     }
     return false;
-}
-
-GuitarMidi::RingBuffer::RingBuffer(int size, int stride)
-{
-    this->size = size;
-    this->stride = stride;
-    this->write_index = 0;
-    this->read_index = 0;
-    buffer = new float[size * stride];
-}
-
-GuitarMidi::RingBuffer::~RingBuffer()
-{
-    delete[] buffer;
-}
-
-void GuitarMidi::RingBuffer::add_data(const float *data, int num_frames)
-{
-    int frames_to_write = std::min(num_frames, size);
-    for (int i = 0; i < frames_to_write; ++i) {
-        std::copy(data + i * stride, data + (i + 1) * stride, buffer + write_index * stride);
-        write_index = (write_index + 1) % size;
-        if (write_index == read_index) {
-            read_index = (read_index + 1) % size; // Overwrite oldest data
-        }
-    }
-}
-
-bool GuitarMidi::RingBuffer::has_new_data() const
-{
-    return write_index != read_index;
-}
-
-float *GuitarMidi::RingBuffer::get_latest_data()
-{
-    if (!has_new_data()) {
-        return nullptr; // No new data available
-    }
-     // Return the latest data from the read index and move the read index forward
-    float* latest_data = buffer + read_index * stride;
-    read_index = (read_index + 1) % size;
-    return latest_data;
-}
-
-void GuitarMidi::RingBuffer::get_latest_data(float *output, int num_frames)
-{
-    if (!has_new_data()) {
-        return; // No new data available
-    }
-    int frames_to_read = std::min(num_frames, size);
-    for (int i = 0; i < frames_to_read; ++i) {
-        std::copy(buffer + read_index * stride, buffer + (read_index + 1) * stride, output + i * stride);
-        read_index = (read_index + 1) % size;
-        if (read_index == write_index) {
-            break; // No more new data available
-        }
-    }
 }

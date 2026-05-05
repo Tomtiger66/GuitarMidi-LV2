@@ -15,35 +15,58 @@
 #include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
 using namespace std;
 using namespace tflite;
-#define RING_BUFFER_SIZE 20 // Number of frames to store in the ring buffer
+#define RING_BUFFER_SIZE 8 // Number of frames to store in the ring buffer
 /*
     * ModelInferencer class for handling model inference tasks. This class contains two ringbuffers for storing the last N frames of the audio input and model output.
         The audio input ringbuffer is used to store the last N frames of the audio input, which are then fed into the model for inference.
          The model output ringbuffer is used to store the last N frames of the model output, which are then used to in noteinferencer.cpp to trigger MIDI messages based on the confidence of the detected notes.
          The inferencing is performed in a separate thread to avoid blocking the audio processing thread, and the results are communicated back to the main thread using the output ringbuffer.
  */
-namespace GuitarMidi{
-    class RingBuffer{
-        int size;
-        int stride;
-        int write_index;
-        int read_index;
-        float* buffer;
-    public:
-        RingBuffer(int size, int stride);
-        ~RingBuffer();
-        void add_data(const float* data, int num_frames);
-        bool has_new_data() const;
-        float* get_latest_data();
-        void get_latest_data(float* output, int num_frames);
 
+namespace GuitarMidi{
+    //spsc ring buffer for audio input and model output with atomic read and write indices for thread safety
+    template<size_t NumSlots,size_t Stride>
+    class SpscRingBuffer{
+        float buffer[NumSlots][Stride];
+        atomic<size_t> write_index;
+        atomic<size_t> read_index;
+    public:
+        SpscRingBuffer():write_index(0),read_index(0){}
+        void add_data(const float* data){
+            size_t index=write_index.load();
+            //performant memcpy for fixed size data
+            memcpy(buffer[index],data,Stride*sizeof(float));
+            write_index.store((index+1)&(NumSlots-1)); // wrap around using bitwise AND, NumSlots must be a power of 2
+
+
+    }
+        bool has_new_data() const{
+            return write_index.load()!=read_index.load();
+        }
+        void get_latest_data(float* output){
+            size_t index=read_index.load();
+            memcpy(output,buffer[index],Stride*sizeof(float));
+            read_index.store((index+1)&(NumSlots-1)); // wrap around using bitwise AND, NumSlots must be a power of 2
+        }
+        float* get_latest_data(){
+            if(!has_new_data()){
+                return nullptr;
+            }
+            size_t index=read_index.load();
+            read_index.store((index+1)&(NumSlots-1));
+            return buffer[index];
+        }
     };
+
+
+
+
 class ModelInferencer {
     private:
         unique_ptr<FlatBufferModel> m_model;
         unique_ptr<Interpreter> m_interpreter;
-        RingBuffer audio_input_buffer;
-        RingBuffer model_output_buffer;
+        SpscRingBuffer<RING_BUFFER_SIZE, NUM_NOTES*NUM_HARMONICS*BUFFER_SIZE> audio_input_buffer;
+        SpscRingBuffer<RING_BUFFER_SIZE, NUM_NOTES> model_output_buffer;
         std::thread inferencing_thread;
         std::mutex buffer_mutex;
         std::condition_variable buffer_cv;
