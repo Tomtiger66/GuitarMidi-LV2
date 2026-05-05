@@ -35,8 +35,8 @@ namespace GuitarMidi{
         void add_data(const float* data){
             size_t index=write_index.load();
             //performant memcpy for fixed size data
-            memcpy(buffer[index],data,Stride*sizeof(float));
-            write_index.store((index+1)&(NumSlots-1)); // wrap around using bitwise AND, NumSlots must be a power of 2
+            memcpy(buffer[index&(NumSlots-1)],data,Stride*sizeof(float));
+            write_index.store((index+1)); // wrap around using bitwise AND, NumSlots must be a power of 2
 
 
     }
@@ -45,16 +45,16 @@ namespace GuitarMidi{
         }
         void get_latest_data(float* output){
             size_t index=read_index.load();
-            memcpy(output,buffer[index],Stride*sizeof(float));
-            read_index.store((index+1)&(NumSlots-1)); // wrap around using bitwise AND, NumSlots must be a power of 2
+            memcpy(output,buffer[index&(NumSlots-1)],Stride*sizeof(float));
+            read_index.store((index+1)); // wrap around using bitwise AND, NumSlots must be a power of 2
         }
         float* get_latest_data(){
             if(!has_new_data()){
                 return nullptr;
             }
             size_t index=read_index.load();
-            read_index.store((index+1)&(NumSlots-1));
-            return buffer[index];
+            read_index.store((index+1));
+            return buffer[index&(NumSlots-1)];
         }
     };
 

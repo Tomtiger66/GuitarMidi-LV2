@@ -15,13 +15,11 @@ void GuitarMidi::ModelInferencer::inferencing_loop()
         // buffer_cv.wait(lock, [this] { return stop_thread || audio_input_buffer.has_new_data(); });
         if (stop_thread) break;
 
-        // Get the latest audio input data from the ring buffer
-        float* audio_input_data = audio_input_buffer.get_latest_data();
       
 
-    if (audio_input_data&& m_interpreter) {
+    if (audio_input_buffer.has_new_data() && m_interpreter) {
             float* input_buffer=m_interpreter->typed_input_tensor<float>(0);
-            memcpy(input_buffer,audio_input_data,NUM_NOTES*NUM_HARMONICS*BUFFER_SIZE*sizeof(float));
+            audio_input_buffer.get_latest_data(input_buffer); // Assuming 1 frame of input
             TFLITE_MINIMAL_CHECK(m_interpreter->Invoke() == kTfLiteOk);
 
             TfLiteTensor *output = m_interpreter->output_tensor(0);
