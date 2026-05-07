@@ -44,7 +44,7 @@ The process is like breaking down the guitar sound into manageable pieces and th
 
 5. **Chord Reasoning**: A 2D convolutional layer looks across all strings simultaneously to understand chord patterns and how notes combine.
 
-6. **Output**: The model combines the per-string predictions into a final output of 37 possible notes (covering the guitar's range from low E to high E). It uses a special "sparse guitar output" layer that maps string/fret combinations to MIDI notes, ensuring only valid guitar notes are predicted. The output is probabilities (0-1) for each note, using sigmoid activation for multi-label detection (multiple notes can be active at once).
+6. **Output**: The model combines the per-string predictions into a final output of 37 possible notes (covering the guitar's range from low E to high E). It uses a special "sparse guitar output" layer that maps string/fret combinations to MIDI notes, ensuring only valid guitar notes are predicted. The output is probabilities (0-1) for each note, using multiple softmax activations for multi-label detection (multiple notes can be active at once).
 
 ## Key Technical Details 
 - **Architecture**: Convolutional Neural Network (CNN) with transformer elements, specialized for guitar.
