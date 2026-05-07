@@ -41,8 +41,7 @@ namespace GuitarMidi
 
     void Filter::initialize()
     {
-        // Setup FILTERORDER 1st order filters. Currently Elliptic::BandPass crashes when running setup() with orders higher than 1
-        // When we solve this we can run sharper filters with narrower bandwidth and maybe drop the pitch validation below in process()
+      
         setFilterParameters(m_q, m_passbandatten);
 
         if (m_bufferSize)
