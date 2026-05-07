@@ -18,7 +18,6 @@
  */
 #pragma once
 #include <time.h>
-#include <noteclassifier.hpp>
 #include <filterbank.hpp>
 #include <fretboardrepresentation.hpp>
 #include <memory>
@@ -37,8 +36,8 @@ typedef enum
 using namespace std;
 using namespace GuitarMidi;
 /**
- * @brief FretBoard holds a bank of NoteClassifiers, which independently trigger a midi note when finding a fundamental (or a partial) frequency
- * in polyphonic audio
+ * @brief FretBoard holds a filterbank and a noteinferencer. It is responsible for setting up the filterbank based on the fretboard representation and processing the audio input
+ * in polyphonic audio. The parameters of the noteinferencer are: smoothing, smoothing offset, onset threshold and offset threshold are set in the fretboard class and can be controlled by the user. The output of the noteinferencer is sent to the midi output buffer.
  * 
  */
 class FretBoard

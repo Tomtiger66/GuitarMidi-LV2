@@ -25,6 +25,13 @@
 #define NUM_NOTES 37
 namespace GuitarMidi{
 
+    /*
+    * A 2D audio buffer structure.
+        * num_filters: The number of filters used in the audio processing.
+        * window_size: The size of the window used for processing the audio buffer.
+        * audio_buffer_2D: A pointer to a 2D array that holds the audio data. The dimensions of this array are determined by num_filters and window_size.
+
+    */
     struct AudioBuffer2D{
         int num_filters;
         int window_size;

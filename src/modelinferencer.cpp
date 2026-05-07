@@ -75,7 +75,7 @@ GuitarMidi::ModelInferencer::ModelInferencer()
 GuitarMidi::ModelInferencer::~ModelInferencer()
 {
     {
-        std::lock_guard<std::mutex> lock(buffer_mutex);
+   
         stop_thread = true;
     }
     // buffer_cv.notify_all();

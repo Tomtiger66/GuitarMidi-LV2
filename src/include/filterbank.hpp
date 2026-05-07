@@ -25,7 +25,11 @@
 using namespace std;
 namespace GuitarMidi{
 
-
+    /**
+    * The FilterBank class manages a collection of Filter objects and is set up based on a provided map of filter representations.
+    * It contains one 2D audio buffer that holds the output of all the filters in the bank in which each row corresponds to the output of a single filter.
+    * This buffer is then used in noteinferencer to infer the played notes based on the output of the filters in the filter bank.
+    */
     class FilterBank{
 
         private:

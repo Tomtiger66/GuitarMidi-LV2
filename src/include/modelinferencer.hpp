@@ -78,7 +78,12 @@ namespace GuitarMidi{
 
 
 
-
+/*
+    * ModelInferencer class for handling model inference tasks. This class contains two ringbuffers for storing the last N frames of the audio input and model output.
+        The audio input ringbuffer is used to store the last N frames of the audio input, which are then fed into the model for inference.
+         The model output ringbuffer is used to store the last N frames of the model output, which are then used to in noteinferencer.cpp to trigger MIDI messages based on the confidence of the detected notes.
+         The inferencing is performed in a separate thread to avoid blocking the audio processing thread, and the results are communicated back to the main thread using the output ringbuffer.
+*/
 class ModelInferencer {
     private:
         unique_ptr<FlatBufferModel> m_model;
@@ -86,8 +91,6 @@ class ModelInferencer {
         SpscRingBuffer<RING_BUFFER_SIZE, NUM_NOTES*NUM_HARMONICS*BUFFER_SIZE> audio_input_buffer;
         SpscRingBuffer<RING_BUFFER_SIZE, NUM_NOTES> model_output_buffer;
         std::thread inferencing_thread;
-        std::mutex buffer_mutex;
-        std::condition_variable buffer_cv;
         bool stop_thread;
         void inferencing_loop();
         

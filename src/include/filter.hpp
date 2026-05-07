@@ -31,6 +31,11 @@
 namespace GuitarMidi
 {
 
+    /**
+ * @brief The Filter class represents a digital filter that can be applied to audio data. It encapsulates the parameters and functionality needed to process audio samples using a bandpass filter. 
+ * The class is designed  allowing for the creation of either Butterworth or Elliptic bandpass filters based on the defined preprocessor directive. 
+ * The Filter class manages the filter's parameters, such as bandwidth and attenuation, and provides methods for initializing the filter and processing audio samples.
+ */
     class Filter
     {
     private:
