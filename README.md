@@ -49,7 +49,7 @@ The process is like breaking down the guitar sound into manageable pieces and th
 ## Key Technical Details 
 - **Architecture**: Convolutional Neural Network (CNN) with transformer elements, specialized for guitar.
 - **Training**: Uses TensorFlow/Keras, trained on labeled audio data with binary cross-entropy loss (good for multi-label problems).
-- **Output Format**: 37-note vector with sigmoid probabilities, not a single "best guess."
+- **Output Format**: 37-note vector with mixture of softmax probabilities, not a single "best guess."
 - **Real-Time Friendly**: Designed to be efficient for audio processing, with techniques like mixed-precision training for GPUs.
 
 In essence, it's a sophisticated pattern-matching system that learns to recognize guitar notes from filtered audio data, much like how your brain recognizes familiar sounds but with math and computers. The model is trained on examples of guitar playing to get better at this task.
