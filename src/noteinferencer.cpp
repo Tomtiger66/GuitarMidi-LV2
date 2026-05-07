@@ -112,27 +112,7 @@ namespace GuitarMidi
             }
         }
 
-        // if(m_frames%48000==0){
-        //    if(m_note_on[40]){
-        //         uint8_t n=40;
-        //        uint8_t midinote[3]={0x90,n,0x00};
-        //        lv2_log_note(&g_logger,"Note off\n");
-        //         m_midioutput.sendMidiMessage(midinote,nsamples);
-        //         m_note_on[40]=false;
-        //     }
-        //    else{
-        //         uint8_t n=40;
-        //        uint8_t midinote[3]={0x90,n,0x7f};
-        //        lv2_log_note(&g_logger,"Note on\n");
-        //         m_midioutput.sendMidiMessage(midinote,nsamples);
-        //         m_note_on[40]=true;
-        //    }
-        // }
 
-        //             uint8_t n=40;
-        //    uint8_t midinote[3]={0x90,n,0x00};
-        //     m_midioutput.sendMidiMessage(midinote,nsamples);
         m_frames += nsamples;
-        // printf("%s\n",msg.str().c_str());
     }
 }
