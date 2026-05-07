@@ -1,12 +1,7 @@
 # GuitarMidi-LV2
 A concept for guitar to midi as an lv2 plugin. GuitarMidi-LV2 analyses the signal of a guitar in standard tuning E A D g b e extracts the notes played.
-It deploys a bank of elliptic cauer bandpass filters to separate the polyphonic audio into monophonic frequency segments, which are then analysed for multiple fundamental frequencies.
-### Why not use FFT?
-For higher frequencies (strings g b e) FFT would be suffient at frame buffersizes of 512 samples. However for lower frequencies the FFT would need windows of 1024 samples and higher to provide suitable resolution for the notes on the E string (82Hz and higher). This results in high latency for the guitar player.
-IIR based filters such as those used in this plugin offer faster frequency response at suitable resolution at low frequencies.
+It deploys a bank of butterworth bandpass filters to separate the polyphonic audio into monophonic frequency segments, which are then analysed for multiple fundamental frequencies by a custom neural net.
 
-### So how fast is GuitarMidi-LV2
-Don't expect wonders. While I havent done strict meassurements I have percieved drastically lower latency compared to my earlier FFT based method which had a guaranteed latency of 1024 samples at 48khz. This new approach is more like 500-700 samples at 48khz when playing lower frequencies at 82hz (E string). The figures are better at higher frequencies, but again: You won't be able to play funk ala Superstition from Stevie Wonder (well not at this stage).
 
 
 
@@ -18,34 +13,64 @@ Currently your Host must be running with 256 samples per period at 48KHz (that w
 Your guitarsignal should be clean, no distortion of sort. 
 * Tune the guitar to the standard E A D g b e tuning
 * Activate the bridge pickup
-* Set the input gain on the audio interface to 1/4
+* Set the input gain on the audio interface to 50%
 * Connect the audio in of the guitarmidi plugin to the channel on your interface, to which you guitar is connected. 
 * connect the midi out of guitarmidi to a synth plugin 
 * first play single notes, adjust the input gain to improve tracking
-* successivly play more strings (in polyphonic mode)
+* successively play more strings/chords
 
-### Monophonic mode
-By default the plugin operates in monophonic mode. 
-You can play a chord and the plugin will try to track lowest string played. 
+# Model description (written with AI)
+The neural network model in this project is designed to analyze guitar audio and predict which notes are being played, converting the sound into MIDI data for music production. Here's a simple explanation for non-experts:
 
-### Polyphonic mode
-In this mode the plugin tracks all strings played
+## What It Does
+Imagine you're listening to a guitar. The model acts like an extremely attentive listener that can "hear" individual notes even when multiple are played together (chords) or when the sound is noisy. It takes raw audio and outputs a list of probabilities for each possible guitar note, telling you how likely each note is to be sounding at that moment.
 
-## Tips
-GuitarMidi doesnt handle the attack phase of the guitar, it blows out a bunch of notes in that phase.
-To overcome this increase the attack time in the synth.
-Second, while the tracking of the bass strings E and A does work, it absolutely is not perfect.
-Playing full chords on all 6 strings doesnt work well in polyphonic mode due to the tracking on E and A string. So try a rather 'John Frusciante' style, playing on the upper strings D,g,b,e. That works somewhat well for me.
+## How It Works 
+The process is like breaking down the guitar sound into manageable pieces and then reassembling them intelligently:
 
+1. **Pre-Processing the Audio**: Before the neural network sees the audio, it's run through a filterbank. This filterbank uses digital filters tuned to the frequencies of guitar notes and their harmonics (overtones). For each of the 13 frets on 6 strings, plus 4 harmonics per note, it creates 148 filtered signals. This turns the raw audio into a kind of "spectrogram" – a visual-like representation of the sound's frequency content over time.
+
+2. **Input to the Model**: The neural network receives this 148x256 "image" (148 frequency bands by 256 time samples) as input.
+
+3. **Feature Extraction**:
+   - **Local Contrast Normalization**: It adjusts the input to highlight differences, like making quiet parts stand out against loud ones. Suggested by Gemini
+   - **Time Compression**: It compresses the time dimension using convolutional layers to focus on patterns.
+   - **Transformer Block**: This is like a smart attention mechanism that looks at relationships between different frequency bands, helping the model understand how notes interact.
+
+4. **String-Aware Processing**: The model splits the data into 6 parallel paths, one for each guitar string. Each path processes its own set of notes:
+   - Convolutional layers extract features for each string.
+   - "Hollow Neighborhood Suppression" reduces interference from nearby frets (like preventing a note from being confused with its neighbors).
+   - It predicts probabilities for each of the 13 frets on that string.
+
+5. **Chord Reasoning**: A 2D convolutional layer looks across all strings simultaneously to understand chord patterns and how notes combine.
+
+6. **Output**: The model combines the per-string predictions into a final output of 37 possible notes (covering the guitar's range from low E to high E). It uses a special "sparse guitar output" layer that maps string/fret combinations to MIDI notes, ensuring only valid guitar notes are predicted. The output is probabilities (0-1) for each note, using sigmoid activation for multi-label detection (multiple notes can be active at once).
+
+## Key Technical Details 
+- **Architecture**: Convolutional Neural Network (CNN) with transformer elements, specialized for guitar.
+- **Training**: Uses TensorFlow/Keras, trained on labeled audio data with binary cross-entropy loss (good for multi-label problems).
+- **Output Format**: 37-note vector with sigmoid probabilities, not a single "best guess."
+- **Real-Time Friendly**: Designed to be efficient for audio processing, with techniques like mixed-precision training for GPUs.
+
+In essence, it's a sophisticated pattern-matching system that learns to recognize guitar notes from filtered audio data, much like how your brain recognizes familiar sounds but with math and computers. The model is trained on examples of guitar playing to get better at this task.
 
 ### Current Bugs and missing things
 * Velocity is not extracted from the audio. All midi notes have max velocity (=127)
+* Only notes upto e5 (12th fret on the e-string) are detected. This is due to the current nvme shortage, I only have enough nvme to store 19000 songs with 37 notes
+* The plugin detects mostly major and minor chords since those are dominant in the training data
 * there is no midi panic control
 * ~~latency is higher then theoretically possible. Due to an issue in the DSPFilter library I can only setup 1st order filters, although 2nd order filters
     should be possible~~ Higher order filters are working, latency is reduced but still perceivable
-* Since a guitar string vibrates with many partial frequencies, it triggers 2-3 harmonic notes (playing A triggers the higher a too )
-* thats why analysis is done only upto the 5th fret
-* I want to look into neural nets to solve the problem of the harmonic notes, help is welcome
+* Since a guitar string vibrates with many partial frequencies, it may trigger 2-3 harmonic notes 
+
+
+
+# Donations
+You can support the development by donating via my paypal
+
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=7ELJYWWJ2BKRQ)
+
+
 
 # Build
 If your distro is not supported by any package at  https://github.com/geraldmwangi/GuitarMidi-LV2/releases:
@@ -65,5 +90,9 @@ cmake --install .
 
 Point your lv2 host to ~/.lv2 (Ardour and Carla will autmatically search in this directory on debian based systems)
 
+# Acknowledgments
+I'd like to thank the team at https://synthtab.dev/ for the great dataset they put out.
+Also I should mention Gemini and Claude for helping me learn tensorflow. The ideas of the model are mine truely, except where noted otherwise.
+The two AI services helped with the details of the model and its training until I had enough knowledge of tensorflow. Thanks
 
 
