@@ -59,6 +59,7 @@ instantiate(const LV2_Descriptor *descriptor,
 	lv2_log_note(&g_logger, "Using butterworth filters");
 #endif
 	FretBoard *fretboard = new FretBoard(map, rate);
+fretboard->initialize(std::string(bundle_path));
 	return (LV2_Handle)fretboard;
 }
 
@@ -105,7 +106,6 @@ activate(LV2_Handle instance)
 {
 	lv2_log_note(&g_logger, "Activating GuitarMidi-LV2 Plugin\n");
 	FretBoard *notecl = (FretBoard *)instance;
-	notecl->initialize();
 }
 
 /** Define a macro for converting a gain in dB to a coefficient. */
