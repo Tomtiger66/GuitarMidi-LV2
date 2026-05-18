@@ -97,7 +97,7 @@ class ModelInferencer {
     public:
         ModelInferencer();
         ~ModelInferencer();
-        void initialize();
+        void initialize(const std::string& bundle_path);
         void add_audio_input(const float* input, int num_frames);
         bool get_model_output(float* output, int num_frames);
 };

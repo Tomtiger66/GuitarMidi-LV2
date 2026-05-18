@@ -51,7 +51,7 @@ namespace GuitarMidi{
         public:
         NoteInferencer(LV2_URID_Map *map);
 
-        void initialize();
+        void initialize(const std::string& bundle_path);
         void setMidiOutput(LV2_Atom_Sequence *output);
 
         void setAudioInputBuffer(AudioBuffer2D input);

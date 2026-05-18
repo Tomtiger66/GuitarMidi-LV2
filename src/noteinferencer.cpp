@@ -15,11 +15,11 @@ namespace GuitarMidi
     NoteInferencer::NoteInferencer(LV2_URID_Map *map) : m_frames(0), m_midioutput(map)
     {
     }
-    void NoteInferencer::initialize()
+    void NoteInferencer::initialize(const std::string& bundle_path)
     {
         m_midioutput.initializeSequence();
         m_frames = 0;
-        m_model.initialize();
+        m_model.initialize(bundle_path);
     }
     void NoteInferencer::setMidiOutput(LV2_Atom_Sequence *output)
     {
