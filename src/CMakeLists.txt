@@ -7,7 +7,7 @@ include_directories(include)
 include_directories(${PROJECT_SOURCE_DIR}/src/include)
 find_package(PkgConfig REQUIRED)
 
-find_package(OpenMP REQUIRED)
+#find_package(OpenMP REQUIRED)
 pkg_check_modules(Pango REQUIRED pango)
 
 # add_subdirectory(tflite_custom_op_example)
@@ -67,7 +67,7 @@ target_link_libraries(guitarmidi dsp aubio ${Pango_LIBRARIES})
 else()
 message("Building without onset support")
 target_link_libraries(guitarmidi PUBLIC dsp  ${Pango_LIBRARIES} tensorflow-lite  )
-target_link_libraries(guitarmidi PUBLIC OpenMP::OpenMP_CXX )
+#target_link_libraries(guitarmidi PUBLIC OpenMP::OpenMP_CXX )
 endif()
 
 
