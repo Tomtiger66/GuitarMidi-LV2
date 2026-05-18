@@ -1,3 +1,4 @@
 #cmakedefine WITH_TRACING_INFO
 #cmakedefine USE_ELLIPTIC_FILTERS
 #cmakedefine WITH_AUBIO
+#cmakedefine RING_BUFFER_SIZE @RING_BUFFER_SIZE@

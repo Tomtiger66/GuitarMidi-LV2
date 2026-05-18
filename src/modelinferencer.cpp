@@ -80,6 +80,9 @@
         stop_thread = false;
         m_interpreter=nullptr;
         inferencing_thread = std::thread(&ModelInferencer::inferencing_loop, this);
+        //log the size of the ring buffers
+        lv2_log_note(&g_logger, "Audio input ring buffer size: %d frames\n", RING_BUFFER_SIZE);
+        lv2_log_note(&g_logger, "Model output ring buffer size: %d frames\n", RING_BUFFER_SIZE);
     }
 
     GuitarMidi::ModelInferencer::~ModelInferencer()

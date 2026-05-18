@@ -33,7 +33,7 @@
 #include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
 using namespace std;
 using namespace tflite;
-#define RING_BUFFER_SIZE 8 // Number of frames to store in the ring buffer
+//#define RING_BUFFER_SIZE 8 // Number of frames to store in the ring buffer
 /*
     * ModelInferencer class for handling model inference tasks. This class contains two ringbuffers for storing the last N frames of the audio input and model output.
         The audio input ringbuffer is used to store the last N frames of the audio input, which are then fed into the model for inference.
@@ -49,7 +49,9 @@ namespace GuitarMidi{
         atomic<size_t> write_index;
         atomic<size_t> read_index;
     public:
-        SpscRingBuffer():write_index(0),read_index(0){}
+        SpscRingBuffer():write_index(0),read_index(0){
+           
+        }
         void add_data(const float* data){
             size_t index=write_index.load();
             //performant memcpy for fixed size data
