@@ -102,7 +102,7 @@ public:
      * @brief initialize the filterbank
      * 
      */
-    void initialize(const std::string& bundle_path);
+    bool initialize(const std::string& bundle_path);
 
     /**
      * @brief finalize all filters and release allocated resources

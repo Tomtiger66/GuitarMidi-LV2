@@ -58,18 +58,10 @@ void FretBoard::setMidiOutput(LV2_Atom_Sequence *output)
     // }
 }
 
-void FretBoard::initialize(const std::string& bundle_path)
+bool FretBoard::initialize(const std::string& bundle_path)
 {
-    m_noteinferencer.initialize(bundle_path);
+    return m_noteinferencer.initialize(bundle_path);
 
-
-    // if (m_midioutput)
-    //     m_midioutput->initializeSequence();
-    // omp_set_num_threads(1);
-    // for (auto notecl : m_noteClassifiers)
-    // {
-    //     notecl->initialize();
-    // }
 }
 
 void FretBoard::finalize()

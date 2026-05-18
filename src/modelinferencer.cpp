@@ -1,6 +1,7 @@
     #include <modelinferencer.hpp>
     #include <iostream>
     #include <tensorflow/lite/logger.h>
+    #include <filesystem>
         // TFlite C++ API reference: https://ai.google.dev/edge/api/tflite/cc?hl=en
     #define TFLITE_MINIMAL_CHECK(x)                                  \
         if (!(x))                                                    \
@@ -35,11 +36,17 @@
         }
     }
 
-    void GuitarMidi::ModelInferencer::initialize(const std::string& bundle_path)
+    bool GuitarMidi::ModelInferencer::initialize(const std::string& bundle_path)
     {
                 // Load model
-            std::string tflite_path = bundle_path + "/guitarmidi.tflite";
-    m_model = FlatBufferModel::BuildFromFile(tflite_path.c_str());
+            std::string tflite_path = bundle_path + "/guitarmidi.tflite"; 
+            lv2_log_note(&g_logger, "Loading model from: %s\n", tflite_path.c_str());
+            // check if file exists
+            if (!std::filesystem::exists(tflite_path)) {
+                lv2_log_error(&g_logger, "Model file not found: %s\n", tflite_path.c_str());
+                return false;
+            }
+            m_model = FlatBufferModel::BuildFromFile(tflite_path.c_str());
             TFLITE_MINIMAL_CHECK(m_model != nullptr);
             ops::builtin::BuiltinOpResolver resolver;
             InterpreterBuilder builder(*m_model, resolver);
@@ -56,13 +63,15 @@
                     TfLiteXNNPackDelegateCreate(&xnnpack_options)) != kTfLiteOk)
             {
                 // Handle error, but usually optional
-                fprintf(stderr, "Warning: Failed to apply XNNPACK delegate.\n");
+                lv2_log_error(&g_logger, "Failed to apply XNNPack delegate\n");
+                return false;
             }
             // Allocate tensor buffers.
             TFLITE_MINIMAL_CHECK(m_interpreter->AllocateTensors() == kTfLiteOk);
             printf("=== Pre-invoke Interpreter State ===\n");
             // tflite::PrintInterpreterState(m_interpreter.get());
             tflite::LoggerOptions::SetMinimumLogSeverity(tflite::TFLITE_LOG_ERROR);
+            return true;
     }
 
     GuitarMidi::ModelInferencer::ModelInferencer()
