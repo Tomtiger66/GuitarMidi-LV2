@@ -8,7 +8,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/include)
 find_package(PkgConfig REQUIRED)
 
 #find_package(OpenMP REQUIRED)
-pkg_check_modules(Pango REQUIRED pango)
+# pkg_check_modules(Pango REQUIRED pango)
 
 # add_subdirectory(tflite_custom_op_example)
 
