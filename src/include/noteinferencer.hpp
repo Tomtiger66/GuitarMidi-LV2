@@ -41,10 +41,14 @@ namespace GuitarMidi{
         AudioBuffer2D m_audiobuffer;
         float* m_onset_threshold;
         float* m_offset_threshold;
+        float* m_onset_energy_threshold;
+        float* m_offset_energy_threshold;
         float* m_smoothing;
         float* m_smoothing_offset;
         float smoothed_onsetoutput[NUM_NOTES]={0};
         float smoothed_offsetoutput[NUM_NOTES]={0};
+        float smoothed_noteenergies[NUM_NOTES]={0};
+        float smoothed_offsetnoteenergies[NUM_NOTES]={0};
         // std::unique_ptr<tflite::FlatBufferModel> model;
         int64_t m_frames;
         bool m_note_on[NUM_NOTES]={false};
@@ -72,6 +76,12 @@ namespace GuitarMidi{
             m_smoothing_offset=smoothing_offset;
         }
 
+        void setOnsetEnergyThreshold(float* threshold){
+            m_onset_energy_threshold=threshold;
+        }
+        void setOffsetEnergyThreshold(float* threshold){
+            m_offset_energy_threshold=threshold;
+        }
         void process(int nsamples);
 
     };

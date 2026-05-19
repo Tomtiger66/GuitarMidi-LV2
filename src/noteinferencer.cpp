@@ -57,42 +57,25 @@ namespace GuitarMidi
                 }
                 smoothed_onsetoutput[i] = *m_smoothing * smoothed_onsetoutput[i] + (1 - *m_smoothing) * output_data[i]; // simple low pass filter to smooth the output and reduce jitter
                 smoothed_offsetoutput[i] = *m_smoothing_offset * smoothed_offsetoutput[i] + (1 - *m_smoothing_offset) * output_data[i];
+               
+                smoothed_noteenergies[i]=*m_smoothing*smoothed_noteenergies[i]+(1-*m_smoothing)*note_energy*smoothed_onsetoutput[i]; // smooth the note energy to avoid jitter
+                smoothed_offsetnoteenergies[i]=*m_smoothing_offset*smoothed_offsetnoteenergies[i]+(1-*m_smoothing_offset)*note_energy*smoothed_offsetoutput[i];
                 if (smoothed_onsetoutput[i] > *m_onset_threshold)
                 {
 
                     if (!m_note_on[i] && i != (NUM_NOTES - 1))
-                    { // avoid sending note on for the extra output used for silence detection
-                        // check if all harmonics of the note are active before sending note on message
-                        // float note_energy=0;
-                        // for(int h=1;h<=NUM_HARMONICS;h++){
-                        //     int harmonic_index=i*NUM_HARMONICS+h-1;
-                        //     if(harmonic_index<NUM_HARMONICS*NUM_NOTES){
-                        //         float harmonicenergy=0;
-                        //         for(int w=0;w<BUFFER_SIZE;w++){
-                        //             harmonicenergy=max(harmonicenergy,input_buffer[harmonic_index*BUFFER_SIZE+w]);
-                        //         }
-                        //         note_energy=max(note_energy,harmonicenergy);
+                    { 
 
-                        //     }
-                        // }
-                        // note_energy*=output_data[i]; // weight the note energy by the confidence of the fundamental note
-                        // // note dependent threshold. the threshold is a piecewise linear function of the note index devised from the visualize_data.ipynb
-                        // // which shows that between note index 30 and 15 the training datas amplitudes are linear following amplitude=-0.005*noteindex*0.15
-                        // float threshold=0;
-                        // float m=-0.005;
-                        // float b=0.15;
-                        // if(i<15){
-                        //     threshold=m*15+b;
-                        // }
-                        // else if(i<30){
-                        //     threshold=m*i+b;
-                        // }
+                        // threshold in dB is converted to linear scale by 10^(threshold_db/20)
+                      
+                        float threshold=pow(10, *m_onset_energy_threshold / 20);
+                        
 
-                        // if(note_energy<threshold){
-                        //     lv2_log_note(&g_logger, "Note %d detected but energy %f is below threshold %f, not sending MIDI message\n", i, note_energy, threshold);
-                        //     continue;
-                        // }
-                        msg << " " << i << "(" << output_data[i] << ")" << " energy:" << note_energy;
+                        if(smoothed_noteenergies[i]<threshold){
+                            lv2_log_note(&g_logger, "Note %d detected but energy %f is below threshold %f, not sending MIDI message\n", i, smoothed_noteenergies[i], threshold);
+                            continue;
+                        }
+                        msg << " " << i << "(" << smoothed_onsetoutput[i] << ")" << " energy:" << smoothed_noteenergies[i];
                         uint8_t midinote[3] = {0x90, i + NOTE_OFFSET, 0x7f};
                         lv2_log_note(&g_logger, "Notes: %s\n", msg.str().c_str());
                         m_midioutput.sendMidiMessage(midinote, m_frames);
@@ -101,6 +84,15 @@ namespace GuitarMidi
                 }
                 else
                 {
+                                            // threshold in dB is converted to linear scale by 10^(threshold_db/20)
+                      
+                        float threshold=pow(10, *m_offset_energy_threshold / 20);
+                        
+
+                        if(smoothed_offsetnoteenergies[i]>threshold){
+                            lv2_log_note(&g_logger, "Note %d detected but energy %f is below threshold %f, not sending MIDI message\n", i, smoothed_offsetnoteenergies[i], threshold);
+                            continue;
+                        }
                     // lv2_log_note(&g_logger, "Note %d OFF with confidence %f\n", i, output_data[i]);
                     if (m_note_on[i] && smoothed_offsetoutput[i] < *m_offset_threshold && i != (NUM_NOTES - 1))
                     {

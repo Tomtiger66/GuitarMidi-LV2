@@ -101,6 +101,12 @@ connect_port(LV2_Handle instance,
 	case FRETBOARD_OFFSET_THRESHOLD:
 		fretboard->setOffsetThreshold((float *)data);
 		break;
+	case FRETBOARD_ONSET_ENERGY_THRESHOLD:
+		fretboard->setOnsetEnergyThreshold((float *)data);
+		break;
+	case FRETBOARD_OFFSET_ENERGY_THRESHOLD:
+		fretboard->setOffsetEnergyThreshold((float *)data);
+		break;
 	default:
 		break;
 	}

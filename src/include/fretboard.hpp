@@ -31,7 +31,9 @@ typedef enum
     FRETBOARD_SMOOTHING=2,
     FRETBOARD_SMOOTHING_OFFSET=3,
     FRETBOARD_ONSET_THRESHOLD=4,
-    FRETBOARD_OFFSET_THRESHOLD=5
+    FRETBOARD_OFFSET_THRESHOLD=5,
+    FRETBOARD_ONSET_ENERGY_THRESHOLD=6,
+    FRETBOARD_OFFSET_ENERGY_THRESHOLD=7
 } PortIndex;
 using namespace std;
 using namespace GuitarMidi;
@@ -96,6 +98,13 @@ public:
 
     void setSmoothingOffset(float* smoothing_offset){
         m_noteinferencer.setSmoothingOffset(smoothing_offset);
+    } 
+
+    void setOnsetEnergyThreshold(float* threshold){
+        m_noteinferencer.setOnsetEnergyThreshold(threshold);
+    }
+    void setOffsetEnergyThreshold(float* threshold){
+        m_noteinferencer.setOffsetEnergyThreshold(threshold);
     }
 
     /**
