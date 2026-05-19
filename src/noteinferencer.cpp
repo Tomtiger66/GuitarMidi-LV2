@@ -15,7 +15,7 @@ namespace GuitarMidi
     NoteInferencer::NoteInferencer(LV2_URID_Map *map) : m_frames(0), m_midioutput(map)
     {
     }
-    bool NoteInferencer::initialize(const std::string& bundle_path)
+    bool NoteInferencer::initialize(const std::string &bundle_path)
     {
         m_midioutput.initializeSequence();
         m_frames = 0;
@@ -31,7 +31,7 @@ namespace GuitarMidi
     }
     void NoteInferencer::process(int nsamples)
     {
-        m_midioutput.initializeSequence(); 
+        m_midioutput.initializeSequence();
         stringstream msg;
         m_model.add_audio_input(m_audiobuffer.audio_buffer_2D, 1);
         float output_data[NUM_NOTES];
@@ -57,21 +57,21 @@ namespace GuitarMidi
                 }
                 smoothed_onsetoutput[i] = *m_smoothing * smoothed_onsetoutput[i] + (1 - *m_smoothing) * output_data[i]; // simple low pass filter to smooth the output and reduce jitter
                 smoothed_offsetoutput[i] = *m_smoothing_offset * smoothed_offsetoutput[i] + (1 - *m_smoothing_offset) * output_data[i];
-               
-                smoothed_noteenergies[i]=*m_smoothing*smoothed_noteenergies[i]+(1-*m_smoothing)*note_energy*smoothed_onsetoutput[i]; // smooth the note energy to avoid jitter
-                smoothed_offsetnoteenergies[i]=*m_smoothing_offset*smoothed_offsetnoteenergies[i]+(1-*m_smoothing_offset)*note_energy*smoothed_offsetoutput[i];
+
+                smoothed_noteenergies[i] = *m_smoothing * smoothed_noteenergies[i] + (1 - *m_smoothing) * note_energy * smoothed_onsetoutput[i]; // smooth the note energy to avoid jitter
+                smoothed_offsetnoteenergies[i] = *m_smoothing_offset * smoothed_offsetnoteenergies[i] + (1 - *m_smoothing_offset) * note_energy * smoothed_offsetoutput[i];
                 if (smoothed_onsetoutput[i] > *m_onset_threshold)
                 {
 
                     if (!m_note_on[i] && i != (NUM_NOTES - 1))
-                    { 
+                    {
 
                         // threshold in dB is converted to linear scale by 10^(threshold_db/20)
-                      
-                        float threshold=pow(10, *m_onset_energy_threshold / 20);
-                        
 
-                        if(smoothed_noteenergies[i]<threshold){
+                        float threshold = pow(10, *m_onset_energy_threshold / 20);
+
+                        if (smoothed_noteenergies[i] < threshold)
+                        {
                             lv2_log_note(&g_logger, "Note %d detected but energy %f is below threshold %f, not sending MIDI message\n", i, smoothed_noteenergies[i], threshold);
                             continue;
                         }
@@ -84,15 +84,15 @@ namespace GuitarMidi
                 }
                 else
                 {
-                                            // threshold in dB is converted to linear scale by 10^(threshold_db/20)
-                      
-                        float threshold=pow(10, *m_offset_energy_threshold / 20);
-                        
+                    // threshold in dB is converted to linear scale by 10^(threshold_db/20)
 
-                        if(smoothed_offsetnoteenergies[i]>threshold){
-                            lv2_log_note(&g_logger, "Note %d detected but energy %f is below threshold %f, not sending MIDI message\n", i, smoothed_offsetnoteenergies[i], threshold);
-                            continue;
-                        }
+                    float threshold = pow(10, *m_offset_energy_threshold / 20);
+
+                    if (smoothed_offsetnoteenergies[i] > threshold)
+                    {
+                        lv2_log_note(&g_logger, "Note %d detected but energy %f is below threshold %f, not sending MIDI message\n", i, smoothed_offsetnoteenergies[i], threshold);
+                        continue;
+                    }
                     // lv2_log_note(&g_logger, "Note %d OFF with confidence %f\n", i, output_data[i]);
                     if (m_note_on[i] && smoothed_offsetoutput[i] < *m_offset_threshold && i != (NUM_NOTES - 1))
                     {
@@ -103,7 +103,6 @@ namespace GuitarMidi
                 }
             }
         }
-
 
         m_frames += nsamples;
     }
